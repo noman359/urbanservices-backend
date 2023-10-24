@@ -4,3 +4,4 @@ layer
 .env
 package-lock.json
 tests
+dist
