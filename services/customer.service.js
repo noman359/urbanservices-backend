@@ -3,13 +3,18 @@ import config from '../config/index.js'
 import Prisma from '@prisma/client';
 const { PrismaClient } = Prisma;
 
+let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
+let bucket = new handler.bucketHandler()
+let encryption = new handler.encryption()
+let JWT = new handler.JWT()
+
 
 export default class CustomerService {
 
-    #db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
-    #bucket = new handler.bucketHandler()
-    #encryption = new handler.encryption()
-    #JWT = new handler.JWT()
+
+
+
+
 
     constructor() { }
 
@@ -23,13 +28,13 @@ export default class CustomerService {
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
                     key: `${customerBody.email}_${customerBody.avatar['name']}`,
-                    body: await this.#bucket.fileToArrayBuffer(customerBody.avatar)
+                    body: await bucket.fileToArrayBuffer(customerBody.avatar)
                 }
-                customer_avatar = await this.#bucket.upload(avatar_val)
+                customer_avatar = await bucket.upload(avatar_val)
             }
 
-            customerBody.password = this.#encryption.encrypt(customerBody.password)
-            servResp.data = await this.#db.customers.create({
+            customerBody.password = encryption.encrypt(customerBody.password)
+            servResp.data = await db.customers.create({
                 data: {
                     full_name: customerBody.full_name,
                     password: customerBody.password,
@@ -56,7 +61,7 @@ export default class CustomerService {
         let customer_avatar = new Object()
         try {
             console.debug('createCustomer() started')
-            let customer = await this.#db.customers.findFirst({ where: { id: query.id } })
+            let customer = await db.customers.findFirst({ where: { id: query.id } })
 
             if (!customer) {
                 throw new Error('Customer not found!')
@@ -69,14 +74,14 @@ export default class CustomerService {
                     let avatar_val = {
                         bucket: config.customer_avatar_s3_bucket_name,
                         key: `${customerBody.email}_${customerBody.avatar['name']}`,
-                        body: await this.#bucket.fileToArrayBuffer(customerBody.avatar)
+                        body: await bucket.fileToArrayBuffer(customerBody.avatar)
                     }
-                    customer_avatar = await this.#bucket.upload(avatar_val)
+                    customer_avatar = await bucket.upload(avatar_val)
                 }
             }
 
-            // customerBody.password = this.#encryption.encrypt(customerBody.password)
-            servResp.data = await this.#db.customers.update({
+            // customerBody.password = encryption.encrypt(customerBody.password)
+            servResp.data = await db.customers.update({
                 data: {
                     full_name: customerBody.full_name,
                     avatar: customer_avatar.url ?? "",

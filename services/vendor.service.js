@@ -3,11 +3,11 @@ import config from '../config/index.js'
 import Prisma from '@prisma/client';
 const { PrismaClient } = Prisma;
 
+let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
+let bucket = new handler.bucketHandler()
+let encryption = new handler.encryption()
+let JWT = new handler.JWT()
 export default class vendorService {
-    #db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
-    #bucket = new handler.bucketHandler()
-    #encryption = new handler.encryption()
-    #JWT = new handler.JWT()
     constructor() { }
 
     async createVendor(vendorModel) {
@@ -17,34 +17,34 @@ export default class vendorService {
             let user_id_front_resp = new Object()
             let user_id_back_resp = new Object()
             let vendor_avatar = new Object()
-            vendorModel.password = this.#encryption.encrypt(vendorModel.password)
+            vendorModel.password = encryption.encrypt(vendorModel.password)
 
             if (vendorModel.user_id_front && vendorModel.user_id_back) {
                 let user_id_front_val = {
                     bucket: config.card_upload_s3_bucket_name,
                     key: `${vendorModel.username}_${vendorModel.user_id_front['name']}`,
-                    body: await this.#bucket.fileToArrayBuffer(vendorModel.user_id_front)
+                    body: await bucket.fileToArrayBuffer(vendorModel.user_id_front)
                 }
-                user_id_front_resp = await this.#bucket.upload(user_id_front_val)
+                user_id_front_resp = await bucket.upload(user_id_front_val)
 
                 let user_id_back_val = {
                     bucket: config.card_upload_s3_bucket_name,
                     key: `${vendorModel.username}_${vendorModel.user_id_back['name']}`,
-                    body: await this.#bucket.fileToArrayBuffer(vendorModel.user_id_back)
+                    body: await bucket.fileToArrayBuffer(vendorModel.user_id_back)
                 }
-                user_id_back_resp = await this.#bucket.upload(user_id_back_val)
+                user_id_back_resp = await bucket.upload(user_id_back_val)
             }
 
             if (vendorModel.avatar) {
                 let avatar_val = {
                     bucket: config.vendor_avatar_s3_bucket_name,
                     key: `${vendorModel.username}_${vendorModel.avatar['name']}`,
-                    body: await this.#bucket.fileToArrayBuffer(vendorModel.avatar)
+                    body: await bucket.fileToArrayBuffer(vendorModel.avatar)
                 }
-                vendor_avatar = await this.#bucket.upload(avatar_val)
+                vendor_avatar = await bucket.upload(avatar_val)
             }
 
-            let created_vendor = await this.#db.vendor.create({
+            let created_vendor = await db.vendor.create({
                 data: {
                     created_at: new Date(new Date().toUTCString()),
                     email: vendorModel.email,
@@ -79,8 +79,8 @@ export default class vendorService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('createVendor() started')
-            let encrypted_password = this.#encryption.encrypt(query.password)
-            let vendor = await this.#db.vendor.findFirst({
+            let encrypted_password = encryption.encrypt(query.password)
+            let vendor = await db.vendor.findFirst({
                 where: {
                     email: query.email,
                     password: encrypted_password
@@ -91,7 +91,7 @@ export default class vendorService {
                 throw new Error('User not found, Incorrect email or password')
             }
 
-            let token = await this.#JWT.getToken(vendor)
+            let token = await JWT.getToken(vendor)
             servResp.data = {
                 ...vendor, token: token
             }
@@ -108,7 +108,7 @@ export default class vendorService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('getVendorData() started')
-            let vendor = await this.#db.vendor.findFirst({
+            let vendor = await db.vendor.findFirst({
                 where: {
                     id: query.id
                 }, include: { vendor_services: { include: { services: true } } }
@@ -134,28 +134,28 @@ export default class vendorService {
                 let user_id_front_val = {
                     bucket: config.card_upload_s3_bucket_name,
                     key: `${vendorModel.username}_${vendorModel.user_id_front['name']}`,
-                    body: await this.#bucket.fileToArrayBuffer(vendorModel.user_id_front)
+                    body: await bucket.fileToArrayBuffer(vendorModel.user_id_front)
                 }
-                user_id_front_resp = await this.#bucket.upload(user_id_front_val)
+                user_id_front_resp = await bucket.upload(user_id_front_val)
 
                 let user_id_back_val = {
                     bucket: config.card_upload_s3_bucket_name,
                     key: `${vendorModel.username}_${vendorModel.user_id_back['name']}`,
-                    body: await this.#bucket.fileToArrayBuffer(vendorModel.user_id_back)
+                    body: await bucket.fileToArrayBuffer(vendorModel.user_id_back)
                 }
-                user_id_back_resp = await this.#bucket.upload(user_id_back_val)
+                user_id_back_resp = await bucket.upload(user_id_back_val)
             }
 
             if (vendorModel.avatar) {
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
                     key: `${vendorModel.username}_${vendorModel.avatar['name']}`,
-                    body: await this.#bucket.fileToArrayBuffer(vendorModel.avatar)
+                    body: await bucket.fileToArrayBuffer(vendorModel.avatar)
                 }
-                vendor_avatar = await this.#bucket.upload(avatar_val)
+                vendor_avatar = await bucket.upload(avatar_val)
             }
 
-            let updated_vendor = await this.#db.vendor.update({
+            let updated_vendor = await db.vendor.update({
                 data: {
                     updated_at: new Date(new Date().toUTCString()),
                     email: vendorModel.email,
@@ -230,7 +230,7 @@ export default class vendorService {
                 }
 
 
-                servResp.data = await this.#db.vendor_services.findMany({
+                servResp.data = await db.vendor_services.findMany({
                     where: where_cols,
                     include: include_tables
                 })
