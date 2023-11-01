@@ -1,7 +1,7 @@
 import handler from '../handlers/index.js'
 import config from '../config/index.js'
-import Prisma from '@prisma/client';
-const { PrismaClient } = Prisma;
+import { PrismaClient } from '@prisma/client';
+
 
 let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
 let bucket = new handler.bucketHandler()
@@ -60,9 +60,22 @@ export default class vendorService {
                     user_id_back: user_id_back_resp.url ?? "",
                     user_id_front: user_id_front_resp.url ?? "",
                     zip_code: vendorModel.zip_code,
-                    vendor_services: { createMany: { service_id: Array.isArray(vendorModel.services) ? vendorModel.services : JSON.parse(vendorModel.services) } }
+                    // vendor_services: { createMany: { service_id: Array.isArray(vendorModel.services) ? vendorModel.services : JSON.parse(vendorModel.services) } }
                 }
             })
+
+            if (vendorModel.services) {
+
+                if (typeof vendorModel.services === 'string') {
+                    vendorModel.services = JSON.parse(vendorModel.services)
+                }
+                let service_ids = Array.isArray(vendorModel.services) ? vendorModel.services : [vendorModel.services]
+                let a = []
+                let promises = service_ids.map(service_id => {
+                    return db.vendor_services.create({ data: { service_id: service_id, vendor_id: created_vendor.id, created_at: new Date(new Date().toUTCString()) } })
+                })
+                created_vendor['vendor_services'] = await Promise.all(promises)
+            }
             console.debug("created vendor data", created_vendor)
             servResp.data = created_vendor
             console.debug('createVendor() ended')
