@@ -181,22 +181,25 @@ export default class vendorService {
                     last_name: vendorModel.last_name,
                     user_id_back: user_id_back_resp.url ?? "",
                     user_id_front: user_id_front_resp.url ?? "",
-                    zip_code: vendorModel.zip_code,
-                    vendor_services: {
-                        upsert: {
-                            where: { vendor_id: query.id },
-                            update: {
-                                service_id: Array.isArray(vendorModel.services) ? vendorModel.services : JSON.parse(vendorModel.services)
-                            },
-                            create: {
-                                service_id: Array.isArray(vendorModel.services) ? vendorModel.services : JSON.parse(vendorModel.services)
-                            }
-                        }
-                    }
+                    zip_code: vendorModel.zip_code
                 }, where: {
-                    id: query.id
+                    id: Number(query.id)
                 }
             })
+
+            if (vendorModel.services) {
+                await db.vendor_services.deleteMany({ where: { vendor_id: Number(query.id) } })
+                if (typeof vendorModel.services === 'string') {
+                    vendorModel.services = JSON.parse(vendorModel.services)
+                }
+                let service_ids = Array.isArray(vendorModel.services) ? vendorModel.services : [vendorModel.services]
+                let a = []
+                let promises = service_ids.map(service_id => {
+                    return db.vendor_services.create({ data: { service_id: service_id, vendor_id: created_vendor.id, created_at: new Date(new Date().toUTCString()) } })
+                })
+                created_vendor['vendor_services'] = await Promise.all(promises)
+            }
+
             console.debug("Updated vendor data", updated_vendor)
             servResp.data = updated_vendor
             console.debug('updateVendor() ended')
