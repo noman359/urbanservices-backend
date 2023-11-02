@@ -7,7 +7,7 @@ let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
 let bucket = new handler.bucketHandler()
 let encryption = new handler.encryption()
 let JWT = new handler.JWT()
-
+let commons = new handler.commonsHandler()
 
 export default class CustomerService {
 
@@ -97,7 +97,53 @@ export default class CustomerService {
             console.debug('createCustomer() returning')
 
         } catch (error) {
-            console.debug('createVendor() exception thrown')
+            console.debug('createCustomer() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+
+    async getCustomers(filters = { limit: 10, offset: 0, search: "", sort: "" }) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getCustomers() started')
+            let order_by_clause = commons.getRawSort(filters.sort)
+            let pagination_clause = commons.getRawPaginate(filters.limit, filters.offset)
+            let where_clause = `WHERE (full_name LIKE '${filters.search}%' OR email LIKE '${filters.search}%' OR phone_number LIKE '${filters.search}%')`
+
+            let sql = `SELECT id, full_name, phone_number, zipcode, created_at, avatar, updated_at, email
+            FROM customers
+            ${where_clause}
+            ${order_by_clause}
+            ${pagination_clause};`
+
+            let count_sql = `SELECT count(id) as total_count
+            FROM customers
+            ${where_clause}
+            ${order_by_clause}`;
+
+            let [data, count] = await Promise.all([db.$queryRawUnsafe(sql), db.$queryRawUnsafe(count_sql)])
+            console.log(count)
+            servResp.data = { customers: data, count: count.length > 0 ? Number(count[0].total_count) : 0 }
+            console.debug('getCustomers() returning')
+        } catch (error) {
+            console.debug('getCustomers() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async getCustomer(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getCustomer() started')
+            servResp.data = await db.customers.findFirst({ where: { id: Number(query.id) } })
+            console.debug('getCustomer() returning')
+        } catch (error) {
+            console.debug('getCustomer() exception thrown')
             servResp.isError = true
             servResp.message = error.message
         }
