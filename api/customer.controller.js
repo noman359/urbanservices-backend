@@ -26,4 +26,10 @@ export default class CustomerController {
         next(customer)
     }
 
+
+    async customerLogin(req, res, next) {
+        let token = await customerServ.signIn(req.body)
+        next(token)
+    }
+
 }

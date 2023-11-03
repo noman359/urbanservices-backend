@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -31,7 +31,6 @@ model vendor {
   gender          vendor_gender?
   password        String            @db.Char(64)
   experience      Int?
-  username        String?           @unique(map: "username") @db.VarChar(100)
   avatar          String?           @db.VarChar(500)
   user_id_front   String?           @db.VarChar(500)
   user_id_back    String?           @db.VarChar(500)
@@ -65,7 +64,7 @@ model customers {
   avatar       String?       @db.VarChar(500)
   updated_at   DateTime?     @db.DateTime(0)
   deleted_at   DateTime?     @db.DateTime(0)
-  password     String?       @db.VarChar(20)
+  password     String?       @db.Char(64)
   email        String        @unique(map: "email") @db.VarChar(50)
   vendor_jobs  vendor_jobs[]
 }

@@ -17,6 +17,9 @@ export default class vendorService {
             let user_id_front_resp = new Object()
             let user_id_back_resp = new Object()
             let vendor_avatar = new Object()
+            if (vendorModel.password.length < 5) {
+                throw new Error("password should be atleast 5 characters long")
+            }
             vendorModel.password = encryption.encrypt(vendorModel.password)
 
             if (vendorModel.user_id_front && vendorModel.user_id_back) {
@@ -56,7 +59,6 @@ export default class vendorService {
                     first_name: vendorModel.first_name,
                     gender: vendorModel.gender,
                     last_name: vendorModel.last_name,
-                    username: vendorModel.username,
                     user_id_back: user_id_back_resp.url ?? "",
                     user_id_front: user_id_front_resp.url ?? "",
                     zip_code: vendorModel.zip_code,
@@ -91,7 +93,7 @@ export default class vendorService {
     async signIn(query) {
         let servResp = new config.serviceResponse()
         try {
-            console.debug('createVendor() started')
+            console.debug('vendor signIn() started')
             let encrypted_password = encryption.encrypt(query.password)
             let vendor = await db.vendor.findFirst({
                 where: {
@@ -103,14 +105,14 @@ export default class vendorService {
             if (!vendor) {
                 throw new Error('User not found, Incorrect email or password')
             }
-
+            delete vendor.password
             let token = await JWT.getToken(vendor)
             servResp.data = {
                 ...vendor, token: token
             }
-            console.debug('createVendor() ended')
+            console.debug('vendor signIn() ended')
         } catch (error) {
-            console.debug('createVendor() exception thrown')
+            console.debug('vendor signIn() exception thrown')
             servResp.isError = true
             servResp.message = error.message
         }

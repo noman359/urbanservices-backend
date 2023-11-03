@@ -32,7 +32,9 @@ export default class CustomerService {
                 }
                 customer_avatar = await bucket.upload(avatar_val)
             }
-
+            if (customerBody.password.length < 5) {
+                throw new Error("password should be atleast 5 characters long")
+            }
             customerBody.password = encryption.encrypt(customerBody.password)
             servResp.data = await db.customers.create({
                 data: {
@@ -144,6 +146,36 @@ export default class CustomerService {
             console.debug('getCustomer() returning')
         } catch (error) {
             console.debug('getCustomer() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+
+    async signIn(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('customer signIn() started')
+            let encrypted_password = encryption.encrypt(query.password)
+            let customer = await db.customers.findFirst({
+                where: {
+                    email: query.email,
+                    password: encrypted_password
+                }
+            })
+
+            if (!customer) {
+                throw new Error('User not found, Incorrect email or password')
+            }
+
+            let token = await JWT.getToken(customer)
+            servResp.data = {
+                ...customer, token: token
+            }
+            console.debug('customer signIn() ended')
+        } catch (error) {
+            console.debug('customer signIn() exception thrown')
             servResp.isError = true
             servResp.message = error.message
         }
