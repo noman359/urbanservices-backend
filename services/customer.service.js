@@ -83,21 +83,21 @@ export default class CustomerService {
             }
 
             // customerBody.password = encryption.encrypt(customerBody.password)
-            servResp.data = await db.customers.update({
+            await db.customers.update({
                 data: {
-                    full_name: customerBody.full_name,
-                    avatar: customer_avatar.url ?? "",
+                    full_name: customerBody.full_name || undefined,
+                    avatar: customer_avatar.url ? customer_avatar.url : undefined,
                     updated_at: new Date(new Date().toUTCString()),
-                    phone_number: customerBody.phone_number,
-                    zipcode: customerBody.password,
-                    email: customerBody.email
+                    phone_number: customerBody.phone_number || undefined,
+                    zipcode: customerBody.zipcode || undefined,
+                    email: customerBody.email || undefined
                 },
                 where: {
-                    id: query.id
+                    id: Number(query.id)
                 }
             })
             console.debug('createCustomer() returning')
-
+            servResp.data = await db.customers.findFirst({ where: { id: Number(query.id) } })
         } catch (error) {
             console.debug('createCustomer() exception thrown')
             servResp.isError = true

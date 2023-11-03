@@ -54,7 +54,7 @@ export default class vendorService {
                     password: vendorModel.password,
                     avatar: vendor_avatar.url ?? "",
                     city: vendorModel.city,
-                    date_of_birth: new Date(vendorModel.date_of_birth),
+                    // date_of_birth: new Date(vendorModel.date_of_birth),
                     experience: Number(vendorModel.experience),
                     first_name: vendorModel.first_name,
                     gender: vendorModel.gender,
@@ -173,17 +173,18 @@ export default class vendorService {
             let updated_vendor = await db.vendor.update({
                 data: {
                     updated_at: new Date(new Date().toUTCString()),
-                    email: vendorModel.email,
-                    avatar: vendor_avatar.url ?? "",
-                    city: vendorModel.city,
-                    date_of_birth: new Date(vendorModel.date_of_birth),
-                    experience: Number(vendorModel.experience),
-                    first_name: vendorModel.first_name,
-                    gender: vendorModel.gender,
-                    last_name: vendorModel.last_name,
-                    user_id_back: user_id_back_resp.url ?? "",
-                    user_id_front: user_id_front_resp.url ?? "",
-                    zip_code: vendorModel.zip_code
+                    email: vendorModel.email || undefined,
+                    avatar: vendor_avatar.url || undefined,
+                    city: vendorModel.city || undefined,
+                    // date_of_birth: vendorModel.date_of_birth ? new Date(vendorModel.date_of_birth) : undefined,
+                    experience: vendorModel.experience ? Number(vendorModel.experience) : undefined,
+                    first_name: vendorModel.first_name || undefined,
+                    gender: vendorModel.gender || undefined,
+                    is_online: vendorModel.is_online ? Boolean(vendorModel.is_online) : undefined,
+                    last_name: vendorModel.last_name || undefined,
+                    user_id_back: user_id_back_resp.url || undefined,
+                    user_id_front: user_id_front_resp.url || undefined,
+                    zip_code: vendorModel.zip_code || undefined
                 }, where: {
                     id: Number(query.id)
                 }
@@ -197,13 +198,16 @@ export default class vendorService {
                 let service_ids = Array.isArray(vendorModel.services) ? vendorModel.services : [vendorModel.services]
                 let a = []
                 let promises = service_ids.map(service_id => {
-                    return db.vendor_services.create({ data: { service_id: service_id, vendor_id: created_vendor.id, created_at: new Date(new Date().toUTCString()) } })
+                    return db.vendor_services.create({ data: { service_id: service_id, vendor_id: Number(query.id), created_at: new Date(new Date().toUTCString()) } })
                 })
                 created_vendor['vendor_services'] = await Promise.all(promises)
             }
 
-            console.debug("Updated vendor data", updated_vendor)
-            servResp.data = updated_vendor
+            let vendor = await db.vendor.findFirst({ where: { id: Number(query.id) } })
+
+            console.log(vendor)
+            console.debug("Updated vendor data", vendor)
+            servResp.data = vendor
             console.debug('updateVendor() ended')
         } catch (error) {
             console.debug('updateVendor() exception thrown')
