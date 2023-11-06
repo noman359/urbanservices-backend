@@ -160,8 +160,9 @@ export default class CustomerService {
             let encrypted_password = encryption.encrypt(query.password)
             let customer = await db.customers.findFirst({
                 where: {
-                    email: query.email,
-                    password: encrypted_password
+                    phone_number: query.phone_number,
+                    password: encrypted_password,
+
                 }
             })
 

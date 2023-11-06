@@ -125,7 +125,7 @@ export default class vendorService {
             console.debug('getVendorData() started')
             let vendor = await db.vendor.findFirst({
                 where: {
-                    id: query.id
+                    id: Number(query.id)
                 }, include: { vendor_services: { include: { services: true } } }
             })
             servResp.data = vendor
