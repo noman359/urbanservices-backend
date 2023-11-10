@@ -4,7 +4,7 @@ import vendorService from "../services/vendor.service.js"
 let vendorServ = new vendorService()
 
 export default class VendorController {
-    
+
     constructor() { }
 
     async createVendor(req, res, next) {
@@ -38,6 +38,16 @@ export default class VendorController {
         console.log(req)
         let vendorServReviews = await vendorServ.getVendorServices({ id: Number(req.params.id), service_id: Number(req.params.service_id) }, { limit: Number(req.query.limit ?? 10), offset: Number(req.query.offset ?? 0) })
         next(vendorServReviews)
+    }
+
+    async getVendorJobs(req, res, next) {
+        let vendorJobs = await vendorServ.getVendorJobs({ id: req.params.id }, req.query)
+        next(vendorJobs)
+    }
+
+    async getVendorjobDetails(req, res, next) {
+        let vendor_job_details = await vendorServ.getVendorJobDetails({ job_id: req.params.job_id })
+        next(vendor_job_details)
     }
 
 }

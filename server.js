@@ -3,22 +3,30 @@ import cors from 'cors'
 import express from 'express'
 import config from './config/index.js'
 import routers from './routers/index.js'
-import ServerlessHttp from 'serverless-http'
-const serverless_handler = null
+import handlers from './handlers/index.js'
+
+
+
+// const io = new Server(server);
+
+
 const startServer = () => {
     const app = express()
+
+
 
     app.use(cors())
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
     app.use(`${config.apiPrefix}`, routers())
-    if (config.environment === 'prod') {
-        exports.handler = serverless_handler(app)
-    } else {
-        app.listen(config.port, () => {
-            console.log(`urban services backend running on http://localhost:${config.port}`)
-        })
-    }
+
+    app.listen(config.port, () => {
+        console.log(`urban services backend running on http://localhost:${config.port}`)
+    })
+
+    const socketHanlder = new handlers.socketHanlder()
+    socketHanlder.initSocket(app)
+
 }
 
 startServer()

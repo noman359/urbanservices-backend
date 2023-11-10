@@ -13,5 +13,7 @@ export default function (router) {
     lRoute.get('/:id', vendorCtrl.getVendor, handler.apiResponseHandler)
     lRoute.get('/:id/services', vendorCtrl.getVendorServices, handler.apiResponseHandler)
     lRoute.get('/:id/services/:service_id', vendorCtrl.getVendorServicesAndReviews, handler.apiResponseHandler)
+    lRoute.get('/:id/jobs', vendorCtrl.getVendorJobs)
+    lRoute.get('/:id/jobs/:job_id', vendorCtrl.getVendorjobDetails)
     // lRoute.delete('/:id', todoCtrl.deleteTodo, response)
 }

@@ -267,4 +267,62 @@ export default class vendorService {
 
         return servResp;
     }
+
+    async getVendorJobs(query, filters) {
+        let servResp = new config.serviceResponse()
+        let where_clause = { vendor_id: Number(query.id) }
+        if (filters) {
+            where_clause['status'] = filters.status
+        }
+        try {
+            console.debug('getVendorJobs() Started')
+            let jobs = await db.vendor_jobs.findMany({ where: where_clause, include: { services: true, customers: true }, orderBy: { created_at: 'desc' } })
+            servResp.data = jobs
+            console.debug('getVendorJobs() returning ')
+        } catch (error) {
+            console.debug('getVendorJobs() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
+    async getVendorJobDetails(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            let sql = `
+            SELECT vendor_jobs.id,
+       vendor_jobs.vendor_id,
+       vendor_jobs.customer_id,
+       vendor_jobs.status,
+       vendor_jobs.created_at,
+       vendor_jobs.updated_at,
+       vendor_jobs.verdict_at,
+       vendor_jobs.job_images,
+       vendor_jobs.description,
+       vendor_jobs.location,
+       vendor_jobs.description,
+       vendor_jobs.service_id,
+       c.full_name,
+       c.id                           AS       customer_id,
+       s.id                           AS       service_id,
+       s.name                         AS       service_name,
+       COALESCE(AVG(vendor_jobs_all.stars), 0) average_rating,
+       COUNT(vendor_jobs_all.comment) AS       total_reviews
+FROM vendor_jobs vendor_jobs
+         INNER JOIN customers c ON vendor_jobs.customer_id = c.id
+         LEFT JOIN vendor_jobs vendor_jobs_all
+                   ON vendor_jobs_all.vendor_id = vendor_jobs.vendor_id AND vendor_jobs_all.status = 'done'
+         INNER JOIN services s ON vendor_jobs.service_id = s.id
+WHERE vendor_jobs.id = ${Number(query.job_id)};`
+            let job_details = await db.$queryRawUnsafe(sql)
+            servResp.data = job_details
+        } catch (error) {
+            console.debug('getVendorJobs() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
 }

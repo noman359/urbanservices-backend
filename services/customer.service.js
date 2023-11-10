@@ -6,15 +6,10 @@ const { PrismaClient } = Prisma;
 let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
 let bucket = new handler.bucketHandler()
 let encryption = new handler.encryption()
-let JWT = new handler.JWT()
 let commons = new handler.commonsHandler()
+let JWT = new handler.JWT()
 
 export default class CustomerService {
-
-
-
-
-
 
     constructor() { }
 

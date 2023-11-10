@@ -24,6 +24,7 @@ export default {
     customer_avatar_s3_bucket_name: process.env.customer_avatar_s3_bucket_name,
     JWT_SECURE_KEY: process.env.JWT_SECURE_KEY,
     environment: process.env.environment,
+    
     responseHandler,
     serviceResponse
 }
