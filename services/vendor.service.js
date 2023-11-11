@@ -288,7 +288,7 @@ export default class vendorService {
 
     }
 
-    async getVendorJobDetails(query) {
+    async getVendorJobDetails(query, filters = { limit: 10, offset: 0, filter: '' }) {
         let servResp = new config.serviceResponse()
         try {
             let sql = `
@@ -316,8 +316,32 @@ FROM vendor_jobs vendor_jobs
                    ON vendor_jobs_all.vendor_id = vendor_jobs.vendor_id AND vendor_jobs_all.status = 'done'
          INNER JOIN services s ON vendor_jobs.service_id = s.id
 WHERE vendor_jobs.id = ${Number(query.job_id)};`
-            let job_details = await db.$queryRawUnsafe(sql)
-            servResp.data = job_details
+
+            let stars_filters = ''
+            if (filters !== '') {
+                let [k, v] = filters.filter.split(':')
+                stars_filters = `AND vendor_jobs.${k}=${v}`
+            }
+
+            let vendor_reviews_sql = `SELECT c.full_name,
+                                        c.avatar,
+                                        vendor_jobs.status,
+                                        vendor_jobs.stars,
+                                        vendor_jobs.comment,
+                                        vendor_jobs.verdict_at AS completed_at
+                                        FROM vendor_jobs
+                                          INNER JOIN customers c ON vendor_jobs.customer_id = c.id
+                                        WHERE status IN ('done', 'cancelled')
+                                        AND vendor_id = ${Number(query.id)} ${stars_filters} LIMIT ${Number(filters.limit)} OFFSET ${Number(filters.offset * 5)};`
+            let [job_details, vendor_reviews] = await Promise.all([db.$queryRawUnsafe(sql), db.$queryRawUnsafe(vendor_reviews_sql)])
+            if (job_details.length > 0) {
+                job_details = job_details.map(job => {
+                    job.total_reviews = Number(job.total_reviews)
+                    return job
+                })[0]
+
+                job_details['reviews'] = vendor_reviews
+            } servResp.data = job_details
         } catch (error) {
             console.debug('getVendorJobs() exception thrown')
             servResp.isError = true

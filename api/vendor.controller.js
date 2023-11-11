@@ -46,7 +46,7 @@ export default class VendorController {
     }
 
     async getVendorjobDetails(req, res, next) {
-        let vendor_job_details = await vendorServ.getVendorJobDetails({ job_id: req.params.job_id })
+        let vendor_job_details = await vendorServ.getVendorJobDetails({ id: req.params.id, job_id: req.params.job_id }, { filter: req.query.filter, limit: Number(req.query.limit), offset: Number(req.query.offset) })
         next(vendor_job_details)
     }
 
