@@ -9,16 +9,15 @@ datasource db {
 }
 
 model services {
-  id               Int               @id @unique(map: "id") @default(autoincrement())
-  name             String?           @db.VarChar(100)
-  avatar           String?           @db.VarChar(100)
+  id               Int            @id @unique(map: "id") @default(autoincrement())
+  name             String?        @db.VarChar(100)
+  avatar           String?        @db.VarChar(100)
   type             services_type?
-  updated_at       DateTime?         @db.DateTime(0)
-  deleted_at       DateTime?         @db.DateTime(0)
-  created_at       DateTime          @db.DateTime(0)
+  updated_at       DateTime?      @db.DateTime(0)
+  deleted_at       DateTime?      @db.DateTime(0)
+  created_at       DateTime       @db.DateTime(0)
   service_category Int?
-  vendor_jobs      vendor_jobs[]
-  vendor_services  vendor_services[]
+  sub_services     sub_services[]
 }
 
 model vendor {
@@ -46,13 +45,10 @@ model vendor {
 model vendor_services {
   id         Int       @id @unique(map: "id") @default(autoincrement())
   vendor_id  Int?
-  service_id Int?
   created_at DateTime  @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
   vendor     vendor?   @relation(fields: [vendor_id], references: [id], onDelete: Restrict, map: "vendor_services_ibfk_1")
-  services   services? @relation(fields: [service_id], references: [id], onDelete: Restrict, map: "vendor_services_ibfk_2")
 
-  @@index([service_id], map: "service_id")
   @@index([vendor_id], map: "vendor_id")
 }
 
@@ -71,26 +67,26 @@ model customers {
 }
 
 model vendor_jobs {
-  id          Int                @id @default(autoincrement())
-  vendor_id   Int
-  customer_id Int
-  status      vendor_jobs_status
-  created_at  DateTime?          @db.DateTime(0)
-  updated_at  DateTime?          @db.DateTime(0)
-  stars       Int?
-  comment     String?            @db.Text
-  service_id  Int
-  job_images  String?            @db.Text
-  location    String?            @db.Text
-  description String             @db.Text
-  verdict_at  DateTime?          @db.DateTime(0)
-  vendor      vendor             @relation(fields: [vendor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vendor_jobs_ibfk_1")
-  customers   customers          @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vendor_jobs_ibfk_2")
-  services    services           @relation(fields: [service_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vendor_jobs_services_id_fk")
+  id              Int                @id @default(autoincrement())
+  vendor_id       Int
+  customer_id     Int
+  status          vendor_jobs_status
+  created_at      DateTime?          @db.DateTime(0)
+  updated_at      DateTime?          @db.DateTime(0)
+  stars           Int?
+  comment         String?            @db.Text
+  job_images      String?            @db.Text
+  location        String?            @db.Text
+  description     String             @db.Text
+  verdict_at      DateTime?          @db.DateTime(0)
+  sub_services_id Int
+  sub_services    sub_services       @relation(fields: [sub_services_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_vendor_jobs_sub_services1")
+  vendor          vendor             @relation(fields: [vendor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vendor_jobs_ibfk_1")
+  customers       customers          @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vendor_jobs_ibfk_2")
 
   @@index([customer_id], map: "customer_id")
   @@index([vendor_id], map: "vendor_id")
-  @@index([service_id], map: "vendor_jobs_services_id_fk")
+  @@index([sub_services_id], map: "fk_vendor_jobs_sub_services1_idx")
 }
 
 model conversation {
@@ -106,6 +102,19 @@ model messages {
   conversation_id Int
   created_at      DateTime @db.DateTime(0)
   message         String   @db.VarChar(500)
+}
+
+model sub_services {
+  id          Int           @id @default(autoincrement())
+  name        String?       @db.VarChar(100)
+  avatar      String?       @db.VarChar(100)
+  services_id Int
+  created_at  String?       @db.VarChar(45)
+  updated_at  String?       @db.VarChar(45)
+  services    services      @relation(fields: [services_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sub_services_services1")
+  vendor_jobs vendor_jobs[]
+
+  @@index([services_id], map: "fk_sub_services_services1_idx")
 }
 
 enum services_type {

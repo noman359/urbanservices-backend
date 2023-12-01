@@ -11,5 +11,8 @@ export default class CustomerController {
         next(services)
     }
 
-
+    async getSubServices(req, res, next) {
+        let subServices = await servicesServ.getSubServices({service_id:Number(req.params.id), limit: Number(req.query.limit ?? 10), offset: Number(req.query.offset ?? 0)})
+        next(subServices)
+    }
 }

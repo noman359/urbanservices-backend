@@ -19,13 +19,12 @@ const startServer = () => {
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
     app.use(`${config.apiPrefix}`, routers())
-
+    console.log(config)
     app.listen(config.port, () => {
         console.log(`urban services backend running on http://localhost:${config.port}`)
     })
-
-    const socketHanlder = new handlers.socketHanlder()
-    socketHanlder.initSocket(app)
+   // const socketHanlder = new handlers.socketHanlder()
+  //  socketHanlder.initSocket(app)
 
 }
 

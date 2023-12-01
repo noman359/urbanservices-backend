@@ -30,4 +30,28 @@ export default class ServicesService {
         return servResp
     }
 
+    async getSubServices(filters = {
+        service_id: 0, limit: 10, offset: 0
+    }) {
+        let servResp = new config.serviceResponse()
+        try {
+            let [sub_services, count] = await db.$transaction([db.sub_services.findMany({
+                where: {
+                   services_id: filters.service_id
+                },
+                take: filters.limit,
+                skip: filters.offset * 10
+            }), db.services.count({ where: filters.filter })])
+            servResp.data = {
+                services: sub_services,
+                count: count
+            }
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
 }
