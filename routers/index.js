@@ -4,6 +4,7 @@ import todoRouter from "./todo.router.js"
 import vendorRouter from "./vendor.router.js"
 import customerRouter from "./customer.router.js"
 import serviceRouter from "./service.router.js"
+import jobsRouter from "./jobs.router.js"
 
 
 export default () => {
@@ -12,6 +13,7 @@ export default () => {
     vendorRouter(router)
     customerRouter(router)
     serviceRouter(router)
+    jobsRouter(router)
     router.use(handler.apiResponseHandler)
     return router
 }
