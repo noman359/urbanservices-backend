@@ -138,6 +138,24 @@ export default class vendorService {
         return servResp
     }
 
+    async getVendorsList(filters = {limit: 10, offset: 0}) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorList() started')
+            const paginatedData = await db.vendor.findMany({
+                take: filters.limit ?? 10,
+                skip: ((filters.offset ?? 0) * 10)
+            });
+            servResp.data = paginatedData
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async updateVendor(query, vendorModel) {
         let servResp = new config.serviceResponse()
         try {

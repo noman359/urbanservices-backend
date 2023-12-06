@@ -28,6 +28,12 @@ export default class VendorController {
         next(vendorResp)
     }
 
+    async getVendorsList(req, res, next) {
+        console.log(req)
+        let vendorResp = await vendorServ.getVendorsList( { limit: Number(req.query.limit), offset: Number(req.query.offset) })
+        next(vendorResp)
+    }
+
     async getVendorServices(req, res, next) {
         console.log(req)
         let vendorServReviews = await vendorServ.getVendorServices({ id: Number(req.params.id) }, { limit: Number(req.query.limit), offset: Number(req.query.offset) })
