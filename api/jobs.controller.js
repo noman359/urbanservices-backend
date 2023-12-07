@@ -13,6 +13,30 @@ export default class JobsController {
         next(created_customer)
     }
 
+    async requestEstimates(req, res, next) {
+        console.log(req)
+        let vendorResp = await customerServ.requestJobEstimates( { customer_id: Number(req.query.customer_id), vendor_id: Number(req.query.vendor_id), job_id: Number(req.query.job_id)})
+        next(vendorResp)
+    }
+
+    async providedJobEstimates(req, res, next) {
+        console.log(req)
+        let vendorResp = await customerServ.providedJobEstimates( {request_id: Number(req.query.request_id), price: Number(req.query.price), hours: Number(req.query.hours) })
+        next(vendorResp)
+    }
+
+    async getEstimatesListForCustomer(req, res, next) {
+        console.log(req)
+        let vendorResp = await customerServ.getEstimatesListForCustomer( { customer_id: Number(req.query.customer_id), limit: Number(req.query.limit), offset: Number(req.query.offset)})
+        next(vendorResp)
+    }
+
+    async getEstimatesListForVendor(req, res, next) {
+        console.log(req)
+        let vendorResp = await customerServ.getEstimatesListForVendor( {vendor_id: Number(req.query.vendor_id), limit: Number(req.query.limit), offset: Number(req.query.offset)})
+        next(vendorResp)
+    }
+
     // async updateCustomer(req, res, next) {
     //     let updated_customer = await customerServ.updateCustomer({ id: Number(req.params.id) }, req.body)
     //     next(updated_customer)

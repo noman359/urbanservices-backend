@@ -68,6 +68,95 @@ export default class JobsService {
         return servResp
     }
 
+    async requestJobEstimates(job) {
+        let servResp = new config.serviceResponse()
+        let job_image = new Object()
+        try {            
+            servResp.data = await db.estimates.create({
+                data: {
+                    customer_id: job.customer_id,
+                    vendor_id: job.vendor_id,
+                    vendor_job_id: job.job_id,
+                    status: "REQUESTED",
+                    created_at: new Date(new Date().toUTCString())
+                }
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async providedJobEstimates(job) {
+        let servResp = new config.serviceResponse()
+        let job_image = new Object()
+        try {            
+            servResp.data = await db.estimates.update({
+                
+                data: {
+                    estimated_price: job.estimated_price,
+                    estimated_hours: job.estimated_hours,
+                    status: "PROVIDED",
+                    updated_at: new Date(new Date().toUTCString())
+                },
+                where: {
+                    id: Number(job.request_id)
+                 }
+            })
+            console.debug('createCustomer() returning')
+            
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async getEstimatesListForCustomer(job) {
+        let servResp = new config.serviceResponse()
+        try {
+            let estimates = await db.estimates.findMany({
+                where: {
+                   customer_id: Number(job.customer_id)
+                }
+            })
+            servResp.data = {
+                estimates: estimates
+            }
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async getEstimatesListForVendor(job) {
+        let servResp = new config.serviceResponse()
+        try {
+            let estimates = await db.estimates.findMany({
+                where: {
+                   vendor_id: Number(job.vendor_id)
+                }
+            })
+            servResp.data = {
+                estimates: estimates
+            }
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    
+
     // async updateCustomer(query, customerBody) {
     //     let servResp = new config.serviceResponse()
     //     let customer_avatar = new Object()
