@@ -126,7 +126,7 @@ export default class vendorService {
             let vendor = await db.vendor.findFirst({
                 where: {
                     id: Number(query.id)
-                }, include: { vendor_services: { include: { services: true } } }
+                }, include: { vendor_reviews: true}
             })
             servResp.data = vendor
             console.debug('getVendorData() ended')
@@ -143,8 +143,24 @@ export default class vendorService {
         try {
             console.debug('getVendorList() started')
             const paginatedData = await db.vendor.findMany({
-                take: filters.limit ?? 10,
-                skip: ((filters.offset ?? 0) * 10)
+                where: {    
+                    service_id: Number(filters.service_id)
+                },
+                select: {
+                    id: true,
+                    first_name: true,
+                    last_name: true,
+                    charges: true,
+                    vendor_reviews: {
+                      select: {
+                        id: true,
+                        description: true,
+                        rating: true,
+                        created_at: true,
+                        updated_at: true,
+                      },
+                    },
+                  },
             });
             servResp.data = paginatedData
             console.debug('getVendorData() ended')

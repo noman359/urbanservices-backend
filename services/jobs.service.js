@@ -39,6 +39,27 @@ export default class JobsService {
                 }
             })
             console.log(propertyResult.id)
+            if (job.job_type == "urgent") {
+            servResp.data = await db.vendor_jobs.create({
+
+                data: {
+
+                    status: vendor_jobs_status.pending,
+                    description: job.description,
+                    job_images: job_image.url,
+                    location: job.location,
+                    created_at: new Date(new Date().toUTCString()),
+                    job_type: "urgent",
+                    sub_service_id: parseInt(job.sub_service_id, 10),
+                    customer_id: parseInt(job.customer_id, 10),
+                    vendor_id: parseInt(job.vendor_id, 10),
+                    job_property_details_id: parseInt(propertyResult.id, 10)
+                    
+
+                }
+            })
+        } else {
+
             servResp.data = await db.vendor_jobs.create({
 
                 data: {
@@ -49,7 +70,7 @@ export default class JobsService {
                     scheduled_time: sceduleDateTime,
                     location: job.location,
                     created_at: new Date(new Date().toUTCString()),
-
+                    job_type: "scheduled",
                     sub_service_id: parseInt(job.sub_service_id, 10),
                     customer_id: parseInt(job.customer_id, 10),
                     vendor_id: parseInt(job.vendor_id, 10),
@@ -58,6 +79,7 @@ export default class JobsService {
 
                 }
             })
+        }
             console.debug('createCustomer() returning')
 
         } catch (error) {

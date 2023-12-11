@@ -39,11 +39,14 @@ export default class ServicesService {
                 where: {
                    services_id: filters.service_id
                 },
+                include: {
+                    services: true, // This includes the posts related to the user
+                  },
                 take: filters.limit,
                 skip: filters.offset * 10
             }), db.services.count({ where: filters.filter })])
             servResp.data = {
-                services: sub_services,
+                sub_services: sub_services,
                 count: count
             }
         } catch (error) {
