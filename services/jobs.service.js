@@ -144,7 +144,8 @@ export default class JobsService {
         try {
             let estimates = await db.estimates.findMany({
                 where: {
-                   customer_id: Number(job.customer_id)
+                   customer_id: Number(job.customer_id),
+                   status: job.status
                 }
             })
             servResp.data = {
@@ -163,7 +164,8 @@ export default class JobsService {
         try {
             let estimates = await db.estimates.findMany({
                 where: {
-                   vendor_id: Number(job.vendor_id)
+                   vendor_id: Number(job.vendor_id),
+                   status: job.status
                 }
             })
             servResp.data = {
@@ -177,6 +179,98 @@ export default class JobsService {
         return servResp
     }
 
+
+    async assignJob(job) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('createCustomer() started')
+          
+            servResp.data = await db.vendor_jobs.update({
+                where: {
+                    id: Number(job.job_id)
+                },
+                data: {
+                    status: vendor_jobs_status.pending,
+                    vendor_id: Number(job.vendor_id)                    
+                }
+                
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+
+    async acceptedJob(job) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('createCustomer() started')
+          
+            servResp.data = await db.vendor_jobs.update({
+                where: {
+                    id: Number(job.job_id)
+                },
+                data: {
+                    status: vendor_jobs_status.started
+                }
+                
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async getVendorJobs(vendor) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('createCustomer() started')
+          
+            servResp.data = await db.vendor_jobs.findMany({
+                where: {
+                    vendor_id: Number(vendor.vendor_id),
+                    status: vendor.status
+                }
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async getCustomerJobs(customer) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('createCustomer() started')
+          
+            servResp.data = await db.vendor_jobs.findMany({
+                where: {
+                    customer_id: Number(customer.customer_id),
+                    status: customer.status
+                }
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
     
 
     // async updateCustomer(query, customerBody) {

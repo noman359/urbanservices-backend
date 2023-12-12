@@ -13,6 +13,16 @@ export default class JobsController {
         next(created_customer)
     }
 
+    async assignJob(req, res, next) {
+        let created_customer = await customerServ.assignJob(req.body)
+        next(created_customer)
+    }
+
+    async acceptedJob(req, res, next) {
+        let created_customer = await customerServ.acceptedJob(req.body)
+        next(created_customer)
+    }
+
     async requestEstimates(req, res, next) {
         console.log(req)
         let vendorResp = await customerServ.requestJobEstimates( { customer_id: Number(req.query.customer_id), vendor_id: Number(req.query.vendor_id), job_id: Number(req.query.job_id)})
@@ -27,13 +37,27 @@ export default class JobsController {
 
     async getEstimatesListForCustomer(req, res, next) {
         console.log(req)
-        let vendorResp = await customerServ.getEstimatesListForCustomer( { customer_id: Number(req.query.customer_id), limit: Number(req.query.limit), offset: Number(req.query.offset)})
+        let vendorResp = await customerServ.getEstimatesListForCustomer( { customer_id: Number(req.query.customer_id), status: req.query.status, limit: Number(req.query.limit), offset: Number(req.query.offset)})
         next(vendorResp)
     }
 
     async getEstimatesListForVendor(req, res, next) {
         console.log(req)
-        let vendorResp = await customerServ.getEstimatesListForVendor( {vendor_id: Number(req.query.vendor_id), limit: Number(req.query.limit), offset: Number(req.query.offset)})
+        let vendorResp = await customerServ.getEstimatesListForVendor( {vendor_id: Number(req.query.vendor_id), status: req.query.status, limit: Number(req.query.limit), offset: Number(req.query.offset)})
+        next(vendorResp)
+    }
+
+
+    async getVendorJobs(req, res, next) {
+        console.log(req)
+        let vendorResp = await customerServ.getVendorJobs( {vendor_id: Number(req.query.vendor_id), status: req.query.status})
+        next(vendorResp)
+    }
+
+
+    async getCustomerJobs(req, res, next) {
+        console.log(req)
+        let vendorResp = await customerServ.getCustomerJobs({customer_id: Number(req.query.customer_id), status: req.query.status})
         next(vendorResp)
     }
 
