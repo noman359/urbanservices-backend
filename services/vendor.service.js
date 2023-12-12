@@ -151,6 +151,7 @@ export default class vendorService {
                     first_name: true,
                     last_name: true,
                     charges: true,
+                    avatar: true,
                     vendor_reviews: {
                       select: {
                         id: true,
@@ -162,6 +163,18 @@ export default class vendorService {
                     },
                   },
             });
+
+            
+            var reviews = paginatedData["vendor_reviews"]
+            for (var element of paginatedData) {
+                var rating = 0
+                console.log(element);
+                for (var review of element.vendor_reviews) {
+                    rating += review.rating 
+                }
+                element.rating = rating
+                
+             }
             servResp.data = paginatedData
             console.debug('getVendorData() ended')
         } catch (error) {
