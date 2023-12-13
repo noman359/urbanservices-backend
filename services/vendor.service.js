@@ -126,8 +126,15 @@ export default class vendorService {
             let vendor = await db.vendor.findFirst({
                 where: {
                     id: Number(query.id)
-                }, include: { vendor_reviews: true}
+                }, include: { vendor_reviews: true, services: true }
             })
+
+
+            var rating = 0
+            for (var review of vendor.vendor_reviews) {
+                rating += review.rating
+            }
+            vendor.rating = rating
             servResp.data = vendor
             console.debug('getVendorData() ended')
         } catch (error) {
@@ -138,12 +145,12 @@ export default class vendorService {
         return servResp
     }
 
-    async getVendorsList(filters = {limit: 10, offset: 0}) {
+    async getVendorsList(filters = { limit: 10, offset: 0 }) {
         let servResp = new config.serviceResponse()
         try {
             console.debug('getVendorList() started')
             const paginatedData = await db.vendor.findMany({
-                where: {    
+                where: {
                     service_id: Number(filters.service_id)
                 },
                 select: {
@@ -153,28 +160,34 @@ export default class vendorService {
                     charges: true,
                     avatar: true,
                     vendor_reviews: {
-                      select: {
-                        id: true,
-                        description: true,
-                        rating: true,
-                        created_at: true,
-                        updated_at: true,
-                      },
+                        select: {
+                            id: true,
+                            description: true,
+                            rating: true,
+                            created_at: true,
+                            updated_at: true,
+                        },
                     },
-                  },
+                    services: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
+                },
             });
 
-            
+
             var reviews = paginatedData["vendor_reviews"]
             for (var element of paginatedData) {
                 var rating = 0
                 console.log(element);
                 for (var review of element.vendor_reviews) {
-                    rating += review.rating 
+                    rating += review.rating
                 }
                 element.rating = rating
-                
-             }
+
+            }
             servResp.data = paginatedData
             console.debug('getVendorData() ended')
         } catch (error) {
