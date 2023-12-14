@@ -62,6 +62,7 @@ export default class vendorService {
                     user_id_back: user_id_back_resp.url ?? "",
                     user_id_front: user_id_front_resp.url ?? "",
                     zip_code: vendorModel.zip_code,
+                    service_id: Number(vendorModel.service_id)
                     // vendor_services: { createMany: { service_id: Array.isArray(vendorModel.services) ? vendorModel.services : JSON.parse(vendorModel.services) } }
                 }
             })
@@ -99,6 +100,9 @@ export default class vendorService {
                 where: {
                     email: query.email,
                     password: encrypted_password
+                },
+                include: {
+                    services: true
                 }
             })
 
