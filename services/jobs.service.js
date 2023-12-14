@@ -180,6 +180,7 @@ export default class JobsService {
                     estimated_price: true,
                     estimated_time: true,
                     vendor_job_id: true,
+                    status: true,
                     customers: {
                         select: {
                             id: true,
