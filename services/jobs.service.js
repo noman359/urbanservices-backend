@@ -16,16 +16,23 @@ export default class JobsService {
 
     async createJob(job) {
         let servResp = new config.serviceResponse()
-        let job_image = new Object()
+        var images = []
+        console.log(job)
         try {
+            const currentDateTime = new Date();
             console.debug('createCustomer() started')
             if (job.job_image) {
-                let avatar_val = {
-                    bucket: config.jobs_s3_bucket_name,
-                    key: `${Date().toString}`,
-                    body: await bucket.fileToArrayBuffer(job.job_image)
+                for (var image of job.job_image) {
+                    let job_image = new Object()
+
+                    let avatar_val = {
+                        bucket: config.jobs_s3_bucket_name,
+                        key: `${currentDateTime.toISOString()}`,
+                        body: await bucket.fileToArrayBuffer(image)
+                    }
+                    job_image = await bucket.upload(avatar_val)
+                    images.push(job_image.url)
                 }
-                job_image = await bucket.upload(avatar_val)
             }
 
             var sceduleDateTime = new Date(job.sceduled_time);
@@ -38,48 +45,49 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString())
                 }
             })
+            var imagesString = images.join(',')
             console.log(propertyResult.id)
             if (job.job_type == "urgent") {
-            servResp.data = await db.vendor_jobs.create({
+                servResp.data = await db.vendor_jobs.create({
 
-                data: {
+                    data: {
 
-                    status: vendor_jobs_status.pending,
-                    description: job.description,
-                    job_images: job_image.url,
-                    location: job.location,
-                    created_at: new Date(new Date().toUTCString()),
-                    job_type: "urgent",
-                    sub_service_id: parseInt(job.sub_service_id, 10),
-                    customer_id: parseInt(job.customer_id, 10),
-                    vendor_id: parseInt(job.vendor_id, 10),
-                    job_property_details_id: parseInt(propertyResult.id, 10)
-                    
+                        status: vendor_jobs_status.pending,
+                        description: job.description,
+                        job_images: imagesString,
+                        location: job.location,
+                        created_at: new Date(new Date().toUTCString()),
+                        job_type: "urgent",
+                        sub_service_id: parseInt(job.sub_service_id, 10),
+                        customer_id: parseInt(job.customer_id, 10),
+                        vendor_id: parseInt(job.vendor_id, 10),
+                        job_property_details_id: parseInt(propertyResult.id, 10)
 
-                }
-            })
-        } else {
 
-            servResp.data = await db.vendor_jobs.create({
+                    }
+                })
+            } else {
 
-                data: {
+                servResp.data = await db.vendor_jobs.create({
 
-                    status: vendor_jobs_status.pending,
-                    description: job.description,
-                    job_images: job_image.url,
-                    scheduled_time: sceduleDateTime,
-                    location: job.location,
-                    created_at: new Date(new Date().toUTCString()),
-                    job_type: "scheduled",
-                    sub_service_id: parseInt(job.sub_service_id, 10),
-                    customer_id: parseInt(job.customer_id, 10),
-                    vendor_id: parseInt(job.vendor_id, 10),
-                    job_property_details_id: parseInt(propertyResult.id, 10)
-                    
+                    data: {
 
-                }
-            })
-        }
+                        status: vendor_jobs_status.pending,
+                        description: job.description,
+                        job_images: imagesString,
+                        scheduled_time: sceduleDateTime,
+                        location: job.location,
+                        created_at: new Date(new Date().toUTCString()),
+                        job_type: "scheduled",
+                        sub_service_id: parseInt(job.sub_service_id, 10),
+                        customer_id: parseInt(job.customer_id, 10),
+                        vendor_id: parseInt(job.vendor_id, 10),
+                        job_property_details_id: parseInt(propertyResult.id, 10)
+
+
+                    }
+                })
+            }
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -93,7 +101,7 @@ export default class JobsService {
     async requestJobEstimates(job) {
         let servResp = new config.serviceResponse()
         let job_image = new Object()
-        try {            
+        try {
             servResp.data = await db.estimates.create({
                 data: {
                     customer_id: job.customer_id,
@@ -116,9 +124,9 @@ export default class JobsService {
     async providedJobEstimates(job) {
         let servResp = new config.serviceResponse()
         let job_image = new Object()
-        try {            
+        try {
             servResp.data = await db.estimates.update({
-                
+
                 data: {
                     estimated_price: job.estimated_price,
                     estimated_hours: job.estimated_hours,
@@ -127,10 +135,10 @@ export default class JobsService {
                 },
                 where: {
                     id: Number(job.request_id)
-                 }
+                }
             })
             console.debug('createCustomer() returning')
-            
+
         } catch (error) {
             console.debug('createVendor() exception thrown')
             servResp.isError = true
@@ -144,8 +152,8 @@ export default class JobsService {
         try {
             let estimates = await db.estimates.findMany({
                 where: {
-                   customer_id: Number(job.customer_id),
-                   status: job.status
+                    customer_id: Number(job.customer_id),
+                    status: job.status
                 }
             })
             servResp.data = {
@@ -164,9 +172,26 @@ export default class JobsService {
         try {
             let estimates = await db.estimates.findMany({
                 where: {
-                   vendor_id: Number(job.vendor_id),
-                   status: job.status
+                    vendor_id: Number(job.vendor_id),
+                    status: job.status
+                },
+                select: {
+                    id: true,
+                    estimated_price: true,
+                    estimated_time: true,
+                    vendor_job_id: true,
+                    customers: {
+                        select: {
+                            id: true,
+                            full_name: true,
+                            phone_number: true,
+                            avatar: true
+
+
+                        },
+                    },
                 }
+               
             })
             servResp.data = {
                 estimates: estimates
@@ -184,16 +209,16 @@ export default class JobsService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('createCustomer() started')
-          
+
             servResp.data = await db.vendor_jobs.update({
                 where: {
                     id: Number(job.job_id)
                 },
                 data: {
                     status: vendor_jobs_status.pending,
-                    vendor_id: Number(job.vendor_id)                    
+                    vendor_id: Number(job.vendor_id)
                 }
-                
+
             })
             console.debug('createCustomer() returning')
 
@@ -210,7 +235,7 @@ export default class JobsService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('createCustomer() started')
-          
+
             servResp.data = await db.vendor_jobs.update({
                 where: {
                     id: Number(job.job_id)
@@ -218,7 +243,7 @@ export default class JobsService {
                 data: {
                     status: vendor_jobs_status.started
                 }
-                
+
             })
             console.debug('createCustomer() returning')
 
@@ -234,7 +259,7 @@ export default class JobsService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('createCustomer() started')
-          
+
             servResp.data = await db.vendor_jobs.findMany({
                 where: {
                     vendor_id: Number(vendor.vendor_id),
@@ -255,7 +280,7 @@ export default class JobsService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('createCustomer() started')
-          
+
             servResp.data = await db.vendor_jobs.findMany({
                 where: {
                     customer_id: Number(customer.customer_id),
@@ -271,7 +296,7 @@ export default class JobsService {
         }
         return servResp
     }
-    
+
 
     // async updateCustomer(query, customerBody) {
     //     let servResp = new config.serviceResponse()
