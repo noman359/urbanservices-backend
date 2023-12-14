@@ -191,6 +191,24 @@ export default class JobsService {
 
                         },
                     },
+                    vendor_jobs: {
+                        select: {
+                            id: true,
+                            description: true,
+                            job_images: true,
+                            location: true,
+                            sub_service_id: true,
+                            job_property_details_id: true,
+                            scheduled_time: true,
+                            job_type: true,
+                            job_property_details_id: true,
+                            comment: true,
+                            status: true,
+                            stars: true
+                            // other fields you want to select from vendor_jobs
+                          }
+                    }
+
                 }
                
             })
