@@ -340,7 +340,20 @@ export default class vendorService {
         }
         try {
             console.debug('getVendorJobs() Started')
-            let jobs = await db.vendor_jobs.findMany({ where: where_clause, include: { services: true, customers: true }, orderBy: { created_at: 'desc' } })
+            let jobs = await db.vendor_jobs.findMany({ where: where_clause, include: { sub_services: {
+                select: {
+                  id: true,
+                  name: true,
+                  avatar: true,
+                  services: {
+                    select: {
+                      id: true,
+                      name: true,
+                      avatar: true
+                    }
+                  }
+                }
+                }, customers: true }, orderBy: { created_at: 'desc' } })
             servResp.data = jobs
             console.debug('getVendorJobs() returning ')
         } catch (error) {
@@ -367,10 +380,10 @@ export default class vendorService {
        vendor_jobs.description,
        vendor_jobs.location,
        vendor_jobs.description,
-       vendor_jobs.service_id,
+       vendor_jobs.sub_service_id,
        c.full_name,
        c.id                           AS       customer_id,
-       s.id                           AS       service_id,
+       s.id                           AS       sub_service_id,
        s.name                         AS       service_name,
        COALESCE(AVG(vendor_jobs_all.stars), 0) average_rating,
        COUNT(vendor_jobs_all.comment) AS       total_reviews
@@ -378,7 +391,7 @@ FROM vendor_jobs vendor_jobs
          INNER JOIN customers c ON vendor_jobs.customer_id = c.id
          LEFT JOIN vendor_jobs vendor_jobs_all
                    ON vendor_jobs_all.vendor_id = vendor_jobs.vendor_id AND vendor_jobs_all.status = 'done'
-         INNER JOIN services s ON vendor_jobs.service_id = s.id
+         INNER JOIN services s ON vendor_jobs.sub_service_id = s.id
 WHERE vendor_jobs.id = ${Number(query.job_id)};`
 
             let stars_filters = ''
