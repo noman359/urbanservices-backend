@@ -223,6 +223,43 @@ export default class JobsService {
         return servResp
     }
 
+    async getEstimatesDetails(job) {
+        let servResp = new config.serviceResponse()
+        try {
+            let estimates = await db.estimates.findFirst({
+                where: {
+                    vendor_id: Number(job.vendor_id),
+                    vendor_job_id: Number(job.job_id)
+                },
+                select: {
+                    id: true,
+                    estimated_price: true,
+                    estimated_time: true,
+                    vendor_job_id: true,
+                    status: true,
+                    message: true,
+                    customers: {
+                        select: {
+                            id: true,
+                            full_name: true,
+                            phone_number: true,
+                            avatar: true
+                        }
+                    }
+                }
+               
+            })
+            servResp.data = {
+                estimates: estimates
+            }
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
 
     async assignJob(job) {
         let servResp = new config.serviceResponse()

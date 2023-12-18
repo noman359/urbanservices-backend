@@ -29,6 +29,12 @@ export default class JobsController {
         next(vendorResp)
     }
 
+    async estimatesDetails(req, res, next) {
+        console.log(req)
+        let vendorResp = await customerServ.getEstimatesDetails( {vendor_id: Number(req.query.vendor_id), job_id: Number(req.query.job_id)})
+        next(vendorResp)
+    }
+
     async providedJobEstimates(req, res, next) {
         console.log(req)
         let vendorResp = await customerServ.providedJobEstimates( {request_id: Number(req.body.request_id), message: req.body.message, price: Number(req.body.price)})
