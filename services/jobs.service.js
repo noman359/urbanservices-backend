@@ -129,7 +129,7 @@ export default class JobsService {
 
                 data: {
                     estimated_price: Number(job.price),
-                    estimated_time: Number(job.hours),
+                    message: job.message,
                     status: "PROVIDED",
                     updated_at: new Date(new Date().toUTCString())
                 },

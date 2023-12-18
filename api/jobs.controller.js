@@ -31,7 +31,7 @@ export default class JobsController {
 
     async providedJobEstimates(req, res, next) {
         console.log(req)
-        let vendorResp = await customerServ.providedJobEstimates( {request_id: Number(req.query.request_id), price: Number(req.query.price), hours: Number(req.query.hours) })
+        let vendorResp = await customerServ.providedJobEstimates( {request_id: Number(req.body.request_id), message: req.body.message, price: Number(req.body.price)})
         next(vendorResp)
     }
 
