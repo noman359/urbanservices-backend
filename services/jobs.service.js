@@ -128,8 +128,8 @@ export default class JobsService {
             servResp.data = await db.estimates.update({
 
                 data: {
-                    estimated_price: job.estimated_price,
-                    estimated_hours: job.estimated_hours,
+                    estimated_price: Number(job.price),
+                    estimated_time: Number(job.hours),
                     status: "PROVIDED",
                     updated_at: new Date(new Date().toUTCString())
                 },

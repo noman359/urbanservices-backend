@@ -395,7 +395,7 @@ FROM vendor_jobs vendor_jobs
 WHERE vendor_jobs.id = ${Number(query.job_id)};`
 
             let stars_filters = ''
-            if (filters !== '') {
+            if (filters.filter !== '' && filters.filter != null) {
                 let [k, v] = filters.filter.split(':')
                 stars_filters = `AND vendor_jobs.${k}=${v}`
             }
