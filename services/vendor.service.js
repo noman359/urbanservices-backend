@@ -1,6 +1,8 @@
 import handler from '../handlers/index.js'
 import config from '../config/index.js'
 import { PrismaClient } from '@prisma/client';
+//import stripe from 'stripe';
+//const stripeInstance = stripe('sk_test_51OMUzdHmGYnRQyfQ80HgdP96iYWHbg5Surkh5c2uJgaXnUYeJS3OIEUj1NbS8U1jVH7YIPr8DfvjI28BjnbFCtvB00SxzStg0e');
 
 
 let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
@@ -47,6 +49,9 @@ export default class vendorService {
                 vendor_avatar = await bucket.upload(avatar_val)
             }
 
+           
+            
+
             let created_vendor = await db.vendor.create({
                 data: {
                     created_at: new Date(new Date().toUTCString()),
@@ -62,10 +67,28 @@ export default class vendorService {
                     user_id_back: user_id_back_resp.url ?? "",
                     user_id_front: user_id_front_resp.url ?? "",
                     zip_code: vendorModel.zip_code,
-                    service_id: Number(vendorModel.service_id)
+                    service_id: Number(vendorModel.service_id),
+                    stripe_account_id: ''
                     // vendor_services: { createMany: { service_id: Array.isArray(vendorModel.services) ? vendorModel.services : JSON.parse(vendorModel.services) } }
                 }
             })
+
+
+            // const serviceAccount = await stripeInstance.accounts.create({
+            //     type: 'express',
+            //     country: 'US',
+            //     email: vendorModel.email
+            //   });
+
+            //   await db.vendor.update({
+            //     where: {
+            //         id: created_vendor.id
+            //     },
+            //     data: {
+            //         stripe_account_id: serviceAccount.id
+            //     }
+
+            //   })
 
             if (vendorModel.services) {
 
@@ -79,6 +102,8 @@ export default class vendorService {
                 })
                 created_vendor['vendor_services'] = await Promise.all(promises)
             }
+
+           // created_vendor['stripe_account_id'] = serviceAccount.id
             console.debug("created vendor data", created_vendor)
             servResp.data = created_vendor
             console.debug('createVendor() ended')
