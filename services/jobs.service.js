@@ -299,9 +299,20 @@ export default class JobsService {
                     id: Number(job.job_id)
                 },
                 data: {
+                    vendor_lat: Number(job.lat),
+                    vendor_long: Number(job.long),
                     status: vendor_jobs_status.accepted
                 }
 
+            })
+
+            await db.estimates.deleteMany({
+                where: {
+                    vendor_job_id: Number(job.job_id),
+                    vendor_id: {
+                        not: { equals: Number(servResp.data.vendor_id) },
+                    }
+                }
             })
             console.debug('createCustomer() returning')
 
@@ -324,6 +335,30 @@ export default class JobsService {
                 },
                 data: {
                     status: vendor_jobs_status.started
+                }
+
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async completeJob(job) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('createCustomer() started')
+
+            servResp.data = await db.vendor_jobs.update({
+                where: {
+                    id: Number(job.job_id)
+                },
+                data: {
+                    status: vendor_jobs_status.done
                 }
 
             })
