@@ -414,6 +414,26 @@ export default class JobsService {
         return servResp
     }
 
+    async getJobsDetails(customer) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('createCustomer() started')
+
+            servResp.data = await db.vendor_jobs.findFirst({
+                where: {
+                    id: Number(customer.job_id)          
+                  }
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
 
     // async updateCustomer(query, customerBody) {
     //     let servResp = new config.serviceResponse()

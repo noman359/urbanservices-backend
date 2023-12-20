@@ -9,6 +9,7 @@ export default function (router) {
     router.use('/job', lRoute)
     lRoute.get('/vendor/jobs', jobsController.getVendorJobs,handler.apiResponseHandler)
     lRoute.get('/customer/jobs', jobsController.getCustomerJobs,handler.apiResponseHandler)
+    lRoute.get('/detail', jobsController.getJobDetails,handler.apiResponseHandler)
     lRoute.post('/estimates', jobsController.requestEstimates,handler.apiResponseHandler)
     lRoute.get('/estimates/detail', jobsController.estimatesDetails,handler.apiResponseHandler)
     lRoute.put('/estimates/vendor', jobsController.providedJobEstimates,handler.apiResponseHandler)

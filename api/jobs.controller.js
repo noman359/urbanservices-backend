@@ -77,6 +77,12 @@ export default class JobsController {
         next(vendorResp)
     }
 
+    async getJobDetails(req, res, next) {
+        console.log(req)
+        let vendorResp = await customerServ.getJobsDetails({job_id: Number(req.query.job_id)})
+        next(vendorResp)
+    }
+
     // async updateCustomer(req, res, next) {
     //     let updated_customer = await customerServ.updateCustomer({ id: Number(req.params.id) }, req.body)
     //     next(updated_customer)
