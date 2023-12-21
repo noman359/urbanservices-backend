@@ -7,6 +7,7 @@ const vendorCtrl = new VendorController()
 const lRoute = Router();
 export default function (router) {
     router.use('/vendor', lRoute)
+    lRoute.post('/token', vendorCtrl.getFCMToken, handler.apiResponseHandler)
     lRoute.post('/', formData, vendorCtrl.createVendor, handler.apiResponseHandler)
     lRoute.get('/list', vendorCtrl.getVendorsList, handler.apiResponseHandler)
     lRoute.put('/:id', formData, vendorCtrl.updateVendor, handler.apiResponseHandler)

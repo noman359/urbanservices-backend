@@ -133,6 +133,29 @@ export default class vendorService {
         return servResp
     }
 
+    async saveVendorFCMToken(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorData() started')
+            let vendor = await db.vendor.update({
+                where: {
+                    id: query.vendor_id
+                },
+                data: {
+                    fcm_token: query.token
+                }
+            })
+
+            servResp.data = vendor
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async getVendorData(query) {
         let servResp = new config.serviceResponse()
         try {

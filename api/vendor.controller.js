@@ -12,6 +12,11 @@ export default class VendorController {
         next(created_vendor)
     }
 
+    async getFCMToken(req, res, next) {
+        let created_vendor = await vendorServ.saveVendorFCMToken(req.body)
+        next(created_vendor)
+    }
+
     async updateVendor(req, res, next) {
         let update_resp = await vendorServ.updateVendor({ id: req.params.id }, req.body)
         next(update_resp)
