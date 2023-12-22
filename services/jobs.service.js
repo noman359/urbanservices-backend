@@ -2,7 +2,13 @@ import handler from '../handlers/index.js'
 import config from '../config/index.js'
 import Prisma, { vendor_jobs_status } from '@prisma/client';
 const { PrismaClient } = Prisma;
+import admin from 'firebase-admin';
+import serviceAccount from '../urban-caps-customer1-firebase-adminsdk-w8cjl-ac6804965d.json' assert { type: "json" };
 
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    // other configurations...
+});
 let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
 let bucket = new handler.bucketHandler()
 let encryption = new handler.encryption()
@@ -113,6 +119,36 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString())
                 }
             })
+
+            var customer = await db.customers.findFirst({
+                where: {
+                    id:  Number(job.customer_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id:  Number(job.vendor_id)
+                }
+            })
+            const registrationToken = vendor.fcm_token;
+
+            const message = {
+                notification: {
+                    title: 'Requested estimates',
+                    body: `${customer.full_name} has requested estimates.`,
+                },
+                token: registrationToken,
+            };
+
+            admin.messaging().send(message)
+                .then((response) => {
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                });
+            console.debug('createCustomer() returning')
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -208,11 +244,11 @@ export default class JobsService {
                             status: true,
                             stars: true
                             // other fields you want to select from vendor_jobs
-                          }
+                        }
                     }
 
                 }
-               
+
             })
             servResp.data = {
                 estimates: estimates
@@ -249,7 +285,7 @@ export default class JobsService {
                         }
                     }
                 }
-               
+
             })
             servResp.data = {
                 estimates: estimates
@@ -278,6 +314,36 @@ export default class JobsService {
                 }
 
             })
+
+            var customer = await db.customers.findFirst({
+                where: {
+                    id:  Number(servResp.data.customer_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id:  Number(servResp.data.vendor_id)
+                }
+            })
+            const registrationToken = vendor.fcm_token;
+
+            const message = {
+                notification: {
+                    title: 'Assigned Job',
+                    body: `${customer.full_name} has assigned you a job.`,
+                },
+                token: registrationToken,
+            };
+
+            admin.messaging().send(message)
+                .then((response) => {
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                });
+            console.debug('createCustomer() returning')
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -314,6 +380,35 @@ export default class JobsService {
                     }
                 }
             })
+
+            var customer = await db.customers.findFirst({
+                where: {
+                    id:  Number(servResp.data.customer_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id:  Number(servResp.data.vendor_id)
+                }
+            })
+            const registrationToken = customer.fcm_token;
+
+            const message = {
+                notification: {
+                    title: 'Job Accepted',
+                    body: `You job has been accepted by ${vendor.full_name}`,
+                },
+                token: registrationToken,
+            };
+
+            admin.messaging().send(message)
+                .then((response) => {
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                });
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -421,8 +516,8 @@ export default class JobsService {
 
             servResp.data = await db.vendor_jobs.findFirst({
                 where: {
-                    id: Number(customer.job_id)          
-                  }
+                    id: Number(customer.job_id)
+                }
             })
             console.debug('createCustomer() returning')
 
