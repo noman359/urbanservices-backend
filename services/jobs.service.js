@@ -467,6 +467,30 @@ export default class JobsService {
         return servResp
     }
 
+    async cancelledJob(job) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('createCustomer() started')
+
+            servResp.data = await db.vendor_jobs.update({
+                where: {
+                    id: Number(job.job_id)
+                },
+                data: {
+                    status: vendor_jobs_status.cancelled
+                }
+
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async getVendorJobs(vendor) {
         let servResp = new config.serviceResponse()
         try {

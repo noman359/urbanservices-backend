@@ -28,6 +28,17 @@ export default class JobsController {
         next(created_customer)
     }
 
+    async completeJob(req, res, next) {
+        let created_customer = await customerServ.completeJob(req.body)
+        next(created_customer)
+    }
+
+    async cancelledJob(req, res, next) {
+        let created_customer = await customerServ.cancelledJob(req.body)
+        next(created_customer)
+    }
+    
+
     async requestEstimates(req, res, next) {
         console.log(req)
         let vendorResp = await customerServ.requestJobEstimates( { customer_id: Number(req.query.customer_id), vendor_id: Number(req.query.vendor_id), job_id: Number(req.query.job_id)})
