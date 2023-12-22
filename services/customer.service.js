@@ -102,6 +102,29 @@ export default class CustomerService {
     }
 
 
+    async saveCustomerFCMToken(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorData() started')
+            let customer = await db.customers.update({
+                where: {
+                    id: Number(query.customer_id)
+                },
+                data: {
+                    fcm_token: query.token
+                }
+            })
+
+            servResp.data = customer
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async getCustomers(filters = { limit: 10, offset: 0, search: "", sort: "" }) {
         let servResp = new config.serviceResponse()
         try {

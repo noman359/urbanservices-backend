@@ -16,6 +16,12 @@ export default class CustomerController {
         next(updated_customer)
     }
 
+    async getFCMToken(req, res, next) {
+        let created_customer_token = await customerServ.saveCustomerFCMToken(req.body)
+        next(created_customer_token)
+    }
+
+
     async getCustomers(req, res, next) {
         let customers = await customerServ.getCustomers({ limit: Number(req.query.limit), offset: Number(req.query.offset), search: req.query.search, sort: req.query.sort })
         next(customers)
