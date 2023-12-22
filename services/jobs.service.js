@@ -3,7 +3,7 @@ import config from '../config/index.js'
 import Prisma, { vendor_jobs_status } from '@prisma/client';
 const { PrismaClient } = Prisma;
 import admin from 'firebase-admin';
-import serviceAccount from '../urban-caps-customer1-firebase-adminsdk-w8cjl-ac6804965d.json' assert { type: "json" };
+import serviceAccount from '../urbancabsvender-firebase-adminsdk-70gg2-1c61b6ef2c.json' assert { type: "json" };
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
