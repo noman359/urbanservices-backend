@@ -135,6 +135,7 @@ export default class CustomerService {
                     comment: query.comment,
                     rating: Number(query.rating),
                     vendor_id: Number(query.vendor_id),
+                    customer_id: Number(query.customer_id),
                     vendor_job_id: Number(query.vendor_job_id),
                     created_at: new Date(new Date().toUTCString())
                 }
@@ -155,7 +156,7 @@ export default class CustomerService {
         try {
             const customer = await db.customer_reviews.findMany({
                 where: {
-                    id: Number(query.customer_id)
+                    customer_id: Number(query.customer_id)
                 },
                 skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                 take: query.limit, // Set the number of records to be returned per page
