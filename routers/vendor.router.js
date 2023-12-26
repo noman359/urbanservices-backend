@@ -10,6 +10,7 @@ export default function (router) {
     lRoute.post('/token', vendorCtrl.getFCMToken, handler.apiResponseHandler)
     lRoute.post('/', formData, vendorCtrl.createVendor, handler.apiResponseHandler)
     lRoute.get('/list', vendorCtrl.getVendorsList, handler.apiResponseHandler)
+    lRoute.post('/review', vendorCtrl.saveVendorReview, handler.apiResponseHandler)
     lRoute.put('/:id', formData, vendorCtrl.updateVendor, handler.apiResponseHandler)
     lRoute.post('/login', vendorCtrl.loginVendor, handler.apiResponseHandler)
     lRoute.get('/:id', vendorCtrl.getVendor, handler.apiResponseHandler)

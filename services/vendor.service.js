@@ -398,6 +398,31 @@ export default class vendorService {
 
     }
 
+    async saveVendorJobReview(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorData() started')
+            let job = await db.vendor_jobs.update({
+                data: {
+                    comment: query.comment,
+                    stars: Number(query.rating)
+                },
+                where: {
+                    id: Number(query.job_id)
+                }
+            })
+
+            servResp.data = job
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+
     async getVendorJobDetails(query, filters = { limit: 10, offset: 0, filter: '' }) {
         let servResp = new config.serviceResponse()
         try {
