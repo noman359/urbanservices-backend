@@ -27,6 +27,17 @@ export default class CustomerController {
         next(customers)
     }
 
+    async getCustomerReviews(req, res, next) {
+        let customers = await customerServ.getCustomerReviews({customer_id: Number(req.query.customer_id), limit: Number(req.query.limit), page: Number(req.query.page) })
+        next(customers)
+    }
+
+
+    async addCustomerReviews(req, res, next) {
+        let customers = await customerServ.saveCustomerReview({comment: req.body.comment, vendor_id: req.body.vendor_id, vendor_job_id: req.body.job_id, rating: req.body.rating})
+        next(customers)
+    }
+
     async getCustomer(req, res, next) {
         let customer = await customerServ.getCustomer({ id: req.params.id })
         next(customer)

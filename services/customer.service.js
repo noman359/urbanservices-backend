@@ -125,6 +125,55 @@ export default class CustomerService {
         return servResp
     }
 
+
+    async saveCustomerReview(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorData() started')
+            let customer = await db.customer_reviews.create({
+                data: {
+                    comment: query.comment,
+                    rating: Number(query.rating),
+                    vendor_id: Number(query.vendor_id),
+                    vendor_job_id: Number(query.vendor_job_id),
+                    created_at: new Date(new Date().toUTCString())
+                }
+            })
+
+            servResp.data = customer
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async getCustomerReviews(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            const customer = await db.customer_reviews.findMany({
+                where: {
+                    id: Number(query.customer_id)
+                },
+                skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                take: query.limit, // Set the number of records to be returned per page
+                
+              });
+            
+
+            servResp.data = customer
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+
     async getCustomers(filters = { limit: 10, offset: 0, search: "", sort: "" }) {
         let servResp = new config.serviceResponse()
         try {
