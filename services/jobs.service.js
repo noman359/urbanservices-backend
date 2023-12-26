@@ -472,6 +472,36 @@ export default class JobsService {
                 }
 
             })
+
+            var customer = await db.customers.findFirst({
+                where: {
+                    id:  Number(servResp.data.customer_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id:  Number(servResp.data.vendor_id)
+                }
+            })
+            const registrationToken = customer.fcm_token;
+
+            const message = {
+                notification: {
+                    title: 'Job Accepted',
+                    body: `You job has been Started by ${vendor.full_name}`,
+                },
+                token: registrationToken,
+            };
+
+            admin.messaging().send(message)
+                .then((response) => {
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                });
+
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -496,6 +526,36 @@ export default class JobsService {
                 }
 
             })
+
+            var customer = await db.customers.findFirst({
+                where: {
+                    id:  Number(servResp.data.customer_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id:  Number(servResp.data.vendor_id)
+                }
+            })
+            const registrationToken = customer.fcm_token;
+
+            const message = {
+                notification: {
+                    title: 'Job Accepted',
+                    body: `You job has been completed by ${vendor.full_name}`,
+                },
+                token: registrationToken,
+            };
+
+            admin.messaging().send(message)
+                .then((response) => {
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                });
+
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -520,6 +580,36 @@ export default class JobsService {
                 }
 
             })
+
+            var customer = await db.customers.findFirst({
+                where: {
+                    id:  Number(servResp.data.customer_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id:  Number(servResp.data.vendor_id)
+                }
+            })
+            const registrationToken = customer.fcm_token;
+
+            const message = {
+                notification: {
+                    title: 'Job Accepted',
+                    body: `You job has been cancelled by ${vendor.full_name}`,
+                },
+                token: registrationToken,
+            };
+
+            admin.messaging().send(message)
+                .then((response) => {
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                });
+
             console.debug('createCustomer() returning')
 
         } catch (error) {
