@@ -175,6 +175,45 @@ export default class JobsService {
                     id: Number(job.request_id)
                 }
             })
+
+            var estiimate = await db.estimates.findFirst({
+                where: {
+                    id:  Number(job.request_id)
+                }
+            })
+
+            const customerId = estiimate.customer_id;
+
+            var customer = await db.customers.findFirst({
+                where: {
+                    id:  Number(customerId)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id:  Number(estiimate.vendor_id)
+                }
+            })
+
+            const registrationToken = customer.fcm_token;
+
+            const message = {
+                notification: {
+                    title: 'Estimates',
+                    body: `${vendor.first_name} has provided estimates.`,
+                },
+                token: registrationToken,
+            };
+
+            admin.messaging().send(message)
+                .then((response) => {
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                });
+
             console.debug('createCustomer() returning')
 
         } catch (error) {
