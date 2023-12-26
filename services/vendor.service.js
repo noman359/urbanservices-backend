@@ -398,21 +398,22 @@ export default class vendorService {
 
     }
 
-    async saveVendorJobReview(query) {
+    async saveVendorReview(query) {
         let servResp = new config.serviceResponse()
         try {
             console.debug('getVendorData() started')
-            let job = await db.vendor_jobs.update({
+            let customer = await db.vendor_reviews.create({
                 data: {
-                    comment: query.comment,
-                    stars: Number(query.rating)
-                },
-                where: {
-                    id: Number(query.job_id)
+                    description: query.comment,
+                    rating: Number(query.rating),
+                    vendor_id: Number(query.vendor_id),
+                    customer_id: Number(query.customer_id),
+                    vendor_job_id: Number(query.vendor_job_id),
+                    created_at: new Date(new Date().toUTCString())
                 }
             })
 
-            servResp.data = job
+            servResp.data = customer
             console.debug('getVendorData() ended')
         } catch (error) {
             console.debug('createVendor() exception thrown')

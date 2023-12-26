@@ -23,7 +23,7 @@ export default class VendorController {
     }
 
     async saveVendorReview(req, res, next) {
-        let update_resp = await vendorServ.saveVendorJobReview({ comment: req.body.comment, rating: req.body.rating, job_id: req.body.job_id})
+        let update_resp = await vendorServ.saveVendorReview({ comment: req.body.comment, rating: req.body.rating, job_id: req.body.job_id, vendor_id: req.body.vendor_id, customer_id: req.body.customer_id})
         next(update_resp)
     }
 

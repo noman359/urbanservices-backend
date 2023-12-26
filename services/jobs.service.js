@@ -436,7 +436,7 @@ export default class JobsService {
             const message = {
                 notification: {
                     title: 'Job Accepted',
-                    body: `Your job has been accepted by ${vendor.full_name} ${vendor.last_name}`,
+                    body: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
                 },
                 token: registrationToken,
             };
