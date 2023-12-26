@@ -436,7 +436,7 @@ export default class JobsService {
             const message = {
                 notification: {
                     title: 'Job Accepted',
-                    body: `You job has been accepted by ${vendor.full_name}`,
+                    body: `Your job has been accepted by ${vendor.full_name} ${vendor.last_name}`,
                 },
                 token: registrationToken,
             };
@@ -488,8 +488,8 @@ export default class JobsService {
 
             const message = {
                 notification: {
-                    title: 'Job Accepted',
-                    body: `You job has been Started by ${vendor.full_name}`,
+                    title: 'Job started',
+                    body: `You job has been started by ${vendor.first_name} ${vendor.last_name}`,
                 },
                 token: registrationToken,
             };
@@ -542,8 +542,8 @@ export default class JobsService {
 
             const message = {
                 notification: {
-                    title: 'Job Accepted',
-                    body: `You job has been completed by ${vendor.full_name}`,
+                    title: 'Job completed',
+                    body: `You job has been completed by ${vendor.first_name} ${vendor.last_name}`,
                 },
                 token: registrationToken,
             };
@@ -596,8 +596,8 @@ export default class JobsService {
 
             const message = {
                 notification: {
-                    title: 'Job Accepted',
-                    body: `You job has been cancelled by ${vendor.full_name}`,
+                    title: 'Job cancelled',
+                    body: `You job has been cancelled by ${vendor.first_name} ${vendor.last_name}`,
                 },
                 token: registrationToken,
             };
