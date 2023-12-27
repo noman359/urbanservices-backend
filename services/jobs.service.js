@@ -252,6 +252,9 @@ export default class JobsService {
                     vendor_id: Number(job.vendor_id),
                     status: job.status
                 },
+                orderBy: {
+                    created_at: 'desc',
+                },
                 select: {
                     id: true,
                     estimated_price: true,
@@ -374,7 +377,7 @@ export default class JobsService {
                 },
                 data: {
                     // Add extra data here
-                    id: Number(job.job_id),
+                    id: `${job.job_id}`,
                     // Add other key-value pairs as needed
                 },
                 token: registrationToken,
@@ -445,7 +448,7 @@ export default class JobsService {
                 },
                 data: {
                     // Add extra data here
-                    id: Number(job.job_id),
+                    id: `${job.job_id}`,
                     // Add other key-value pairs as needed
                 },
                 token: registrationToken,
@@ -562,7 +565,7 @@ export default class JobsService {
                 },
                 data: {
                     // Add extra data here
-                    id: Number(job.job_id),
+                    id: `${job.job_id}`,
                     // Add other key-value pairs as needed
                 },
                 token: registrationToken,
@@ -621,7 +624,7 @@ export default class JobsService {
                 },
                 data: {
                     // Add extra data here
-                    id: Number(job.job_id),
+                    id: `${job.job_id}`,
                     // Add other key-value pairs as needed
                 },
                 token: registrationToken,
