@@ -11,6 +11,7 @@ export default function (router) {
     lRoute.get('/customer/jobs', jobsController.getCustomerJobs,handler.apiResponseHandler)
     lRoute.get('/detail', jobsController.getJobDetails,handler.apiResponseHandler)
     lRoute.get('/list', jobsController.getJobsByStatus,handler.apiResponseHandler)
+    lRoute.get('/scheduleList', jobsController.getJobsByDateStatus,handler.apiResponseHandler)
     lRoute.post('/estimates', jobsController.requestEstimates,handler.apiResponseHandler)
     lRoute.get('/estimates/detail', jobsController.estimatesDetails,handler.apiResponseHandler)
     lRoute.put('/estimates/vendor', jobsController.providedJobEstimates,handler.apiResponseHandler)

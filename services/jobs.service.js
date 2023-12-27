@@ -122,13 +122,13 @@ export default class JobsService {
 
             var customer = await db.customers.findFirst({
                 where: {
-                    id:  Number(job.customer_id)
+                    id: Number(job.customer_id)
                 }
             })
 
             var vendor = await db.vendor.findFirst({
                 where: {
-                    id:  Number(job.vendor_id)
+                    id: Number(job.vendor_id)
                 }
             })
             const registrationToken = vendor.fcm_token;
@@ -183,7 +183,7 @@ export default class JobsService {
 
             var estiimate = await db.estimates.findFirst({
                 where: {
-                    id:  Number(job.request_id)
+                    id: Number(job.request_id)
                 }
             })
 
@@ -191,13 +191,13 @@ export default class JobsService {
 
             var customer = await db.customers.findFirst({
                 where: {
-                    id:  Number(customerId)
+                    id: Number(customerId)
                 }
             })
 
             var vendor = await db.vendor.findFirst({
                 where: {
-                    id:  Number(estiimate.vendor_id)
+                    id: Number(estiimate.vendor_id)
                 }
             })
 
@@ -364,13 +364,13 @@ export default class JobsService {
 
             var customer = await db.customers.findFirst({
                 where: {
-                    id:  Number(servResp.data.customer_id)
+                    id: Number(servResp.data.customer_id)
                 }
             })
 
             var vendor = await db.vendor.findFirst({
                 where: {
-                    id:  Number(servResp.data.vendor_id)
+                    id: Number(servResp.data.vendor_id)
                 }
             })
             const registrationToken = vendor.fcm_token;
@@ -435,13 +435,13 @@ export default class JobsService {
 
             var customer = await db.customers.findFirst({
                 where: {
-                    id:  Number(servResp.data.customer_id)
+                    id: Number(servResp.data.customer_id)
                 }
             })
 
             var vendor = await db.vendor.findFirst({
                 where: {
-                    id:  Number(servResp.data.vendor_id)
+                    id: Number(servResp.data.vendor_id)
                 }
             })
             const registrationToken = customer.fcm_token;
@@ -476,42 +476,97 @@ export default class JobsService {
         return servResp
     }
 
+    async getJobbyStatusAndDate(query) {
+        let servResp = new config.serviceResponse()
+        var jobs = [];
+        const targetDate = new Date(query.date);
+        try {
+            if (query.customer_id != null) {
+                jobs = await db.vendor_jobs.findMany({
+                    where: {
+                        customer_id: Number(query.customer_id),
+                        status: query.status,
+                        job_type: 'scheduled',
+                        created_at: {
+                            gt: targetDate,
+                        }
+                    },
+                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                    take: query.limit, // Set the number of records to be returned per page
+
+                });
+            } else {
+                jobs = await db.vendor_jobs.findMany({
+                    where: {
+                        vendor_id: Number(query.vendor_id),
+                        status: query.status,
+                        job_type: 'scheduled',
+                        created_at: {
+                            gt: targetDate,
+                        }
+                    },
+                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                    take: query.limit, // Set the number of records to be returned per page
+
+                });
+            }
+
+
+            servResp.data = jobs
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async getJobbyStatus(query) {
         let servResp = new config.serviceResponse()
         var jobs = [];
+
         try {
-            if (query.customer_id != null ) {
-             jobs = await db.vendor_jobs.findMany({
-                where: {
-                    customer_id: Number(query.customer_id),
-                    status: query.status
-                },
-                select: {
-                
-                    vendor: {
-                        select: {
+            if (query.customer_id != null) {
+                jobs = await db.vendor_jobs.findMany({
+                    where: {
+                        customer_id: Number(query.customer_id),
+                        status: query.status
+                    },
+                    select: {
                         id: true,
-                        first_name: true,
-                        last_name: true
-                        }
-                     },
-                   
-                    sub_services: {
-                        select: {
-                            services: {
-                                select: {
-                                    id:true,
-                                    name: true
+                        location: true,
+                        job_images: true,
+                        status: true,
+                        created_at: true,
+                        lat: true,
+                        long: true,
+                        vendor_lat: true,
+                        vendor_long: true,
+                        vendor: {
+                            select: {
+                                id: true,
+                                first_name: true,
+                                last_name: true
+                            }
+                        },
+
+                        sub_services: {
+                            select: {
+                                services: {
+                                    select: {
+                                        id: true,
+                                        name: true
+                                    }
                                 }
                             }
                         }
-                    }
 
-                },
-                skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
-                take: query.limit, // Set the number of records to be returned per page
-                
-              });
+                    },
+                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                    take: query.limit, // Set the number of records to be returned per page
+
+                });
             } else {
                 jobs = await db.vendor_jobs.findMany({
                     where: {
@@ -519,31 +574,40 @@ export default class JobsService {
                         status: query.status
                     },
                     select: {
-                      
+                        id: true,
+                        location: true,
+                        job_images: true,
+                        status: true,
+                        created_at: true,
+                        lat: true,
+                        long: true,
+                        vendor_lat: true,
+                        vendor_long: true,
                         customers: {
                             select: {
-                             id: true,
-                             full_name: true
+                                id: true,
+                                first_name: true,
+                                last_name: true
                             }
-                         },
-                         sub_services: {
+                        },
+                        sub_services: {
                             select: {
                                 services: {
                                     select: {
-                                        id:true,
+                                        id: true,
                                         name: true
                                     }
                                 }
                             }
                         }
-    
+
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
-                    
-                  });
+
+                });
             }
-            
+
 
             servResp.data = jobs
             console.debug('getVendorData() ended')
@@ -573,13 +637,13 @@ export default class JobsService {
 
             var customer = await db.customers.findFirst({
                 where: {
-                    id:  Number(servResp.data.customer_id)
+                    id: Number(servResp.data.customer_id)
                 }
             })
 
             var vendor = await db.vendor.findFirst({
                 where: {
-                    id:  Number(servResp.data.vendor_id)
+                    id: Number(servResp.data.vendor_id)
                 }
             })
             const registrationToken = customer.fcm_token;
@@ -632,13 +696,13 @@ export default class JobsService {
 
             var customer = await db.customers.findFirst({
                 where: {
-                    id:  Number(servResp.data.customer_id)
+                    id: Number(servResp.data.customer_id)
                 }
             })
 
             var vendor = await db.vendor.findFirst({
                 where: {
-                    id:  Number(servResp.data.vendor_id)
+                    id: Number(servResp.data.vendor_id)
                 }
             })
             const registrationToken = customer.fcm_token;
@@ -691,13 +755,13 @@ export default class JobsService {
 
             var customer = await db.customers.findFirst({
                 where: {
-                    id:  Number(servResp.data.customer_id)
+                    id: Number(servResp.data.customer_id)
                 }
             })
 
             var vendor = await db.vendor.findFirst({
                 where: {
-                    id:  Number(servResp.data.vendor_id)
+                    id: Number(servResp.data.vendor_id)
                 }
             })
             const registrationToken = customer.fcm_token;

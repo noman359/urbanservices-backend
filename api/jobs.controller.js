@@ -94,6 +94,11 @@ export default class JobsController {
         next(vendor_job_details)
     }
 
+    async getJobsByDateStatus(req, res, next) {
+        let vendor_job_details = await customerServ.getJobbyStatusAndDate({date: req.query.date, customer_id: req.query.customer_id, vendor_id: req.query.vendor_id, status: req.query.status, limit: Number(req.query.limit), page: Number(req.query.page)})
+        next(vendor_job_details)
+    }
+
     // async updateCustomer(req, res, next) {
     //     let updated_customer = await customerServ.updateCustomer({ id: Number(req.params.id) }, req.body)
     //     next(updated_customer)
