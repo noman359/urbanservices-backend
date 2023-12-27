@@ -4,6 +4,7 @@ import Prisma, { vendor_jobs_status } from '@prisma/client';
 const { PrismaClient } = Prisma;
 import admin from 'firebase-admin';
 import serviceAccount from '../urbancabsvender-firebase-adminsdk-70gg2-1c61b6ef2c.json' assert { type: "json" };
+import { parse, format } from 'date-fns';
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -479,7 +480,12 @@ export default class JobsService {
     async getJobbyStatusAndDate(query) {
         let servResp = new config.serviceResponse()
         var jobs = [];
-        const targetDate = new Date(query.date);
+        const dateString = query.date
+        const dateObject = parse(dateString, 'dd-MM-yyyy', new Date());
+        const nextDay = new Date(dateObject);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+
         try {
             if (query.customer_id != null) {
                 jobs = await db.vendor_jobs.findMany({
@@ -487,9 +493,10 @@ export default class JobsService {
                         customer_id: Number(query.customer_id),
                         status: query.status,
                         job_type: 'scheduled',
-                        created_at: {
-                            gt: targetDate,
-                        }
+                        scheduled_time: {
+                            gte: dateObject,
+                            lt: nextDay,
+                        },
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
@@ -501,9 +508,10 @@ export default class JobsService {
                         vendor_id: Number(query.vendor_id),
                         status: query.status,
                         job_type: 'scheduled',
-                        created_at: {
-                            gt: targetDate,
-                        }
+                        scheduled_time: {
+                            gte: dateObject,
+                            lt: nextDay,
+                        },
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
