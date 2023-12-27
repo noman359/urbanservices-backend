@@ -487,8 +487,7 @@ export default class JobsService {
                     status: query.status
                 },
                 select: {
-                    id: true,
-                    status: true,
+                
                     vendor: {
                         select: {
                         id: true,
