@@ -372,6 +372,11 @@ export default class JobsService {
                     title: 'Assigned Job',
                     body: `${customer.full_name} has assigned you a job.`,
                 },
+                data: {
+                    // Add extra data here
+                    id: Number(job.job_id),
+                    // Add other key-value pairs as needed
+                },
                 token: registrationToken,
             };
 
@@ -438,6 +443,11 @@ export default class JobsService {
                     title: 'Job Accepted',
                     body: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
                 },
+                data: {
+                    // Add extra data here
+                    id: Number(job.job_id),
+                    // Add other key-value pairs as needed
+                },
                 token: registrationToken,
             };
 
@@ -490,6 +500,11 @@ export default class JobsService {
                 notification: {
                     title: 'Job started',
                     body: `Your job has been started by ${vendor.first_name} ${vendor.last_name}`,
+                },
+                data: {
+                    // Add extra data here
+                    id: Number(job.job_id),
+                    // Add other key-value pairs as needed
                 },
                 token: registrationToken,
             };
@@ -545,6 +560,11 @@ export default class JobsService {
                     title: 'Job completed',
                     body: `Your job has been completed by ${vendor.first_name} ${vendor.last_name}`,
                 },
+                data: {
+                    // Add extra data here
+                    id: Number(job.job_id),
+                    // Add other key-value pairs as needed
+                },
                 token: registrationToken,
             };
 
@@ -598,6 +618,11 @@ export default class JobsService {
                 notification: {
                     title: 'Job cancelled',
                     body: `Your job has been cancelled by ${vendor.first_name} ${vendor.last_name}`,
+                },
+                data: {
+                    // Add extra data here
+                    id: Number(job.job_id),
+                    // Add other key-value pairs as needed
                 },
                 token: registrationToken,
             };
