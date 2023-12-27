@@ -66,4 +66,9 @@ export default class VendorController {
         next(vendor_job_details)
     }
 
+    async getVendorReviews(req, res, next) {
+        let vendor_job_details = await vendorServ.getVendorReview({ vendor_id: req.body.id, limit: req.body.limit, page: req.body.page })
+        next(vendor_job_details)
+    }
+
 }

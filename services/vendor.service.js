@@ -424,6 +424,29 @@ export default class vendorService {
     }
 
 
+    async getVendorReview(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorData() started')
+            let vendors = await db.vendor_reviews.findMany({
+                where: {
+                    vendor_id: Number(query.vendor_id)
+                },
+                skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                take: query.limit, // Set the number of records to be returned per page
+            })
+            
+            servResp.data = vendors
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+
     async getVendorJobDetails(query, filters = { limit: 10, offset: 0, filter: '' }) {
         let servResp = new config.serviceResponse()
         try {
