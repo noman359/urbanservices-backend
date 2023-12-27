@@ -158,6 +158,14 @@ export default class CustomerService {
                 where: {
                     customer_id: Number(query.customer_id)
                 },
+
+                select: {
+                    id: true,
+                    comment: true,
+                    rating: true,
+                    customers: {
+                    }
+                },
                 skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                 take: query.limit, // Set the number of records to be returned per page
                 
