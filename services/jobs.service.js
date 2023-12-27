@@ -138,6 +138,11 @@ export default class JobsService {
                     title: 'Requested estimates',
                     body: `${customer.full_name} has requested estimates.`,
                 },
+                data: {
+                    // Add extra data here
+                    id: `${servResp.data.vendor_job_id}`,
+                    // Add other key-value pairs as needed
+                },
                 token: registrationToken,
             };
 
@@ -470,6 +475,44 @@ export default class JobsService {
         }
         return servResp
     }
+
+    async getJobbyStatus(query) {
+        let servResp = new config.serviceResponse()
+        var jobs = [];
+        try {
+            if (query.customer_id != null ) {
+             jobs = await db.vendor_jobs.findMany({
+                where: {
+                    customer_id: Number(query.customer_id),
+                    status: query.status
+                },
+                skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                take: query.limit, // Set the number of records to be returned per page
+                
+              });
+            } else {
+                jobs = await db.vendor_jobs.findMany({
+                    where: {
+                        vendor_id: Number(query.vendor_id),
+                        status: query.status
+                    },
+                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                    take: query.limit, // Set the number of records to be returned per page
+                    
+                  });
+            }
+            
+
+            servResp.data = jobs
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
 
     async startedJob(job) {
         let servResp = new config.serviceResponse()
