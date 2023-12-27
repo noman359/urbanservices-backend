@@ -432,10 +432,23 @@ export default class vendorService {
                 where: {
                     vendor_id: Number(query.vendor_id)
                 },
+                select: {
+                    id: true,
+                    description: true,
+                    rating: true, 
+                    vendor:{
+                        select: {
+                        id: true,
+                        first_name: true,
+                        last_name: true,
+                        avatar: true
+                     }
+                    }
+                },
                 skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                 take: query.limit, // Set the number of records to be returned per page
             })
-            
+
             servResp.data = vendors
             console.debug('getVendorData() ended')
         } catch (error) {
