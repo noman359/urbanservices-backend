@@ -519,8 +519,7 @@ export default class JobsService {
                         status: query.status
                     },
                     select: {
-                        id: true,
-                        status: true,
+                      
                         customers: {
                             select: {
                              id: true,
