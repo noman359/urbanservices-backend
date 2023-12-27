@@ -486,6 +486,26 @@ export default class JobsService {
                     customer_id: Number(query.customer_id),
                     status: query.status
                 },
+                select: {
+                    id: true,
+                    status: true,
+                    customer: {
+                        id: true,
+                        first_name: true,
+                        last_name: true
+                    },
+                    sub_services: {
+                        select: {
+                            services: {
+                                select: {
+                                    id:true,
+                                    name: true
+                                }
+                            }
+                        }
+                    }
+
+                },
                 skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                 take: query.limit, // Set the number of records to be returned per page
                 
@@ -495,6 +515,29 @@ export default class JobsService {
                     where: {
                         vendor_id: Number(query.vendor_id),
                         status: query.status
+                    },
+                    select: {
+                        id: true,
+                        status: true,
+                         vendor: {
+                            select: {
+                            id: true,
+                            first_name: true,
+                            last_name: true
+                            }
+                         },
+                        
+                         sub_services: {
+                            select: {
+                                services: {
+                                    select: {
+                                        id:true,
+                                        name: true
+                                    }
+                                }
+                            }
+                        }
+    
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
