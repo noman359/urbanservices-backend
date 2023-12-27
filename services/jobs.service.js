@@ -489,11 +489,14 @@ export default class JobsService {
                 select: {
                     id: true,
                     status: true,
-                    customer: {
+                    vendor: {
+                        select: {
                         id: true,
                         first_name: true,
                         last_name: true
-                    },
+                        }
+                     },
+                   
                     sub_services: {
                         select: {
                             services: {
@@ -519,14 +522,12 @@ export default class JobsService {
                     select: {
                         id: true,
                         status: true,
-                         vendor: {
+                        customers: {
                             select: {
-                            id: true,
-                            first_name: true,
-                            last_name: true
+                             id: true,
+                             full_name: true
                             }
                          },
-                        
                          sub_services: {
                             select: {
                                 services: {
