@@ -346,7 +346,6 @@ export default class JobsService {
         return servResp
     }
 
-
     async assignJob(job) {
         let servResp = new config.serviceResponse()
         try {
@@ -406,7 +405,6 @@ export default class JobsService {
         }
         return servResp
     }
-
 
     async acceptedJob(job) {
         let servResp = new config.serviceResponse()
@@ -594,8 +592,8 @@ export default class JobsService {
                         customers: {
                             select: {
                                 id: true,
-                                first_name: true,
-                                last_name: true
+                                full_name: true,
+                                avatar: true
                             }
                         },
                         sub_services: {
@@ -626,7 +624,6 @@ export default class JobsService {
         }
         return servResp
     }
-
 
     async startedJob(job) {
         let servResp = new config.serviceResponse()
@@ -866,7 +863,6 @@ export default class JobsService {
         }
         return servResp
     }
-
 
     // async updateCustomer(query, customerBody) {
     //     let servResp = new config.serviceResponse()
