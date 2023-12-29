@@ -120,11 +120,9 @@ export default class vendorService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('vendor signIn() started')
-            let encrypted_password = encryption.encrypt(query.password)
             let vendor = await db.vendor.findFirst({
                 where: {
-                    email: query.email,
-                    password: encrypted_password
+                    email: query.email
                 },
                 include: {
                     services: true
