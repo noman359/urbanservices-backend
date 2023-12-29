@@ -19,11 +19,7 @@ export default class vendorService {
             let user_id_front_resp = new Object()
             let user_id_back_resp = new Object()
             let vendor_avatar = new Object()
-            if (vendorModel.password.length < 5) {
-                throw new Error("password should be atleast 5 characters long")
-            }
-            vendorModel.password = encryption.encrypt(vendorModel.password)
-
+            
             if (vendorModel.user_id_front && vendorModel.user_id_back) {
                 let user_id_front_val = {
                     bucket: config.card_upload_s3_bucket_name,
@@ -57,9 +53,9 @@ export default class vendorService {
                 data: {
                     created_at: new Date(new Date().toUTCString()),
                     email: vendorModel.email,
-                    password: vendorModel.password,
                     avatar: vendor_avatar.url ?? "",
                     city: vendorModel.city,
+                    phone_number: vendorModel.phone_number,
                     // date_of_birth: new Date(vendorModel.date_of_birth),
                     experience: Number(vendorModel.experience),
                     first_name: vendorModel.first_name,
@@ -122,7 +118,7 @@ export default class vendorService {
             console.debug('vendor signIn() started')
             let vendor = await db.vendor.findFirst({
                 where: {
-                    email: query.email
+                    phone_number: query.phone_number
                 },
                 include: {
                     services: true
