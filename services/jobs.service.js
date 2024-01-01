@@ -209,6 +209,10 @@ export default class JobsService {
                     title: 'Estimates',
                     body: `${vendor.first_name} has provided estimates.`,
                 },
+                data: {
+                    estimate_id: job.request_id,
+                    job_id: estiimate.vendor_job_id
+                },
                 token: registrationToken,
             };
 
@@ -350,6 +354,11 @@ export default class JobsService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('createCustomer() started')
+            let estimate = await db.estimates.findFirst({
+                where: {
+                    vendor_job_id: Number(job.job_id)
+                }
+            })
 
             servResp.data = await db.vendor_jobs.update({
                 where: {
