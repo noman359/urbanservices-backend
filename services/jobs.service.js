@@ -211,7 +211,8 @@ export default class JobsService {
                 },
                 data: {
                     estimate_id: job.request_id,
-                    job_id: estiimate.vendor_job_id
+                    job_id: estiimate.vendor_job_id,
+                    vendor_id: vendor.id
                 },
                 token: registrationToken,
             };
@@ -366,7 +367,8 @@ export default class JobsService {
                 },
                 data: {
                     status: vendor_jobs_status.pending,
-                    vendor_id: Number(job.vendor_id)
+                    vendor_id: Number(job.vendor_id),
+                    amount: Number(estimate.estimated_price ?? 0)
                 }
 
             })
