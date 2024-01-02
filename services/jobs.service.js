@@ -671,7 +671,7 @@ export default class JobsService {
                 },
                 data: {
                     // Add extra data here
-                    id: Number(job.job_id),
+                    id: `${job.job_id}`,
                     // Add other key-value pairs as needed
                 },
                 token: registrationToken,
