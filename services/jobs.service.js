@@ -210,9 +210,9 @@ export default class JobsService {
                     body: `${vendor.first_name} has provided estimates.`,
                 },
                 data: {
-                    estimate_id: job.request_id,
-                    job_id: estiimate.vendor_job_id,
-                    vendor_id: vendor.id
+                    estimate_id: `${job.request_id}`,
+                    job_id: `${estiimate.vendor_job_id}`,
+                    vendor_id: `${vendor.id}`
                 },
                 token: registrationToken,
             };
