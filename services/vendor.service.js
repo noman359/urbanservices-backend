@@ -543,24 +543,12 @@ WHERE vendor_jobs.id = ${Number(query.job_id)};`
                 stars_filters = `AND vendor_jobs.${k}=${v}`
             }
 
-            let vendor_reviews_sql = `SELECT c.full_name,
-                                        c.avatar,
-                                        vendor_jobs.status,
-                                        vendor_jobs.stars,
-                                        vendor_jobs.comment,
-                                        vendor_jobs.verdict_at AS completed_at
-                                        FROM vendor_jobs
-                                          INNER JOIN customers c ON vendor_jobs.customer_id = c.id
-                                        WHERE status IN ('done', 'cancelled')
-                                        AND vendor_id = ${Number(query.id)} ${stars_filters} LIMIT ${Number(filters.limit)} OFFSET ${Number(filters.offset * 5)};`
-            let [job_details, vendor_reviews] = await Promise.all([db.$queryRawUnsafe(sql), db.$queryRawUnsafe(vendor_reviews_sql)])
+            let [job_details] = await Promise.all([db.$queryRawUnsafe(sql)])
             if (job_details.length > 0) {
                 job_details = job_details.map(job => {
                     job.total_reviews = Number(job.total_reviews)
                     return job
                 })[0]
-
-                job_details['reviews'] = vendor_reviews
             } servResp.data = job_details
         } catch (error) {
             console.debug('getVendorJobs() exception thrown')
