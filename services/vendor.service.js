@@ -70,6 +70,21 @@ export default class vendorService {
                 }
             })
 
+            let vendor = await db.vendor.findFirst({
+                where: {
+                    phone_number: vendorModel.phone_number
+                },
+                include: {
+                    services: true
+                }
+            })
+
+            if (!vendor) {
+                throw new Error('User not found, Incorrect email or password')
+            }
+            delete vendor.password
+            let token = await JWT.getToken(vendor)
+            
             var serviceAccount = await stripeInstance.accounts.create({
                 type: 'custom',
                 country: 'US',
@@ -117,7 +132,7 @@ export default class vendorService {
             }
 
             created_vendor['stripe_account_id'] = serviceAccount.id
-            
+            created_vendor['token'] = token
             console.debug("created vendor data", created_vendor)
             servResp.data = created_vendor
             servResp.data['on_board_url'] = accountLink.url

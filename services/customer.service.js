@@ -43,6 +43,21 @@ export default class CustomerService {
 
                 }
             })
+
+            let customer = await db.customers.findFirst({
+                where: {
+                    phone_number: customerBody.phone_number
+                }
+            })
+
+            if (!customer) {
+                throw new Error('User not found, Incorrect email or password')
+            }
+
+            let token = await JWT.getToken(customer)
+            servResp.data = {
+                ...customer, token: token
+            }
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -233,6 +248,33 @@ export default class CustomerService {
         return servResp
     }
 
+
+    async signIn(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('customer signIn() started')
+            let customer = await db.customers.findFirst({
+                where: {
+                    phone_number: query.phone_number
+                }
+            })
+
+            if (!customer) {
+                throw new Error('User not found, Incorrect email or password')
+            }
+
+            let token = await JWT.getToken(customer)
+            servResp.data = {
+                ...customer, token: token
+            }
+            console.debug('customer signIn() ended')
+        } catch (error) {
+            console.debug('customer signIn() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
 
     async signIn(query) {
         let servResp = new config.serviceResponse()
