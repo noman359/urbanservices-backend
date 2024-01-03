@@ -5,6 +5,9 @@ const { PrismaClient } = Prisma;
 import admin from 'firebase-admin';
 import serviceAccount from '../urbancabsvender-firebase-adminsdk-70gg2-1c61b6ef2c.json' assert { type: "json" };
 import { parse, format } from 'date-fns';
+import PaymentService from './payment.service.js';
+import stripe from 'stripe';
+const stripeInstance = stripe('sk_test_51OMUzdHmGYnRQyfQ80HgdP96iYWHbg5Surkh5c2uJgaXnUYeJS3OIEUj1NbS8U1jVH7YIPr8DfvjI28BjnbFCtvB00SxzStg0e');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -20,6 +23,22 @@ export default class JobsService {
 
     constructor() { }
 
+    async isTransactionCompleted(paymentMethodId) {
+        try {
+            const paymentMethod = await stripe.paymentMethods.retrieve(paymentMethodId);
+
+            if (paymentMethod.status === 'succeeded') {
+                console.log('Transaction is completed.');
+                return true;
+            } else {
+                console.log('Transaction is not completed. Status:', paymentMethod.status);
+                return false;
+            }
+        } catch (error) {
+            console.error('Error retrieving PaymentMethod:', error);
+            throw error;
+        }
+    }
 
     async createJob(job) {
         let servResp = new config.serviceResponse()
@@ -169,6 +188,12 @@ export default class JobsService {
         let servResp = new config.serviceResponse()
         let job_image = new Object()
         try {
+            if (Number(job.price) < 0) {
+                servResp.isError = true
+                servResp.message = 'Estimates can not be less than service fee: $39'
+                return servResp
+            }
+        
             servResp.data = await db.estimates.update({
 
                 data: {
@@ -700,6 +725,53 @@ export default class JobsService {
         try {
             console.debug('createCustomer() started')
 
+            var jobpaymentDetails = await db.payment_details.findFirst({
+                where: {
+                    vendor_job_id: job.job_id
+                }
+            })
+
+            var intentString = `${jobpaymentDetails.payment_intent.split('_')[0]}_${jobpaymentDetails.payment_intent.split('_')[1]}`
+            var paymentIntent = await stripeInstance.paymentIntents.retrieve(
+                intentString
+            );
+
+            if (paymentIntent.status === 'succeeded') {
+
+                console.log('Transaction is completed.');
+            } else {
+                console.log('Transaction is not completed. Status:', paymentMethod.status);
+                servResp.data.isError = true
+                servResp.data.message = 'Transaction is not completed. Status:', paymentMethod.status
+                return servResp
+            }
+
+            var job = await db.vendor_jobs.findFirst({
+                where: {
+                    id: Number(jobpaymentDetails.vendor_job_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id: Number(job.vendor_id)
+                }
+            })
+
+            var vendorServiceFee = Number(paymentIntent.amount)
+            vendorServiceFee = vendorServiceFee - 39.0
+            if (vendorServiceFee < 0) {
+                servResp.data.isError = true
+                servResp.data.message = 'Amount can not be negative'
+                return servResp
+            }
+            var vendorPaymentObject = {
+                'amount': vendorServiceFee,
+                'vendorAccountId': vendor.stripe_account_id
+            };
+            var paymentService = new PaymentService()
+            await paymentService.sendMoneyToVendor(vendorPaymentObject)
+
             servResp.data = await db.vendor_jobs.update({
                 where: {
                     id: Number(job.job_id)
@@ -716,11 +788,6 @@ export default class JobsService {
                 }
             })
 
-            var vendor = await db.vendor.findFirst({
-                where: {
-                    id: Number(servResp.data.vendor_id)
-                }
-            })
             const registrationToken = customer.fcm_token;
 
             const message = {

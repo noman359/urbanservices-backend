@@ -19,7 +19,7 @@ export default class vendorService {
             let user_id_front_resp = new Object()
             let user_id_back_resp = new Object()
             let vendor_avatar = new Object()
-            
+
             if (vendorModel.user_id_front && vendorModel.user_id_back) {
                 let user_id_front_val = {
                     bucket: config.card_upload_s3_bucket_name,
@@ -45,9 +45,9 @@ export default class vendorService {
                 vendor_avatar = await bucket.upload(avatar_val)
             }
 
-            
 
-            
+
+
 
             let created_vendor = await db.vendor.create({
                 data: {
@@ -71,21 +71,38 @@ export default class vendorService {
             })
 
             var serviceAccount = await stripeInstance.accounts.create({
-                type: 'express',
+                type: 'custom',
                 country: 'US',
-                email: vendorModel.email
-              });
+                email: vendorModel.email,
+                capabilities: {
+                    card_payments: {
+                      requested: true,
+                    },
+                    transfers: {
+                      requested: true,
+                    }
+                  },
+    
+            });
 
-              await db.vendor.update({
+            var accountLink = await stripeInstance.accountLinks.create({
+                account: serviceAccount.id,
+                refresh_url: 'https://codersglobe.com',
+                return_url: 'https://urban_cabs_vender',
+                type: 'account_onboarding',
+              });
+           
+
+            await db.vendor.update({
                 where: {
                     id: created_vendor.id
                 },
                 data: {
-                    stripe_account_id: serviceAccount.id
+                    stripe_account_id: serviceAccount.id,
+                    on_board_url: accountLink.url
                 }
+            })
 
-              })
-        
             if (vendorModel.services) {
 
                 if (typeof vendorModel.services === 'string') {
@@ -100,8 +117,10 @@ export default class vendorService {
             }
 
             created_vendor['stripe_account_id'] = serviceAccount.id
+            
             console.debug("created vendor data", created_vendor)
             servResp.data = created_vendor
+            servResp.data['on_board_url'] = accountLink.url
             console.debug('createVendor() ended')
         } catch (error) {
             console.debug('createVendor() exception thrown')
@@ -133,6 +152,7 @@ export default class vendorService {
             servResp.data = {
                 ...vendor, token: token
             }
+            
             console.debug('vendor signIn() ended')
         } catch (error) {
             console.debug('vendor signIn() exception thrown')
@@ -382,20 +402,24 @@ export default class vendorService {
         }
         try {
             console.debug('getVendorJobs() Started')
-            let jobs = await db.vendor_jobs.findMany({ where: where_clause, include: { sub_services: {
-                select: {
-                  id: true,
-                  name: true,
-                  avatar: true,
-                  services: {
-                    select: {
-                      id: true,
-                      name: true,
-                      avatar: true
-                    }
-                  }
-                }
-                }, customers: true }, orderBy: { created_at: 'desc' } })
+            let jobs = await db.vendor_jobs.findMany({
+                where: where_clause, include: {
+                    sub_services: {
+                        select: {
+                            id: true,
+                            name: true,
+                            avatar: true,
+                            services: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    avatar: true
+                                }
+                            }
+                        }
+                    }, customers: true
+                }, orderBy: { created_at: 'desc' }
+            })
             servResp.data = jobs
             console.debug('getVendorJobs() returning ')
         } catch (error) {
@@ -444,14 +468,14 @@ export default class vendorService {
                 select: {
                     id: true,
                     description: true,
-                    rating: true, 
-                    vendor:{
+                    rating: true,
+                    vendor: {
                         select: {
-                        id: true,
-                        first_name: true,
-                        last_name: true,
-                        avatar: true
-                     }
+                            id: true,
+                            first_name: true,
+                            last_name: true,
+                            avatar: true
+                        }
                     }
                 },
                 skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number

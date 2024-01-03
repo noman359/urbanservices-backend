@@ -2,8 +2,10 @@ import handler from '../handlers/index.js';
 import { Router } from 'express';
 import VendorController from '../api/vendor.controller.js';
 import formData from '../middlewares/formdata-parser.js';
+import TokenHandler from '../handlers/token.handler.js';
 
 const vendorCtrl = new VendorController()
+const tokenController = new TokenHandler()
 const lRoute = Router();
 export default function (router) {
     router.use('/vendor', lRoute)

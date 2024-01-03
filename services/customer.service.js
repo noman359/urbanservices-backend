@@ -238,12 +238,9 @@ export default class CustomerService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('customer signIn() started')
-            let encrypted_password = encryption.encrypt(query.password)
             let customer = await db.customers.findFirst({
                 where: {
-                    phone_number: query.phone_number,
-                    password: encrypted_password,
-
+                    phone_number: query.phone_number
                 }
             })
 
