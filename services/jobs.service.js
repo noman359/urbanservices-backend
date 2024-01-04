@@ -930,6 +930,18 @@ export default class JobsService {
             servResp.data = await db.vendor_jobs.findFirst({
                 where: {
                     id: Number(customer.job_id)
+                },
+                select: {
+                    customers: {
+                        select: {
+                            id: true,
+                            full_name: true,
+                            phone_number: true,
+                            avatar: true,
+                            email: true,
+                            status: true
+                        }
+                    }
                 }
             })
             console.debug('createCustomer() returning')
