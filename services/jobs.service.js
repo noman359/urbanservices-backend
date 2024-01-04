@@ -532,6 +532,34 @@ export default class JobsService {
                             lt: nextDay,
                         },
                     },
+                    select: {
+                        id: true,
+                        location: true,
+                        job_images: true,
+                        status: true,
+                        created_at: true,
+                        lat: true,
+                        long: true,
+                        vendor_lat: true,
+                        vendor_long: true,
+                        vendor: {
+                            select: {
+                                id: true,
+                                first_name: true,
+                                last_name: true
+                            }
+                        },
+
+                        sub_services: {
+                            select: {
+                                services: {
+                                    select: {
+                                        id: true,
+                                        name: true
+                                    }
+                                }
+                            }
+                        },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
 
@@ -547,6 +575,34 @@ export default class JobsService {
                             lt: nextDay,
                         },
                     },
+                    select: {
+                        id: true,
+                        location: true,
+                        job_images: true,
+                        status: true,
+                        created_at: true,
+                        lat: true,
+                        long: true,
+                        vendor_lat: true,
+                        vendor_long: true,
+                        vendor: {
+                            select: {
+                                id: true,
+                                first_name: true,
+                                last_name: true
+                            }
+                        },
+
+                        sub_services: {
+                            select: {
+                                services: {
+                                    select: {
+                                        id: true,
+                                        name: true
+                                    }
+                                }
+                            }
+                        },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
 
