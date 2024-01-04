@@ -559,7 +559,8 @@ export default class JobsService {
                                     }
                                 }
                             }
-                        },
+                        }
+                    },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
 
@@ -602,7 +603,8 @@ export default class JobsService {
                                     }
                                 }
                             }
-                        },
+                        }
+                    },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
 
