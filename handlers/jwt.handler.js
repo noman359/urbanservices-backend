@@ -5,7 +5,7 @@ export default class JWTHandler {
 
     getToken(userData) {
         return new Promise((resolve, reject) => {
-            JWT.sign(userData, config.JWT_SECURE_KEY, { expiresIn: '1h' }, (err, token) => {
+            JWT.sign(userData, config.JWT_SECURE_KEY, (err, token) => {
                 if (err) {
                     reject(err)
                 }

@@ -6,6 +6,7 @@ import customerRouter from "./customer.router.js"
 import serviceRouter from "./service.router.js"
 import jobsRouter from "./jobs.router.js"
 import paymentRouter from "./payment.router.js"
+import adminRouter from "./admin.router.js"
 
 
 export default () => {
@@ -16,6 +17,7 @@ export default () => {
     serviceRouter(router)
     jobsRouter(router)
     paymentRouter(router)
+    adminRouter(router)
     router.use(handler.apiResponseHandler)
     return router
 }
