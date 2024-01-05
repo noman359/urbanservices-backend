@@ -2,8 +2,10 @@ import handler from '../handlers/index.js';
 import JobsController from '../api/jobs.controller.js';
 import formData from '../middlewares/formdata-parser.js';
 import { Router } from 'express';
+import  CronHandler  from '../handlers/userStatus.js';
 
 const jobsController = new JobsController()
+const cronJob = new CronHandler()
 const lRoute = Router();
 export default function (router) {
     router.use('/job', lRoute)
@@ -23,4 +25,5 @@ export default function (router) {
     lRoute.put('/cancel', jobsController.cancelledJob, handler.apiResponseHandler)
     lRoute.get('/estimates/vendor/list', jobsController.getEstimatesListForVendor,handler.apiResponseHandler)
     lRoute.get('/estimates/customer/list', jobsController.getEstimatesListForCustomer,handler.apiResponseHandler)
+    cronJob.createCron()
 }

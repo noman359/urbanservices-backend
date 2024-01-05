@@ -61,7 +61,7 @@ export default class JobsService {
                 }
             }
 
-            var sceduleDateTime = new Date(job.sceduled_time);
+            
 
             var propertyResult = await db.job_property_details.create({
                 data: {
@@ -95,7 +95,7 @@ export default class JobsService {
                     }
                 })
             } else {
-
+                var sceduleDateTime = new Date(job.sceduled_time)
                 servResp.data = await db.vendor_jobs.create({
 
                     data: {
@@ -515,7 +515,7 @@ export default class JobsService {
         let servResp = new config.serviceResponse()
         var jobs = [];
         const dateString = query.date
-        const dateObject = parse(dateString, 'dd-MM-yyyy', new Date());
+        const dateObject = parse(dateString, 'MM-dd-yyyy', new Date());
         const nextDay = new Date(dateObject);
         nextDay.setDate(nextDay.getDate() + 1);
 
@@ -542,6 +542,7 @@ export default class JobsService {
                         long: true,
                         vendor_lat: true,
                         vendor_long: true,
+                        scheduled_time: true,
                         vendor: {
                             select: {
                                 id: true,
@@ -586,6 +587,7 @@ export default class JobsService {
                         long: true,
                         vendor_lat: true,
                         vendor_long: true,
+                        scheduled_time: true,
                         vendor: {
                             select: {
                                 id: true,
