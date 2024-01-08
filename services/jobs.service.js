@@ -50,10 +50,12 @@ export default class JobsService {
             if (job.job_image) {
                 for (var image of job.job_image) {
                     let job_image = new Object()
+                    var arr = image.name.split('.')
+                    let extentionName = arr[arr.length - 1]
 
                     let avatar_val = {
                         bucket: config.jobs_s3_bucket_name,
-                        key: `${currentDateTime.toISOString()}`,
+                        key: `${currentDateTime.toISOString()}.${extentionName}`,
                         body: await bucket.fileToArrayBuffer(image)
                     }
                     job_image = await bucket.upload(avatar_val)
@@ -61,7 +63,7 @@ export default class JobsService {
                 }
             }
 
-            
+
 
             var propertyResult = await db.job_property_details.create({
                 data: {
@@ -193,7 +195,7 @@ export default class JobsService {
                 servResp.message = 'Estimates can not be less than service fee: $39'
                 return servResp
             }
-        
+
             servResp.data = await db.estimates.update({
 
                 data: {
@@ -227,6 +229,8 @@ export default class JobsService {
                 }
             })
 
+            const notify = ''
+
             const registrationToken = customer.fcm_token;
 
             const message = {
@@ -258,6 +262,18 @@ export default class JobsService {
             servResp.message = error.message
         }
         return servResp
+    }
+
+    async createNotifications() {
+        await db.notifications.create({
+            data: {
+                customer_id: Number(customer.id),
+                vendor_id: Number(vendor.id),
+                vendor_job_id: Number(estiimate.vendor_job_id),
+                description: `${vendor.first_name} has provided estimates.`,
+                created_at: new Date(new Date().toUTCString())
+            }
+        })
     }
 
     async getEstimatesListForCustomer(job) {
@@ -543,6 +559,7 @@ export default class JobsService {
                         vendor_lat: true,
                         vendor_long: true,
                         scheduled_time: true,
+                        amount: true,
                         vendor: {
                             select: {
                                 id: true,
@@ -588,6 +605,7 @@ export default class JobsService {
                         vendor_lat: true,
                         vendor_long: true,
                         scheduled_time: true,
+                        amount: true,
                         vendor: {
                             select: {
                                 id: true,
@@ -991,18 +1009,21 @@ export default class JobsService {
                 where: {
                     id: Number(customer.job_id)
                 },
-                select: {
-                    customers: {
-                        select: {
-                            id: true,
-                            full_name: true,
-                            phone_number: true,
-                            avatar: true,
-                            email: true,
-                            status: true
-                        }
-                    }
+                include: {
+                    customers: true
                 }
+                // select: {
+                //     customers: {
+                //         select: {
+                //             id: true,
+                //             full_name: true,
+                //             phone_number: true,
+                //             avatar: true,
+                //             email: true,
+                //             status: true
+                //         }
+                //     }
+                // }
             })
             console.debug('createCustomer() returning')
 

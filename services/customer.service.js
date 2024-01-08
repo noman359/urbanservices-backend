@@ -20,9 +20,11 @@ export default class CustomerService {
         try {
             console.debug('createCustomer() started')
             if (customerBody.avatar) {
+                var arr = customerBody.avatar.split('.')
+                    let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
-                    key: `${customerBody.email}_${customerBody.avatar['name']}`,
+                    key: `${customerBody.email}_${customerBody.avatar['name']}.${extentionName}`,
                     body: await bucket.fileToArrayBuffer(customerBody.avatar)
                 }
                 customer_avatar = await bucket.upload(avatar_val)
@@ -83,9 +85,11 @@ export default class CustomerService {
                 if (typeof customerBody.avatar === 'string') {
                     customer_avatar['url'] = customerBody.avatar
                 } else {
+                    var arr = customerBody.avatar.split('.')
+                    let extentionName = arr[arr.length - 1]
                     let avatar_val = {
                         bucket: config.customer_avatar_s3_bucket_name,
-                        key: `${customerBody.email}_${customerBody.avatar['name']}`,
+                        key: `${customerBody.email}_${customerBody.avatar['name']}.${extentionName}`,
                         body: await bucket.fileToArrayBuffer(customerBody.avatar)
                     }
                     customer_avatar = await bucket.upload(avatar_val)

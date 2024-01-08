@@ -37,17 +37,15 @@ export default class vendorService {
             }
 
             if (vendorModel.avatar) {
+                var arr = vendorModel.avatar.split('.')
+                    let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.vendor_avatar_s3_bucket_name,
-                    key: `${vendorModel.username}_${vendorModel.avatar['name']}`,
+                    key: `${vendorModel.username}_${vendorModel.avatar['name']}.${extentionName}`,
                     body: await bucket.fileToArrayBuffer(vendorModel.avatar)
                 }
                 vendor_avatar = await bucket.upload(avatar_val)
             }
-
-
-
-
 
             let created_vendor = await db.vendor.create({
                 data: {
@@ -303,9 +301,11 @@ export default class vendorService {
             }
 
             if (vendorModel.avatar) {
+                var arr = vendorModel.avatar.split('.')
+                    let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
-                    key: `${vendorModel.username}_${vendorModel.avatar['name']}`,
+                    key: `${vendorModel.username}_${vendorModel.avatar['name']}.${extentionName}`,
                     body: await bucket.fileToArrayBuffer(vendorModel.avatar)
                 }
                 vendor_avatar = await bucket.upload(avatar_val)
