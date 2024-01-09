@@ -19,7 +19,8 @@ export default class vendorService {
             let user_id_front_resp = new Object()
             let user_id_back_resp = new Object()
             let vendor_avatar = new Object()
-            
+            var arr = vendorModel.user_id_front.name.split('.')
+            let extentionName = arr[arr.length - 1]
 
             if (vendorModel.user_id_front && vendorModel.user_id_back) {
                 let user_id_front_val = {
@@ -38,7 +39,7 @@ export default class vendorService {
             }
 
             if (vendorModel.avatar) {
-                var arr = vendorModel.avatar.split('.')
+                var arr = vendorModel.avatar.name.split('.')
                     let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.vendor_avatar_s3_bucket_name,
@@ -288,14 +289,14 @@ export default class vendorService {
             if (vendorModel.user_id_front && vendorModel.user_id_back) {
                 let user_id_front_val = {
                     bucket: config.card_upload_s3_bucket_name,
-                    key: `${uuidv4()}.${extentionName}`,
+                    key: `${vendorModel.username}_${vendorModel.user_id_front['name']}`,
                     body: await bucket.fileToArrayBuffer(vendorModel.user_id_front)
                 }
                 user_id_front_resp = await bucket.upload(user_id_front_val)
 
                 let user_id_back_val = {
                     bucket: config.card_upload_s3_bucket_name,
-                    key: `${uuidv4()}.${extentionName}`,
+                    key: `${vendorModel.username}_${vendorModel.user_id_back['name']}`,
                     body: await bucket.fileToArrayBuffer(vendorModel.user_id_back)
                 }
                 user_id_back_resp = await bucket.upload(user_id_back_val)
@@ -306,7 +307,7 @@ export default class vendorService {
                     let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
-                    key: `${uuidv4()}.${extentionName}`,
+                    key: `${vendorModel.username}_${vendorModel.avatar['name']}.${extentionName}`,
                     body: await bucket.fileToArrayBuffer(vendorModel.avatar)
                 }
                 vendor_avatar = await bucket.upload(avatar_val)

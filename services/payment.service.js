@@ -26,7 +26,7 @@ export default class PaymentService {
     try {
       // Create a PaymentIntent
       const paymentIntent = await stripeInstance.paymentIntents.create({
-        amount: Number(payment.price),
+        amount: Number(payment.price*100),
         currency: 'usd',
         automatic_payment_methods: {
           enabled: true,
@@ -51,7 +51,7 @@ export default class PaymentService {
     try {
 
       var transfer = await stripeInstance.transfers.create({
-        amount: payment.amount,
+        amount: payment.amount*100,
         currency: 'usd',
         destination: payment.vendorAccountId,
       });
