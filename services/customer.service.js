@@ -2,7 +2,7 @@ import handler from '../handlers/index.js'
 import config from '../config/index.js'
 import Prisma from '@prisma/client';
 const { PrismaClient } = Prisma;
-
+import { v4 as uuidv4 } from 'uuid';
 let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
 let bucket = new handler.bucketHandler()
 let encryption = new handler.encryption()
@@ -24,7 +24,7 @@ export default class CustomerService {
                     let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
-                    key: `${customerBody.email}_${customerBody.avatar['name']}.${extentionName}`,
+                    key: `${uuidv4()}.${extentionName}`,
                     body: await bucket.fileToArrayBuffer(customerBody.avatar)
                 }
                 customer_avatar = await bucket.upload(avatar_val)

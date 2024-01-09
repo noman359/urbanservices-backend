@@ -8,7 +8,7 @@ import { parse, format } from 'date-fns';
 import PaymentService from './payment.service.js';
 import stripe from 'stripe';
 const stripeInstance = stripe('sk_test_51OMUzdHmGYnRQyfQ80HgdP96iYWHbg5Surkh5c2uJgaXnUYeJS3OIEUj1NbS8U1jVH7YIPr8DfvjI28BjnbFCtvB00SxzStg0e');
-
+import { v4 as uuidv4 } from 'uuid';
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     // other configurations...
@@ -55,7 +55,7 @@ export default class JobsService {
 
                     let avatar_val = {
                         bucket: config.jobs_s3_bucket_name,
-                        key: `${currentDateTime.toISOString()}.${extentionName}`,
+                        key: `${uuidv4()}.${extentionName}`,
                         body: await bucket.fileToArrayBuffer(image)
                     }
                     job_image = await bucket.upload(avatar_val)
