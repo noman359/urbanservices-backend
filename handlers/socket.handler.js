@@ -12,7 +12,7 @@ export default class socketHandler {
             return this.#io
         } else {
             const server = http.createServer(app)
-            server.listen(3001, () => {
+            server.listen(3001, "ec2-44-205-32-103.compute-1.amazonaws.com",() => {
                 console.log(`Socket is listening to http://localhost:3001`);
             })
 
