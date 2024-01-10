@@ -1080,7 +1080,8 @@ export default class JobsService {
                     id: Number(customer.job_id)
                 },
                 include: {
-                    customers: true
+                    customers: true,
+                    sub_services: true
                 }
                 // select: {
                 //     customers: {
