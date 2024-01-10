@@ -18,7 +18,7 @@ export default class socketHandler {
 
             this.#io = new Server(server, {
                 cors: {
-                    origin: 'http://ec2-44-205-32-103.compute-1.amazonaws.com:8080',
+                    origin: 'http://ec2-44-205-32-103.compute-1.amazonaws.com:3001',
                     methods: ['GET', 'POST']
                 }
             });
