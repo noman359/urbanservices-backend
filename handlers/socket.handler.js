@@ -12,11 +12,16 @@ export default class socketHandler {
             return this.#io
         } else {
             const server = http.createServer(app)
-            server.listen(8081, 'ec2-44-205-32-103.compute-1.amazonaws.com',() => {
-                console.log(`Socket is listening to http://localhost:3001`);
+            server.listen(8081,() => {
+                console.log(`Socket is listening to http://localhost:8081`);
             })
 
-            this.#io = new Server(server);
+            this.#io = new Server(server,{
+                cors: {
+                    origin: '*',
+                    methods: ['GET', 'POST']
+                }
+                });
 
             this.#io.on('connection', (socket) => {
                 console.log('A user connected');
