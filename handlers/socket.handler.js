@@ -16,12 +16,7 @@ export default class socketHandler {
                 console.log(`Socket is listening to http://localhost:3001`);
             })
 
-            this.#io = new Server(server, {
-                cors: {
-                    origin: '*',
-                    methods: ['GET', 'POST']
-                }
-            });
+            this.#io = new Server(server);
 
             this.#io.on('connection', (socket) => {
                 console.log('A user connected');
