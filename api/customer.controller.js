@@ -25,6 +25,17 @@ export default class CustomerController {
         }
     }
 
+    async getCustomerNotications(req, res, next) {
+        console.log(req)
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let vendorResp = await customerServ.getNotifications({ customer_id: req.query.customer_id, limit: Number(req.query.limit), page: Number(req.query.page) })
+            next(vendorResp)
+        }
+    }
+
     async getFCMToken(req, res, next) {
         let created_customer_token = await customerServ.saveCustomerFCMToken(req.body)
         next(created_customer_token)

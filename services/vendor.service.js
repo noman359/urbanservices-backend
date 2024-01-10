@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import stripe from 'stripe';
 const stripeInstance = stripe('sk_test_51OMUzdHmGYnRQyfQ80HgdP96iYWHbg5Surkh5c2uJgaXnUYeJS3OIEUj1NbS8U1jVH7YIPr8DfvjI28BjnbFCtvB00SxzStg0e');
 import { v4 as uuidv4 } from 'uuid';
+import { parse, format } from 'date-fns';
 
 let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
 let bucket = new handler.bucketHandler()
@@ -40,7 +41,7 @@ export default class vendorService {
 
             if (vendorModel.avatar) {
                 var arr = vendorModel.avatar.name.split('.')
-                    let extentionName = arr[arr.length - 1]
+                let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.vendor_avatar_s3_bucket_name,
                     key: `${uuidv4()}.${extentionName}`,
@@ -84,20 +85,20 @@ export default class vendorService {
             }
             delete vendor.password
             let token = await JWT.getToken(vendor)
-            
+
             var serviceAccount = await stripeInstance.accounts.create({
                 type: 'custom',
                 country: 'US',
                 email: vendorModel.email,
                 capabilities: {
                     card_payments: {
-                      requested: true,
+                        requested: true,
                     },
                     transfers: {
-                      requested: true,
+                        requested: true,
                     }
-                  },
-    
+                },
+
             });
 
             var accountLink = await stripeInstance.accountLinks.create({
@@ -105,8 +106,8 @@ export default class vendorService {
                 refresh_url: 'https://codersglobe.com',
                 return_url: 'https://urban_cabs_vender',
                 type: 'account_onboarding',
-              });
-           
+            });
+
 
             await db.vendor.update({
                 where: {
@@ -167,7 +168,7 @@ export default class vendorService {
             servResp.data = {
                 ...vendor, token: token
             }
-            
+
             console.debug('vendor signIn() ended')
         } catch (error) {
             console.debug('vendor signIn() exception thrown')
@@ -198,6 +199,83 @@ export default class vendorService {
             servResp.message = error.message
         }
         return servResp
+    }
+
+    async getNotifications(query) {
+
+        let servResp = new config.serviceResponse()
+        const dateObject = new Date()
+        const nextDay = new Date(dateObject);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        const previousDate = new Date(dateObject);
+        previousDate.setDate(previousDate.getDate() - 1);
+        try {
+            let todayNotifications = await db.notifications.findMany({
+                where: {
+                    vendor_id: Number(query.vendor_id),
+                    created_at: {
+                        gte: dateObject,
+                        lt: nextDay,
+                    },
+                },
+                // skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                // take: query.limit, // Set the number of records to be returned per page
+
+            });
+
+            let yesterdayNotifications = await db.notifications.findMany({
+                where: {
+                    vendor_id: Number(query.vendor_id),
+                    created_at: {
+                        gte: previousDate,
+                        lt: dateObject,
+                    },
+                },
+                // skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                // take: query.limit, // Set the number of records to be returned per page
+
+            });
+
+            let olderNotifications = await db.notifications.findMany({
+                where: {
+                    vendor_id: Number(query.vendor_id),
+                    created_at: {
+                        lt: previousDate,
+                    },
+                },
+                skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                take: query.limit, // Set the number of records to be returned per page
+
+            });
+
+            var response = {};
+
+            if (Number(query.page) > 1) {
+                response = {
+                    older: olderNotifications
+                }
+
+            } else {
+                response = {
+                    today: todayNotifications,
+                    yesterday: yesterdayNotifications,
+                    older: olderNotifications
+                }
+            }
+            
+
+            servResp.data = response
+
+            
+        }
+        catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
     }
 
     async getVendorData(query) {
@@ -304,7 +382,7 @@ export default class vendorService {
 
             if (vendorModel.avatar) {
                 var arr = vendorModel.avatar.split('.')
-                    let extentionName = arr[arr.length - 1]
+                let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
                     key: `${vendorModel.username}_${vendorModel.avatar['name']}.${extentionName}`,

@@ -8,6 +8,7 @@ const lRoute = Router();
 export default function (router) {
     router.use('/customer', lRoute)
     lRoute.post('/token', customerCtrl.getFCMToken, handler.apiResponseHandler)
+    lRoute.post('/notifications', customerCtrl.getCustomerNotications, handler.apiResponseHandler)
     lRoute.post('/', formData, customerCtrl.createCustomer, handler.apiResponseHandler)
     lRoute.post('/login', customerCtrl.customerLogin, handler.apiResponseHandler)
     lRoute.get('/', customerCtrl.getCustomers, handler.apiResponseHandler)

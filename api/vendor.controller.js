@@ -60,6 +60,17 @@ export default class VendorController {
         }
     }
 
+    async getVendorNotications(req, res, next) {
+        console.log(req)
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let vendorResp = await vendorServ.getNotifications({ vendor_id: req.query.vendor_id, limit: Number(req.query.limit), page: Number(req.query.page) })
+            next(vendorResp)
+        }
+    }
+
     async getVendorsList(req, res, next) {
         console.log(req)
         let token = await tokenHandler.checkToken(req)

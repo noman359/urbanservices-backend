@@ -70,6 +70,92 @@ export default class CustomerService {
         return servResp
     }
 
+    async getNotifications(query) {
+
+        let servResp = new config.serviceResponse()
+        const dateObject = new Date()
+        const nextDay = new Date(dateObject);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        const previousDate = new Date(dateObject);
+        previousDate.setDate(previousDate.getDate() - 1);
+        try {
+            
+
+            var response = {};
+
+            if (Number(query.page) > 1) {
+                let olderNotifications = await db.notifications.findMany({
+                    where: {
+                        customer_id: Number(query.customer_id),
+                        created_at: {
+                            lt: previousDate,
+                        },
+                    },
+                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                    take: query.limit, // Set the number of records to be returned per page
+    
+                });
+                
+                response = {
+                    older: olderNotifications
+                }
+
+            } else {
+                let todayNotifications = await db.notifications.findMany({
+                    where: {
+                        customer_id: Number(query.customer_id),
+                        created_at: {
+                            gte: dateObject,
+                            lt: nextDay,
+                        },
+                    },
+    
+                });
+    
+                let yesterdayNotifications = await db.notifications.findMany({
+                    where: {
+                        customer_id: Number(query.customer_id),
+                        created_at: {
+                            gte: previousDate,
+                            lt: dateObject,
+                        },
+                    },
+    
+                });
+    
+                let olderNotifications = await db.notifications.findMany({
+                    where: {
+                        customer_id: Number(query.customer_id),
+                        created_at: {
+                            lt: previousDate,
+                        },
+                    },
+                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                    take: query.limit, // Set the number of records to be returned per page
+    
+                });
+                response = {
+                    today: todayNotifications,
+                    yesterday: yesterdayNotifications,
+                    older: olderNotifications
+                }
+            }
+            
+
+            servResp.data = response
+
+            
+        }
+        catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
     async updateCustomer(query, customerBody) {
         let servResp = new config.serviceResponse()
         let customer_avatar = new Object()

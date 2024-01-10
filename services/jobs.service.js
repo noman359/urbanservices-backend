@@ -155,6 +155,16 @@ export default class JobsService {
             })
             const registrationToken = vendor.fcm_token;
 
+            await db.notifications.create({
+                data: {
+                    description: `${customer.full_name} has requested estimates.`,
+                    created_at: new Date(new Date().toUTCString()),
+                    customer_id: Number(vendor.id),
+                    vendor_job_id: Number(job.job_id)
+
+                }
+            })
+
             const message = {
                 notification: {
                     title: 'Requested estimates',
@@ -232,6 +242,16 @@ export default class JobsService {
             const notify = ''
 
             const registrationToken = customer.fcm_token;
+
+            await db.notifications.create({
+                data: {
+                    description:`${vendor.first_name} has provided estimates.`,
+                    created_at: new Date(new Date().toUTCString()),
+                    customer_id: Number(customer.id),
+                    vendor_job_id: Number(job.job_id)
+
+                }
+            })
 
             const message = {
                 notification: {
@@ -427,6 +447,16 @@ export default class JobsService {
             })
             const registrationToken = vendor.fcm_token;
 
+            await db.notifications.create({
+                data: {
+                    description: `${customer.full_name} has assigned you a job.`,
+                    created_at: new Date(new Date().toUTCString()),
+                    vendor_id: Number(vendor.id),
+                    vendor_job_id: Number(job.job_id)
+
+                }
+            })
+
             const message = {
                 notification: {
                     title: 'Assigned Job',
@@ -497,6 +527,15 @@ export default class JobsService {
             })
             const registrationToken = customer.fcm_token;
 
+            await db.notifications.create({
+                data: {
+                    description: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
+                    created_at: new Date(new Date().toUTCString()),
+                    customer_id: Number(customer.id),
+                    vendor_job_id: Number(job.job_id)
+
+                }
+            })
             const message = {
                 notification: {
                     title: 'Job Accepted',
@@ -767,6 +806,16 @@ export default class JobsService {
             })
             const registrationToken = customer.fcm_token;
 
+            await db.notifications.create({
+                data: {
+                    description: `Your job has been started by ${vendor.first_name} ${vendor.last_name}`,
+                    created_at: new Date(new Date().toUTCString()),
+                    customer_id: Number(customer.id),
+                    vendor_job_id: Number(job.job_id)
+
+                }
+            })
+
             const message = {
                 notification: {
                     title: 'Job started',
@@ -868,6 +917,16 @@ export default class JobsService {
 
             const registrationToken = customer.fcm_token;
 
+            await db.notifications.create({
+                data: {
+                    description: `Your job has been completed by ${vendor.first_name} ${vendor.last_name}`,
+                    created_at: new Date(new Date().toUTCString()),
+                    customer_id: Number(customer.id),
+                    vendor_job_id: Number(job.job_id)
+
+                }
+            })
+
             const message = {
                 notification: {
                     title: 'Job completed',
@@ -926,6 +985,17 @@ export default class JobsService {
                 }
             })
             const registrationToken = customer.fcm_token;
+
+
+            await db.notifications.create({
+                data: {
+                    description: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
+                    created_at: new Date(new Date().toUTCString()),
+                    customer_id: Number(customer.id),
+                    vendor_job_id: Number(job.job_id)
+
+                }
+            })
 
             const message = {
                 notification: {
