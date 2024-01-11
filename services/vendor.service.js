@@ -205,58 +205,67 @@ export default class vendorService {
 
         let servResp = new config.serviceResponse()
         const dateObject = new Date()
-        const nextDay = new Date(dateObject);
-        nextDay.setDate(nextDay.getDate() + 1);
-
         const previousDate = new Date(dateObject);
         previousDate.setDate(previousDate.getDate() - 1);
+
+        const yesterdayDate = new Date(dateObject);
+        yesterdayDate.setDate(yesterdayDate.getDate() - 2);
         try {
-            let todayNotifications = await db.notifications.findMany({
-                where: {
-                    vendor_id: Number(query.vendor_id),
-                    created_at: {
-                        gte: dateObject,
-                        lt: nextDay,
-                    },
-                },
-                // skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
-                // take: query.limit, // Set the number of records to be returned per page
-
-            });
-
-            let yesterdayNotifications = await db.notifications.findMany({
-                where: {
-                    vendor_id: Number(query.vendor_id),
-                    created_at: {
-                        gte: previousDate,
-                        lt: dateObject,
-                    },
-                },
-                // skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
-                // take: query.limit, // Set the number of records to be returned per page
-
-            });
-
-            let olderNotifications = await db.notifications.findMany({
-                where: {
-                    vendor_id: Number(query.vendor_id),
-                    created_at: {
-                        lt: previousDate,
-                    },
-                },
-                skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
-                take: query.limit, // Set the number of records to be returned per page
-
-            });
+            
 
             var response = {};
 
             if (Number(query.page) > 1) {
+                let olderNotifications = await db.notifications.findMany({
+                    where: {
+                        vendor_id: Number(query.vendor_id),
+                        created_at: {
+                            lt: yesterdayDate,
+                        },
+                    },
+                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                    take: query.limit, // Set the number of records to be returned per page
+    
+                });
+                
                 response = {
                     older: olderNotifications
                 }
 
             } else {
+                let todayNotifications = await db.notifications.findMany({
+                    where: {
+                        vendor_id: Number(query.vendor_id),
+                        created_at: {
+                            gte: previousDate,
+                            lt: dateObject,
+                        },
+                    },
+    
+                });
+    
+                let yesterdayNotifications = await db.notifications.findMany({
+                    where: {
+                        vendor_id: Number(query.vendor_id),
+                        created_at: {
+                            gte: yesterdayDate,
+                            lt: previousDate,
+                        },
+                    },
+    
+                });
+    
+                let olderNotifications = await db.notifications.findMany({
+                    where: {
+                        vendor_id: Number(query.vendor_id),
+                        created_at: {
+                            lt: yesterdayDate,
+                        },
+                    },
+                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                    take: query.limit, // Set the number of records to be returned per page
+    
+                });
                 response = {
                     today: todayNotifications,
                     yesterday: yesterdayNotifications,
@@ -266,7 +275,6 @@ export default class vendorService {
             
 
             servResp.data = response
-
             
         }
         catch (error) {

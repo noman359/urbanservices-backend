@@ -74,11 +74,11 @@ export default class CustomerService {
 
         let servResp = new config.serviceResponse()
         const dateObject = new Date()
-        const nextDay = new Date(dateObject);
-        nextDay.setDate(nextDay.getDate() + 1);
-
         const previousDate = new Date(dateObject);
         previousDate.setDate(previousDate.getDate() - 1);
+
+        const yesterdayDate = new Date(dateObject);
+        yesterdayDate.setDate(yesterdayDate.getDate() - 2);
         try {
             
 
@@ -89,7 +89,7 @@ export default class CustomerService {
                     where: {
                         customer_id: Number(query.customer_id),
                         created_at: {
-                            lt: previousDate,
+                            lt: yesterdayDate,
                         },
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
@@ -106,8 +106,8 @@ export default class CustomerService {
                     where: {
                         customer_id: Number(query.customer_id),
                         created_at: {
-                            gte: dateObject,
-                            lt: nextDay,
+                            gte: previousDate,
+                            lt: dateObject,
                         },
                     },
     
@@ -117,8 +117,8 @@ export default class CustomerService {
                     where: {
                         customer_id: Number(query.customer_id),
                         created_at: {
-                            gte: previousDate,
-                            lt: dateObject,
+                            gte: yesterdayDate,
+                            lt: previousDate,
                         },
                     },
     
@@ -128,7 +128,7 @@ export default class CustomerService {
                     where: {
                         customer_id: Number(query.customer_id),
                         created_at: {
-                            lt: previousDate,
+                            lt: yesterdayDate,
                         },
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
