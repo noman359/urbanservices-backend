@@ -326,6 +326,8 @@ export default class vendorService {
                     last_name: true,
                     charges: true,
                     avatar: true,
+                    lat: true,
+                    long: true,
                     vendor_reviews: {
                         select: {
                             id: true,
