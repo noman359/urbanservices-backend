@@ -129,4 +129,14 @@ export default class VendorController {
             next(vendor_job_details)
         }
     }
+
+    async getVendorCoordinates(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let vendorCoordinates = await vendorServ.saveVendorCoordinates({ vendor_id: req.body.vendor_id, lat: req.body.lat, long: req.body.long })
+            next(vendorCoordinates)
+        }
+    }
 }

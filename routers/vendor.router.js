@@ -14,6 +14,7 @@ export default function (router) {
     lRoute.get('/list', vendorCtrl.getVendorsList, handler.apiResponseHandler)
     lRoute.get('/notifications', vendorCtrl.getVendorNotications, handler.apiResponseHandler)
     lRoute.post('/review', vendorCtrl.saveVendorReview, handler.apiResponseHandler)
+    lRoute.post('/coordinates', vendorCtrl.getVendorCoordinates, handler.apiResponseHandler)
     lRoute.post('/reviews', vendorCtrl.getVendorReviews, handler.apiResponseHandler)
     lRoute.put('/:id', formData, vendorCtrl.updateVendor, handler.apiResponseHandler)
     lRoute.post('/login', vendorCtrl.loginVendor, handler.apiResponseHandler)
