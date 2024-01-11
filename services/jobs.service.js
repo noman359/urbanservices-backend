@@ -112,8 +112,9 @@ export default class JobsService {
                         sub_service_id: parseInt(job.sub_service_id, 10),
                         customer_id: parseInt(job.customer_id, 10),
                         vendor_id: parseInt(job.vendor_id, 10),
-                        job_property_details_id: parseInt(propertyResult.id, 10)
-
+                        job_property_details_id: parseInt(propertyResult.id, 10),
+                        lat: Number(job.lat),
+                        long: Number(job.long)
 
                     }
                 })
