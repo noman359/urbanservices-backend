@@ -47,7 +47,7 @@ export default class ServicesService {
                     services: true, // This includes the posts related to the user
                 },
                 take: filters.limit,
-                skip: filters.offset * 10
+                skip: filters.offset
             }), db.services.count({ where: filters.filter })])
             servResp.data = {
                 sub_services: sub_services,
@@ -60,5 +60,64 @@ export default class ServicesService {
         }
         return servResp
     }
+
+    async getPopularSubServices(filters = {
+        service_id: 0, limit: 10, offset: 0
+    }) {
+        let servResp = new config.serviceResponse()
+        try {
+
+            if (filters.service != null) {
+                let [sub_services, count] = await db.$transaction([db.sub_services.findMany({
+                    where: {
+                        services_id: filters.service_id
+                    },
+                    orderBy: {
+                        stats: 'desc', // Order by stats column in descending order (higher stats first)
+                    },
+                    take: filters.limit,
+                    skip: filters.offset
+                }), db.sub_services.count({ 
+                    where: {
+                        services_id: filters.service_id
+                    },
+                    orderBy: {
+                        stats: 'desc', // Order by stats column in descending order (higher stats first)
+                    },
+                    take: filters.limit,
+                    skip: filters.offset
+                })])
+                servResp.data = {
+                    sub_services: sub_services,
+                    count: count
+                }
+            } else {
+                let [sub_services, count] = await db.$transaction([db.sub_services.findMany({
+                    orderBy: {
+                        stats: 'desc', // Order by stats column in descending order (higher stats first)
+                    },
+                    take: filters.limit,
+                    skip: filters.offset
+                }), db.sub_services.count({ 
+                    orderBy: {
+                        stats: 'desc', // Order by stats column in descending order (higher stats first)
+                    },
+                    take: filters.limit,
+                    skip: filters.offset
+                })])
+                servResp.data = {
+                    sub_services: sub_services,
+                    count: count
+                }
+            }
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
 
 }

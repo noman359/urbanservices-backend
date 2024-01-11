@@ -75,6 +75,7 @@ export default class JobsService {
             })
             var imagesString = images.join(',')
             console.log(propertyResult.id)
+
             if (job.job_type == "urgent") {
                 servResp.data = await db.vendor_jobs.create({
 
@@ -119,6 +120,16 @@ export default class JobsService {
                     }
                 })
             }
+
+            let subServices = await db.sub_services.update({
+                where: {
+                    id: Number(job.sub_service_id)
+                },
+                data: {
+                    stats: {increment: 1}
+                }
+            })
+
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -1084,18 +1095,6 @@ export default class JobsService {
                     customers: true,
                     sub_services: true
                 }
-                // select: {
-                //     customers: {
-                //         select: {
-                //             id: true,
-                //             full_name: true,
-                //             phone_number: true,
-                //             avatar: true,
-                //             email: true,
-                //             status: true
-                //         }
-                //     }
-                // }
             })
             console.debug('createCustomer() returning')
 

@@ -8,6 +8,7 @@ const lRoute = Router();
 export default function (router) {
     router.use('/services', lRoute)
     lRoute.get('/', filtersParser, serviceCtrl.getServices, handler.apiResponseHandler)
+    lRoute.get('/popular', serviceCtrl.getPopularSubServices, handler.apiResponseHandler)
     lRoute.get('/:id/subservices', serviceCtrl.getSubServices, handler.apiResponseHandler)
     // lRoute.put('/:id', formData, serviceCtrl.updateCustomer, handler.apiResponseHandler)
 }
