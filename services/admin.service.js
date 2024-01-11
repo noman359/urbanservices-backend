@@ -385,7 +385,8 @@ export default class AdminService {
             servResp.data = await db.services.create({
                 data: {
                     name: serviceBody.name,
-                    created_at: new Date(new Date().toUTCString())
+                    created_at: new Date(new Date().toUTCString()),
+                    stats: 0
                 }
             })
             console.debug('createCustomer() returning')
