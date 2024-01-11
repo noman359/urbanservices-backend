@@ -449,7 +449,8 @@ export default class AdminService {
                 data: {
                     name: serviceBody.name,
                     created_at: new Date(new Date().toUTCString()),
-                    services_id: Number(serviceBody.service_id)
+                    services_id: Number(serviceBody.service_id),
+                    stats: 0
                 }
             })
             console.debug('createCustomer() returning')
