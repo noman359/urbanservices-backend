@@ -139,4 +139,14 @@ export default class VendorController {
             next(vendorCoordinates)
         }
     }
+
+    async changeVendorStatus(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let status = await vendorServ.changeVendorStatus({ vendor_id: req.body.vendor_id, status: req.body.status})
+            next(status)
+        }
+    }
 }

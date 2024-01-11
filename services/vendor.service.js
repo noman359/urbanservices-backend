@@ -318,7 +318,8 @@ export default class vendorService {
             console.debug('getVendorList() started')
             const paginatedData = await db.vendor.findMany({
                 where: {
-                    service_id: Number(filters.service_id)
+                    service_id: Number(filters.service_id),
+                    status: 'online'
                 },
                 select: {
                     id: true,
@@ -328,6 +329,7 @@ export default class vendorService {
                     avatar: true,
                     lat: true,
                     long: true,
+                    status: true,
                     vendor_reviews: {
                         select: {
                             id: true,
@@ -569,6 +571,30 @@ export default class vendorService {
                 data: {
                     lat: Number(query.lat),
                     long: Number(query.long),
+                },
+                where: {
+                    id: Number(query.vendor_id)
+                }
+
+            })
+
+            servResp.data = vendor
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async changeVendorStatus(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorData() started')
+            let vendor = await db.vendor.update({
+                data: {
+                    status: query.status
                 },
                 where: {
                     id: Number(query.vendor_id)
