@@ -159,7 +159,7 @@ export default class JobsService {
                 data: {
                     description: `${customer.full_name} has requested estimates.`,
                     created_at: new Date(new Date().toUTCString()),
-                    customer_id: Number(vendor.id),
+                    vendor_id: Number(vendor.id),
                     vendor_job_id: Number(job.job_id)
 
                 }
