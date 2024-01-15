@@ -376,8 +376,8 @@ export default class JobsService {
                     }
 
                 },
-                skip: (job.offset - 1) * job.limit, // Calculate the number of records to skip based on page number
-                take: job.limit, // Set the number of records to be returned per page
+                // skip: (job.offset - 1) * job.limit, // Calculate the number of records to skip based on page number
+                // take: job.limit, // Set the number of records to be returned per page
 
             })
             servResp.data = {
