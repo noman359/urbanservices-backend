@@ -42,13 +42,23 @@ export default class JobsController {
     }
 
     async startedJob(req, res, next) {
-        // let token = await tokenHandler.checkToken(req)
-        // if (token.isError == true) {
-        //     next(token)
-        // } else {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
             let created_customer = await customerServ.startedJob(req.body)
             next(created_customer)
-      //  }
+        }
+    }
+
+    async onWayToJob(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let created_customer = await customerServ.onWayJob(req.body)
+            next(created_customer)
+        }
     }
 
     async completeJob(req, res, next) {

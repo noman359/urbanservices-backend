@@ -859,6 +859,75 @@ export default class JobsService {
         return servResp
     }
 
+    async onWayJob(job) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('createCustomer() started')
+
+            servResp.data = await db.vendor_jobs.update({
+                where: {
+                    id: Number(job.job_id)
+                },
+                data: {
+                    status: vendor_jobs_status.onway
+                }
+
+            })
+
+            var customer = await db.customers.findFirst({
+                where: {
+                    id: Number(servResp.data.customer_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id: Number(servResp.data.vendor_id)
+                }
+            })
+            const registrationToken = customer.fcm_token;
+
+            await db.notifications.create({
+                data: {
+                    description: `${vendor.first_name} ${vendor.last_name} is on his way`,
+                    created_at: new Date(new Date().toUTCString()),
+                    customer_id: Number(customer.id),
+                    vendor_job_id: Number(job.job_id)
+
+                }
+            })
+
+            const message = {
+                notification: {
+                    title: 'On Way',
+                    body: `${vendor.first_name} ${vendor.last_name} is on his way`,
+                },
+                data: {
+                    // Add extra data here
+                    id: `${job.job_id}`,
+                    // Add other key-value pairs as needed
+                },
+                token: registrationToken,
+            };
+
+            admin.messaging().send(message)
+                .then((response) => {
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                });
+
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async completeJob(job) {
         let servResp = new config.serviceResponse()
         try {
