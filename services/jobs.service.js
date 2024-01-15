@@ -409,6 +409,14 @@ export default class JobsService {
                             phone_number: true,
                             avatar: true
                         }
+                    },
+                    vendor: {
+                        select: {
+                            id: true,
+                            first_name: true,
+                            last_name: true,
+                            avatar: true
+                        }
                     }
                 }
 
