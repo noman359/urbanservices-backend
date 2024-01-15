@@ -23,12 +23,12 @@ export default class JobsController {
 
     async assignJob(req, res, next) {
         let token = await tokenHandler.checkToken(req)
-        // if (token.isError == true) {
-        //     next(token)
-        // } else {
+        if (token.isError == true) {
+            next(token)
+        } else {
             let created_customer = await customerServ.assignJob(req.body)
             next(created_customer)
-       // }
+        }
     }
 
     async acceptedJob(req, res, next) {
@@ -147,7 +147,7 @@ export default class JobsController {
         if (token.isError == true) {
             next(token)
         } else {
-            let vendorResp = await customerServ.getVendorJobs({ vendor_id: Number(req.query.vendor_id), status: req.query.status })
+            let vendorResp = await customerServ.getVendorJobs({ vendor_id: Number(req.query.vendor_id), status: req.query.status , limit: Number(req.query.limit), offset: Number(req.query.offset) })
             next(vendorResp)
         }
     }
@@ -159,7 +159,7 @@ export default class JobsController {
         if (token.isError == true) {
             next(token)
         } else {
-            let vendorResp = await customerServ.getCustomerJobs({ customer_id: Number(req.query.customer_id), status: req.query.status })
+            let vendorResp = await customerServ.getCustomerJobs({ customer_id: Number(req.query.customer_id), status: req.query.status, limit: Number(req.query.limit), offset: Number(req.query.offset)  })
             next(vendorResp)
         }
     }

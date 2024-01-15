@@ -321,6 +321,8 @@ export default class vendorService {
                     service_id: Number(filters.service_id),
                     status: 'online'
                 },
+                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                take: filters.limit, // Set the number of records to be returned per page
                 select: {
                     id: true,
                     first_name: true,
@@ -525,7 +527,9 @@ export default class vendorService {
                             }
                         }
                     }, customers: true
-                }, orderBy: { created_at: 'desc' }
+                }, orderBy: { created_at: 'desc' },
+                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                take: filters.limit, // Set the number of records to be returned per page
             })
             servResp.data = jobs
             console.debug('getVendorJobs() returning ')

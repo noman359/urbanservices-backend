@@ -315,7 +315,9 @@ export default class JobsService {
                 where: {
                     customer_id: Number(job.customer_id),
                     status: job.status
-                }
+                },
+                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                take: filters.limit, // Set the number of records to be returned per page
             })
             servResp.data = {
                 estimates: estimates
@@ -373,7 +375,9 @@ export default class JobsService {
                         }
                     }
 
-                }
+                },
+                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                take: filters.limit, // Set the number of records to be returned per page
 
             })
             servResp.data = {
@@ -418,6 +422,7 @@ export default class JobsService {
                             avatar: true
                         }
                     }
+                    
                 }
 
             })
@@ -1126,7 +1131,9 @@ export default class JobsService {
                 where: {
                     vendor_id: Number(vendor.vendor_id),
                     status: vendor.status
-                }
+                },
+                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                take: filters.limit, // Set the number of records to be returned per page
             })
             console.debug('createCustomer() returning')
 
@@ -1147,7 +1154,9 @@ export default class JobsService {
                 where: {
                     customer_id: Number(customer.customer_id),
                     status: customer.status
-                }
+                },
+                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                take: filters.limit, // Set the number of records to be returned per page
             })
             console.debug('createCustomer() returning')
 
