@@ -376,8 +376,8 @@ export default class JobsService {
                     }
 
                 },
-                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
-                take: filters.limit, // Set the number of records to be returned per page
+                skip: (job.offset - 1) * job.limit, // Calculate the number of records to skip based on page number
+                take: job.limit, // Set the number of records to be returned per page
 
             })
             servResp.data = {
@@ -1132,8 +1132,8 @@ export default class JobsService {
                     vendor_id: Number(vendor.vendor_id),
                     status: vendor.status
                 },
-                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
-                take: filters.limit, // Set the number of records to be returned per page
+                skip: (vendor.offset - 1) * vendor.limit, // Calculate the number of records to skip based on page number
+                take: vendor.limit, // Set the number of records to be returned per page
             })
             console.debug('createCustomer() returning')
 
@@ -1155,8 +1155,8 @@ export default class JobsService {
                     customer_id: Number(customer.customer_id),
                     status: customer.status
                 },
-                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
-                take: filters.limit, // Set the number of records to be returned per page
+                skip: (customer.offset - 1) * customer.limit, // Calculate the number of records to skip based on page number
+                take: customer.limit, // Set the number of records to be returned per page
             })
             console.debug('createCustomer() returning')
 
