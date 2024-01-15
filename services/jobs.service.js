@@ -1132,6 +1132,9 @@ export default class JobsService {
                     vendor_id: Number(vendor.vendor_id),
                     status: vendor.status
                 },
+                include: {
+                    vendor: true
+                },
                 skip: (vendor.offset - 1) * vendor.limit, // Calculate the number of records to skip based on page number
                 take: vendor.limit, // Set the number of records to be returned per page
             })
