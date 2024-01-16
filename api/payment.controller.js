@@ -12,7 +12,7 @@ export default class PaymentController {
         if (token.isError == true) {
             next(token)
         } else {
-            let services = await servicesServ.createPaymentIntents({ price: req.body.price, job_id: req.body.job_id })
+            let services = await servicesServ.createPaymentIntents({ price: req.body.price, job_id: Number(req.body.job_id)})
             next(services)
         }
     }
