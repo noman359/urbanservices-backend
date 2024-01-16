@@ -727,6 +727,7 @@ export default class JobsService {
                         long: true,
                         vendor_lat: true,
                         vendor_long: true,
+                        scheduled_time: true,
                         vendor: {
                             select: {
                                 id: true,
@@ -768,6 +769,7 @@ export default class JobsService {
                         long: true,
                         vendor_lat: true,
                         vendor_long: true,
+                        scheduled_time: true,
                         customers: {
                             select: {
                                 id: true,
