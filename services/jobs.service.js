@@ -1158,13 +1158,8 @@ export default class JobsService {
                     customer_id: Number(customer.customer_id),
                     status: customer.status
                 },
-                select: {
-                    vendor: {
-                        id: true,
-                        first_name: true,
-                        last_name: true,
-                        avatar: true,
-                    }
+                include: {
+                    vendor: true
                 },
                 skip: (customer.offset - 1) * customer.limit, // Calculate the number of records to skip based on page number
                 take: customer.limit, // Set the number of records to be returned per page
