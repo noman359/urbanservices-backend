@@ -731,7 +731,8 @@ export default class JobsService {
                             select: {
                                 id: true,
                                 first_name: true,
-                                last_name: true
+                                last_name: true,
+                                avatar: true
                             }
                         },
 
