@@ -996,7 +996,7 @@ export default class JobsService {
 
             servResp.data = await db.vendor_jobs.update({
                 where: {
-                    id: Number(job.job_id)
+                    id: Number(jobpaymentDetails.vendor_job_id)
                 },
                 data: {
                     status: vendor_jobs_status.done
