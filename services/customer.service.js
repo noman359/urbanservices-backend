@@ -20,7 +20,7 @@ export default class CustomerService {
         try {
             console.debug('createCustomer() started')
             if (customerBody.avatar) {
-                var arr = customerBody.avatar.split('.')
+                var arr = customerBody.avatar.name.split('.')
                     let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,

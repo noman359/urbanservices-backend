@@ -3,7 +3,7 @@ import config from '../config/index.js'
 import Prisma, { vendor_jobs_status } from '@prisma/client';
 const { PrismaClient } = Prisma;
 import admin from 'firebase-admin';
-import serviceAccount from '../urbancabsvender-firebase-adminsdk-70gg2-1c61b6ef2c.json' assert { type: "json" };
+import serviceAccount from '../urban-service-399715-firebase-adminsdk-8cnwc-b77d07c8f8.json' assert { type: "json" };
 import { parse, format } from 'date-fns';
 import PaymentService from './payment.service.js';
 import stripe from 'stripe';
@@ -73,7 +73,10 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString())
                 }
             })
-            var imagesString = images.join(',')
+            var imagesString = ''
+            if (images.length != 0) {
+                imagesString = images.join(',')
+            }
             console.log(propertyResult.id)
 
             if (job.job_type == "urgent") {
@@ -126,7 +129,7 @@ export default class JobsService {
                     id: Number(job.sub_service_id)
                 },
                 data: {
-                    stats: {increment: 1}
+                    stats: { increment: 1 }
                 }
             })
 
@@ -257,7 +260,7 @@ export default class JobsService {
 
             await db.notifications.create({
                 data: {
-                    description:`${vendor.first_name} has provided estimates.`,
+                    description: `${vendor.first_name} has provided estimates.`,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
                     vendor_job_id: Number(job.job_id)
@@ -422,7 +425,7 @@ export default class JobsService {
                             avatar: true
                         }
                     }
-                    
+
                 }
 
             })
