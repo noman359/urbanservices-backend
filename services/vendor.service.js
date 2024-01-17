@@ -20,10 +20,11 @@ export default class vendorService {
             let user_id_front_resp = new Object()
             let user_id_back_resp = new Object()
             let vendor_avatar = new Object()
-            var arr = vendorModel.user_id_front.name.split('.')
-            let extentionName = arr[arr.length - 1]
+
 
             if (vendorModel.user_id_front && vendorModel.user_id_back) {
+                var arr = vendorModel.user_id_front.name.split('.')
+                let extentionName = arr[arr.length - 1]
                 let user_id_front_val = {
                     bucket: config.card_upload_s3_bucket_name,
                     key: `${uuidv4()}.${extentionName}`,
@@ -211,7 +212,7 @@ export default class vendorService {
         const yesterdayDate = new Date(dateObject);
         yesterdayDate.setDate(yesterdayDate.getDate() - 2);
         try {
-            
+
 
             var response = {};
 
@@ -225,9 +226,9 @@ export default class vendorService {
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
-    
+
                 });
-                
+
                 response = {
                     older: olderNotifications
                 }
@@ -241,9 +242,9 @@ export default class vendorService {
                             lt: dateObject,
                         },
                     },
-    
+
                 });
-    
+
                 let yesterdayNotifications = await db.notifications.findMany({
                     where: {
                         vendor_id: Number(query.vendor_id),
@@ -252,9 +253,9 @@ export default class vendorService {
                             lt: previousDate,
                         },
                     },
-    
+
                 });
-    
+
                 let olderNotifications = await db.notifications.findMany({
                     where: {
                         vendor_id: Number(query.vendor_id),
@@ -264,7 +265,7 @@ export default class vendorService {
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
-    
+
                 });
                 response = {
                     today: todayNotifications,
@@ -272,10 +273,10 @@ export default class vendorService {
                     older: olderNotifications
                 }
             }
-            
+
 
             servResp.data = response
-            
+
         }
         catch (error) {
             console.debug('createVendor() exception thrown')
