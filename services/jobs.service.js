@@ -949,6 +949,7 @@ export default class JobsService {
 
     async completeJob(job) {
         let servResp = new config.serviceResponse()
+        var vendor = {};
         try {
             console.debug('createCustomer() started')
 
@@ -979,7 +980,7 @@ export default class JobsService {
                 }
             })
 
-            var vendor = await db.vendor.findFirst({
+            vendor = await db.vendor.findFirst({
                 where: {
                     id: Number(job.vendor_id)
                 }
@@ -1053,7 +1054,7 @@ export default class JobsService {
         } catch (error) {
             console.debug('createVendor() exception thrown')
             servResp.isError = true
-            servResp.message = error.message
+            servResp.message = error.message+`Please go to this link: ${vendor.on_board_url}`
         }
         return servResp
     }

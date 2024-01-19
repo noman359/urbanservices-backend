@@ -60,6 +60,7 @@ export default class PaymentService {
       return transfer;
     } catch (error) {
       console.error('Error sending money:', error);
+      error.message = 'You payment receiving account is not active'
       throw error;
     }
   }

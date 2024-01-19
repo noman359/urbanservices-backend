@@ -1,9 +1,10 @@
 export default class responseHandler {
-    static apiSuccess(res, result = null, message = "success") {
+    static apiSuccess(res, result = null, message = "success", count = 0) {
         res.status(200).json({
             error: false,
             message: message,
             data: result,
+            count: count,
             errors: [],
         });
     };

@@ -5,6 +5,6 @@ export default function (response, req, res, next) {
     if (response.isError) {
         config.responseHandler.apiError(res, response.message, null, null, 400)
     } else {
-        config.responseHandler.apiSuccess(res, response.data, response.message)
+        config.responseHandler.apiSuccess(res, response.data, response.message, response.count)
     }
 }

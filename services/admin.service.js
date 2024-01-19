@@ -79,16 +79,16 @@ export default class AdminService {
         return servResp
     }
 
-
     async getVendorsList(filters) {
-        let servResp = new config.serviceResponse()
+        var servResp = new config.serviceResponse()
         try {
             console.debug('getVendorList() started')
             var paginatedData = {};
+            var count = 0
             if (filters.status != null) {
 
                 if (filters.search != null) {
-                    paginatedData = await db.vendor.findMany({
+                 [paginatedData, count] =  await db.$transaction( [db.vendor.findMany({
                         where: {
                             status: filters.status,
                             full_name: {
@@ -97,22 +97,33 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.vendor.count({
+                        where: {
+                            status: filters.status,
+                            full_name: {
+                                startsWith: filters.search,
+                            }
+                        },
+                    })]);
                 } else {
-                    paginatedData = await db.vendor.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.vendor.findMany({
                         where: {
                             status: filters.status
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.vendor.count({
+                        where: {
+                            status: filters.status
+                        },
+                    })]);
                 }
 
             } else {
 
                 if (filters.search != null) {
 
-                    paginatedData = await db.vendor.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.vendor.findMany({
                         where: {
                             full_name: {
                                 startsWith: filters.search,
@@ -120,18 +131,25 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.vendor.count({
+                        where: {
+                            full_name: {
+                                startsWith: filters.search,
+                            }
+                        },
+                    })]);
 
                 } else {
-                    paginatedData = await db.vendor.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.vendor.findMany({
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.vendor.count()]);
                 }
             }
 
+            servResp.count = count
             servResp.data = paginatedData
-            console.debug('getVendorData() ended')
+            console.debug('getVendorData() ended',servResp.totalRecords)
         } catch (error) {
             console.debug('createVendor() exception thrown')
             servResp.isError = true
@@ -145,10 +163,11 @@ export default class AdminService {
         try {
             console.debug('getCustomerList() started')
             var paginatedData = {}
+            var count = 0
             if (filters.status != null) {
 
                 if (filters.search != null) {
-                    paginatedData = await db.customers.findMany({
+                    [paginatedData, count] =  await db.$transaction([db.customers.findMany({
                         where: {
                             status: filters.status,
                             full_name: {
@@ -157,23 +176,34 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.customers.count({
+                        where: {
+                            status: filters.status,
+                            full_name: {
+                                startsWith: filters.search,
+                            }
+                        },
+                    })]);
 
                 } else {
-                    paginatedData = await db.customers.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.customers.findMany({
                         where: {
                             status: filters.status
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.customers.count({
+                        where: {
+                            status: filters.status
+                        },
+                    })]);
                 }
 
             } else {
 
                 if (filters.search != null) {
 
-                    paginatedData = await db.customers.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.customers.findMany({
                         where: {
                             full_name: {
                                 startsWith: filters.search,
@@ -181,16 +211,23 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.customers.count({
+                        where: {
+                            full_name: {
+                                startsWith: filters.search,
+                            }
+                        },
+                    })]);
 
                 } else {
-                    paginatedData = await db.customers.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.customers.findMany({
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.customers.count()]);
                 }
             }
-
+            servResp.count = count
+            paginatedData.count = count
             servResp.data = paginatedData
             console.debug('getVendorData() ended')
         } catch (error) {
@@ -319,10 +356,11 @@ export default class AdminService {
         try {
             console.debug('getCustomerList() started')
             var paginatedData = {}
+            var count = 0
             if (filters.status != null) {
 
                 if (filters.search != null) {
-                    paginatedData = await db.vendor_jobs.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.vendor_jobs.findMany({
                         where: {
                             status: filters.status,
                             description: {
@@ -333,23 +371,36 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.vendor_jobs.count({
+                        where: {
+                            status: filters.status,
+                            description: {
+                                startsWith: filters.search,
+                            },
+
+
+                        },
+                    })]);
 
                 } else {
-                    paginatedData = await db.vendor_jobs.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.vendor_jobs.findMany({
                         where: {
                             status: filters.status
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.vendor_jobs.count({
+                        where: {
+                            status: filters.status
+                        },
+                    })]);
                 }
 
             } else {
 
                 if (filters.search != null) {
 
-                    paginatedData = await db.vendor_jobs.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.vendor_jobs.findMany({
                         where: {
                             description: {
                                 startsWith: filters.search,
@@ -358,16 +409,24 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.vendor_jobs.count({
+                        where: {
+                            description: {
+                                startsWith: filters.search,
+                            },
+
+                        },
+                    })]);
 
                 } else {
-                    paginatedData = await db.vendor_jobs.findMany({
+                    [paginatedData, count] =  await db.$transaction( [db.vendor_jobs.findMany({
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    });
+                    }),db.vendor_jobs.count()]);
                 }
             }
-
+            servResp.count = count
+            paginatedData.count = count
             servResp.data = paginatedData
             console.debug('getVendorData() ended')
         } catch (error) {
@@ -377,7 +436,6 @@ export default class AdminService {
         }
         return servResp
     }
-
 
     async createService(serviceBody) {
         let servResp = new config.serviceResponse()
