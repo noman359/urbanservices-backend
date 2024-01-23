@@ -329,6 +329,7 @@ export default class CustomerService {
         try {
             console.debug('getCustomer() started')
             servResp.data = await db.customers.findFirst({ where: { id: Number(query.id) } })
+            delete servResp.data.fcm_token;
             console.debug('getCustomer() returning')
         } catch (error) {
             console.debug('getCustomer() exception thrown')
@@ -352,7 +353,7 @@ export default class CustomerService {
             if (!customer) {
                 throw new Error('User not found, Incorrect email or password')
             }
-
+            delete customer.fcm_token;
             let token = await JWT.getToken(customer)
             servResp.data = {
                 ...customer, token: token

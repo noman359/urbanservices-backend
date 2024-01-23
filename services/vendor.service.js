@@ -165,6 +165,7 @@ export default class vendorService {
                 throw new Error('User not found, Incorrect email or password')
             }
             delete vendor.password
+            delete vendor.fcm_token
             let token = await JWT.getToken(vendor)
             servResp.data = {
                 ...vendor, token: token
@@ -303,6 +304,7 @@ export default class vendorService {
                 rating += review.rating
             }
             vendor.rating = rating
+            delete vendor.fcm_token
             servResp.data = vendor
             console.debug('getVendorData() ended')
         } catch (error) {
