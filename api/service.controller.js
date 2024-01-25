@@ -17,7 +17,7 @@ export default class CustomerController {
     }
 
     async getPopularSubServices(req, res, next) {
-        let subServices = await servicesServ.getPopularSubServices({service_id:Number(req.params.id), limit: Number(req.query.limit ?? 10), offset: Number(req.query.offset ?? 0)})
+        let subServices = await servicesServ.getPopularSubServices({service_id:Number(req.query.service_id), limit: Number(req.query.limit ?? 10), offset: Number(req.query.offset ?? 0)})
         next(subServices)
     }
 }

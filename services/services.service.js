@@ -67,7 +67,7 @@ export default class ServicesService {
         let servResp = new config.serviceResponse()
         try {
 
-            if (filters.service != null) {
+            if (filters.service_id != null) {
                 let [sub_services, count] = await db.$transaction([db.sub_services.findMany({
                     where: {
                         services_id: filters.service_id
