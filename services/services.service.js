@@ -67,10 +67,10 @@ export default class ServicesService {
         let servResp = new config.serviceResponse()
         try {
 
-            if (filters.service_id != null) {
+            if (filters.service_id != null || filters.service_id != undefined) {
                 let [sub_services, count] = await db.$transaction([db.sub_services.findMany({
                     where: {
-                        services_id: filters.service_id
+                        services_id: Number(filters.service_id)
                     },
                     orderBy: {
                         stats: 'desc', // Order by stats column in descending order (higher stats first)
@@ -79,7 +79,7 @@ export default class ServicesService {
                     skip: filters.offset
                 }), db.sub_services.count({ 
                     where: {
-                        services_id: filters.service_id
+                        services_id:  Number(filters.service_id)
                     },
                     orderBy: {
                         stats: 'desc', // Order by stats column in descending order (higher stats first)
