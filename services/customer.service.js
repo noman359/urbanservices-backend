@@ -111,6 +111,10 @@ export default class CustomerService {
                         created_at: {
                             lt: yesterdayDate,
                         },
+                    
+                    },
+                    include: {
+                        vendor: true
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
@@ -129,6 +133,10 @@ export default class CustomerService {
                             gte: previousDate,
                             lt: dateObject,
                         },
+                        
+                    },
+                    include: {
+                        vendor: true
                     },
     
                 });
@@ -141,7 +149,9 @@ export default class CustomerService {
                             lt: previousDate,
                         },
                     },
-    
+                    include: {
+                        vendor: true
+                    },
                 });
     
                 let olderNotifications = await db.notifications.findMany({
@@ -150,6 +160,9 @@ export default class CustomerService {
                         created_at: {
                             lt: yesterdayDate,
                         },
+                    },
+                    include: {
+                        vendor: true
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
@@ -201,7 +214,7 @@ export default class CustomerService {
                     let extentionName = arr[arr.length - 1]
                     let avatar_val = {
                         bucket: config.customer_avatar_s3_bucket_name,
-                        key: `${customerBody.email}_${customerBody.avatar['name']}.${extentionName}`,
+                        key: `${uuidv4()}.${extentionName}`,
                         body: await bucket.fileToArrayBuffer(customerBody.avatar)
                     }
                     customer_avatar = await bucket.upload(avatar_val)
@@ -214,7 +227,6 @@ export default class CustomerService {
                     full_name: customerBody.full_name || undefined,
                     avatar: customer_avatar.url ? customer_avatar.url : undefined,
                     updated_at: new Date(new Date().toUTCString()),
-                    phone_number: customerBody.phone_number || undefined,
                     zipcode: customerBody.zipcode || undefined,
                     email: customerBody.email || undefined
                 },
