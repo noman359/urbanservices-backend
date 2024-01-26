@@ -77,6 +77,9 @@ export default class CustomerService {
             let notification = await db.notifications.update({
                 where: {
                     id: query.id
+                },
+                data: {
+                    isRead: 1
                 }
                 
             })

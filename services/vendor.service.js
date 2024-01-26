@@ -210,6 +210,9 @@ export default class vendorService {
             let notification = await db.notifications.update({
                 where: {
                     id: query.id
+                },
+                data: {
+                    isRead: 1
                 }
                 
             })
