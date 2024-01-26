@@ -176,7 +176,8 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString()),
                     vendor_id: Number(vendor.id),
                     vendor_job_id: Number(job.job_id),
-                    customer_id: Number(job.customer_id)
+                    customer_id: Number(job.customer_id),
+                    isRead: 0
 
                 }
             })
@@ -267,7 +268,8 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
                     vendor_job_id: Number(job.job_id),
-                    vendor_id: Number(estiimate.vendor_id)
+                    vendor_id: Number(estiimate.vendor_id),
+                    isRead: 0
 
                 }
             })
@@ -487,7 +489,8 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString()),
                     vendor_id: Number(vendor.id),
                     vendor_job_id: Number(job.job_id),
-                    customer_id: Number(servResp.data.customer_id)
+                    customer_id: Number(servResp.data.customer_id),
+                    isRead: 0
 
                 }
             })
@@ -571,7 +574,8 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
                     vendor_job_id: Number(job.job_id),
-                    vendor_id: Number(servResp.data.vendor_id)
+                    vendor_id: Number(servResp.data.vendor_id),
+                    isRead: 0
 
                 }
             })
@@ -857,7 +861,8 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
                     vendor_job_id: Number(job.job_id),
-                    vendor_id: Number(servResp.data.vendor_id)
+                    vendor_id: Number(servResp.data.vendor_id),
+                    isRead: 0
 
                 }
             })
@@ -928,7 +933,8 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
                     vendor_job_id: Number(job.job_id),
-                    vendor_id: Number(servResp.data.vendor_id)
+                    vendor_id: Number(servResp.data.vendor_id),
+                    isRead: 0
 
                 }
             })
@@ -1049,7 +1055,8 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
                     vendor_job_id: Number(job.job_id),
-                    vendor_id: Number(servResp.data.vendor_id)
+                    vendor_id: Number(servResp.data.vendor_id),
+                    isRead: 0
 
                 }
             })
@@ -1123,7 +1130,8 @@ export default class JobsService {
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
                     vendor_job_id: Number(job.job_id),
-                    vendor_id: Number(servResp.data.vendor_id)
+                    vendor_id: Number(servResp.data.vendor_id),
+                    isRead: 0
 
                 }
             })
