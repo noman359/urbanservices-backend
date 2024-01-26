@@ -62,6 +62,16 @@ export default class CustomerController {
         }
     }
 
+    async readNotification(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+        let customers = await customerServ.readNotification({id: Number(req.query.id)})
+        next(customers)
+        }
+    }
+
 
     async addCustomerReviews(req, res, next) {
         let token = await tokenHandler.checkToken(req)

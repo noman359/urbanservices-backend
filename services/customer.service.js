@@ -70,6 +70,26 @@ export default class CustomerService {
         return servResp
     }
 
+    async readNotification(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorData() started')
+            let notification = await db.notifications.update({
+                where: {
+                    id: query.id
+                }
+                
+            })
+            servResp.data = notification
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async getNotifications(query) {
 
         let servResp = new config.serviceResponse()
@@ -142,7 +162,13 @@ export default class CustomerService {
                 }
             }
             
-
+            let unReadCount = await db.notifications.count({
+                where: {
+                    customer_id:  Number(query.customer_id),
+                    isRead: 0
+                }
+            })
+            response.unReadCount = unReadCount
             servResp.data = response
 
             

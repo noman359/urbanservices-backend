@@ -1010,6 +1010,12 @@ export default class JobsService {
 
             })
 
+            await db.estimates.delete({
+                where: {
+                    vendor_job_id: Number(jobpaymentDetails.vendor_job_id)
+                }
+            })
+
             var customer = await db.customers.findFirst({
                 where: {
                     id: Number(servResp.data.customer_id)

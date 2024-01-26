@@ -34,6 +34,16 @@ export default class VendorController {
         }
     }
 
+    async readNotification(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+        let customers = await vendorServ.readNotification({id: Number(req.query.id)})
+        next(customers)
+        }
+    }
+
     async saveVendorReview(req, res, next) {
         let token = await tokenHandler.checkToken(req)
         if (token.isError == true) {
