@@ -181,26 +181,28 @@ export default class JobsService {
                 }
             })
 
-            const message = {
-                notification: {
-                    title: 'Requested estimates',
-                    body: `${customer.full_name} has requested estimates.`,
-                },
-                data: {
-                    // Add extra data here
-                    id: `${servResp.data.vendor_job_id}`,
-                    // Add other key-value pairs as needed
-                },
-                token: registrationToken,
-            };
+            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
+                const message = {
+                    notification: {
+                        title: 'Requested estimates',
+                        body: `${customer.full_name} has requested estimates.`,
+                    },
+                    data: {
+                        // Add extra data here
+                        id: `${servResp.data.vendor_job_id}`,
+                        // Add other key-value pairs as needed
+                    },
+                    token: registrationToken,
+                };
 
-            admin.messaging().send(message)
-                .then((response) => {
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                });
+                admin.messaging().send(message)
+                    .then((response) => {
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
+            }
             console.debug('createCustomer() returning')
             console.debug('createCustomer() returning')
 
@@ -270,6 +272,8 @@ export default class JobsService {
                 }
             })
 
+            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
+
             const message = {
                 notification: {
                     title: 'Estimates',
@@ -290,7 +294,7 @@ export default class JobsService {
                 .catch((error) => {
                     console.error('Error sending message:', error);
                 });
-
+            }
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -488,6 +492,8 @@ export default class JobsService {
                 }
             })
 
+            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
+
             const message = {
                 notification: {
                     title: 'Assigned Job',
@@ -508,6 +514,7 @@ export default class JobsService {
                 .catch((error) => {
                     console.error('Error sending message:', error);
                 });
+            }
             console.debug('createCustomer() returning')
             console.debug('createCustomer() returning')
 
@@ -568,6 +575,8 @@ export default class JobsService {
 
                 }
             })
+
+            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
             const message = {
                 notification: {
                     title: 'Job Accepted',
@@ -588,6 +597,7 @@ export default class JobsService {
                 .catch((error) => {
                     console.error('Error sending message:', error);
                 });
+            }
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -852,6 +862,7 @@ export default class JobsService {
                 }
             })
 
+            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
             const message = {
                 notification: {
                     title: 'Job started',
@@ -872,7 +883,7 @@ export default class JobsService {
                 .catch((error) => {
                     console.error('Error sending message:', error);
                 });
-
+            }
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -922,6 +933,8 @@ export default class JobsService {
                 }
             })
 
+            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
+
             const message = {
                 notification: {
                     title: 'On Way',
@@ -942,7 +955,7 @@ export default class JobsService {
                 .catch((error) => {
                     console.error('Error sending message:', error);
                 });
-
+            }
             console.debug('createCustomer() returning')
 
         } catch (error) {
@@ -1041,6 +1054,8 @@ export default class JobsService {
                 }
             })
 
+            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
+
             const message = {
                 notification: {
                     title: 'Job completed',
@@ -1061,13 +1076,14 @@ export default class JobsService {
                 .catch((error) => {
                     console.error('Error sending message:', error);
                 });
+            }
 
             console.debug('createCustomer() returning')
 
         } catch (error) {
             console.debug('createVendor() exception thrown')
             servResp.isError = true
-            servResp.message = error.message+`Please go to this link: ${vendor.on_board_url}`
+            servResp.message = error.message + `Please go to this link: ${vendor.on_board_url}`
         }
         return servResp
     }
@@ -1112,6 +1128,8 @@ export default class JobsService {
                 }
             })
 
+            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
+
             const message = {
                 notification: {
                     title: 'Job cancelled',
@@ -1132,6 +1150,7 @@ export default class JobsService {
                 .catch((error) => {
                     console.error('Error sending message:', error);
                 });
+            }
 
             console.debug('createCustomer() returning')
 
