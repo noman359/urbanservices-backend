@@ -201,6 +201,8 @@ export default class CustomerService {
     async updateCustomer(query, customerBody) {
         let servResp = new config.serviceResponse()
         let customer_avatar = new Object()
+        let front_id_avatar = new Object()
+        let back_id_avatar = new Object()
         try {
             console.debug('createCustomer() started')
             let customer = await db.customers.findFirst({ where: { id: query.id } })
@@ -210,29 +212,65 @@ export default class CustomerService {
             }
 
             if (customerBody.avatar) {
-                if (typeof customerBody.avatar === 'string') {
-                    customer_avatar['url'] = customerBody.avatar
-                } else {
-                    var arr = customerBody.avatar.split('.')
-                    let extentionName = arr[arr.length - 1]
-                    let avatar_val = {
-                        bucket: config.customer_avatar_s3_bucket_name,
-                        key: `${uuidv4()}.${extentionName}`,
-                        body: await bucket.fileToArrayBuffer(customerBody.avatar)
-                    }
-                    customer_avatar = await bucket.upload(avatar_val)
+                var arr = customerBody.avatar.name.split('.')
+                let extentionName = arr[arr.length - 1]
+                let avatar_val = {
+                    bucket: config.customer_avatar_s3_bucket_name,
+                    key: `${uuidv4()}.${extentionName}`,
+                    body: await bucket.fileToArrayBuffer(customerBody.avatar)
                 }
+                customer_avatar = await bucket.upload(avatar_val)
+            }
+
+            if (customerBody.front_id) {
+                var arr = customerBody.front_id.name.split('.')
+                    let extentionName = arr[arr.length - 1]
+                let avatar_val = {
+                    bucket: config.customer_avatar_s3_bucket_name,
+                    key: `${uuidv4()}.${extentionName}`,
+                    body: await bucket.fileToArrayBuffer(customerBody.front_id)
+                }
+                front_id_avatar = await bucket.upload(avatar_val)
+            }
+
+            if (customerBody.back_id) {
+                var arr = customerBody.back_id.name.split('.')
+                    let extentionName = arr[arr.length - 1]
+                let avatar_val = {
+                    bucket: config.customer_avatar_s3_bucket_name,
+                    key: `${uuidv4()}.${extentionName}`,
+                    body: await bucket.fileToArrayBuffer(customerBody.back_id)
+                }
+                back_id_avatar = await bucket.upload(avatar_val)
+            }
+            var frontImage = ''
+
+            if (front_id_avatar.url != null) {
+                frontImage = front_id_avatar.url
+            } else {
+                frontImage = customer.front_id ? customer.front_id : undefined
+            }
+
+            var backImage = ''
+
+            if (front_id_avatar.url != null) {
+                backImage = front_id_avatar.url
+            } else {
+                backImage = customer.front_id ? customer.front_id : undefined
             }
 
             // customerBody.password = encryption.encrypt(customerBody.password)
             await db.customers.update({
                 data: {
-                    full_name: customerBody.full_name || undefined,
-                    avatar: customer_avatar.url ? customer_avatar.url : undefined,
+                    full_name: customerBody.full_name ? customerBody.full_name : customer.full_name,
+                    avatar: customer_avatar.url ? customer_avatar.url : customer.avatar,
                     updated_at: new Date(new Date().toUTCString()),
-                    zipcode: customerBody.zipcode || undefined,
-                    email: customerBody.email || undefined
+                    zipcode: customerBody.zipcode ? customerBody.zipcode : customer.zipcode,
+                    email: customerBody.email ? customerBody.email : customer.email,
+                    front_id: frontImage,
+                    back_id: backImage
                 },
+
                 where: {
                     id: Number(query.id)
                 }
