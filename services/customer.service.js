@@ -268,7 +268,9 @@ export default class CustomerService {
                     zipcode: customerBody.zipcode ? customerBody.zipcode : customer.zipcode,
                     email: customerBody.email ? customerBody.email : customer.email,
                     front_id: frontImage,
-                    back_id: backImage
+                    back_id: backImage,
+                    cnic: customerBody.cnic ? customerBody.cnic : customer.cnic,
+                    addrress : customerBody.addrress ? customerBody.addrress : customer.addrress
                 },
 
                 where: {
