@@ -1035,7 +1035,7 @@ export default class JobsService {
 
             })
 
-            await db.estimates.delete({
+            await db.estimates.deleteMany({
                 where: {
                     vendor_job_id: Number(jobpaymentDetails.vendor_job_id)
                 }
