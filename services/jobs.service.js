@@ -175,7 +175,8 @@ export default class JobsService {
                     description: `${customer.full_name} has requested estimates.`,
                     created_at: new Date(new Date().toUTCString()),
                     vendor_id: Number(vendor.id),
-                    vendor_job_id: Number(job.job_id)
+                    vendor_job_id: Number(job.job_id),
+                    customer_id: Number(job.customer_id)
 
                 }
             })
@@ -263,7 +264,8 @@ export default class JobsService {
                     description: `${vendor.first_name} has provided estimates.`,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
-                    vendor_job_id: Number(job.job_id)
+                    vendor_job_id: Number(job.job_id),
+                    vendor_id: Number(estiimate.vendor_id)
 
                 }
             })
@@ -480,7 +482,8 @@ export default class JobsService {
                     description: `${customer.full_name} has assigned you a job.`,
                     created_at: new Date(new Date().toUTCString()),
                     vendor_id: Number(vendor.id),
-                    vendor_job_id: Number(job.job_id)
+                    vendor_job_id: Number(job.job_id),
+                    customer_id: Number(servResp.data.customer_id)
 
                 }
             })
@@ -560,7 +563,8 @@ export default class JobsService {
                     description: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
-                    vendor_job_id: Number(job.job_id)
+                    vendor_job_id: Number(job.job_id),
+                    vendor_id: Number(servResp.data.vendor_id)
 
                 }
             })
@@ -842,7 +846,8 @@ export default class JobsService {
                     description: `Your job has been started by ${vendor.first_name} ${vendor.last_name}`,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
-                    vendor_job_id: Number(job.job_id)
+                    vendor_job_id: Number(job.job_id),
+                    vendor_id: Number(servResp.data.vendor_id)
 
                 }
             })
@@ -911,7 +916,8 @@ export default class JobsService {
                     description: `${vendor.first_name} ${vendor.last_name} is on his way`,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
-                    vendor_job_id: Number(job.job_id)
+                    vendor_job_id: Number(job.job_id),
+                    vendor_id: Number(servResp.data.vendor_id)
 
                 }
             })
@@ -1029,7 +1035,8 @@ export default class JobsService {
                     description: `Your job has been completed by ${vendor.first_name} ${vendor.last_name}`,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
-                    vendor_job_id: Number(job.job_id)
+                    vendor_job_id: Number(job.job_id),
+                    vendor_id: Number(servResp.data.vendor_id)
 
                 }
             })
@@ -1099,7 +1106,8 @@ export default class JobsService {
                     description: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
-                    vendor_job_id: Number(job.job_id)
+                    vendor_job_id: Number(job.job_id),
+                    vendor_id: Number(servResp.data.vendor_id)
 
                 }
             })
