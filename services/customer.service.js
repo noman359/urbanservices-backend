@@ -270,7 +270,7 @@ export default class CustomerService {
                     front_id: frontImage,
                     back_id: backImage,
                     cnic: customerBody.cnic ? customerBody.cnic : customer.cnic,
-                    addrress : customerBody.addrress ? customerBody.addrress : customer.addrress
+                    address : customerBody.address ? customerBody.address : customer.address
                 },
 
                 where: {
