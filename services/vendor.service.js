@@ -86,9 +86,7 @@ export default class vendorService {
                 throw new Error('User not found, Incorrect email or password')
             }
 
-            let paymentController = new PaymentService()
-            let account = await paymentController.checkConnectAccountStatus(vendor)
-            vendor.payment_status = account
+           
             delete vendor.password
             let token = await JWT.getToken(vendor)
 
@@ -115,7 +113,7 @@ export default class vendorService {
             });
 
 
-            await db.vendor.update({
+            let newVendor = await db.vendor.update({
                 where: {
                     id: created_vendor.id
                 },
@@ -137,6 +135,10 @@ export default class vendorService {
                 })
                 created_vendor['vendor_services'] = await Promise.all(promises)
             }
+
+            let paymentController = new PaymentService()
+            let account = await paymentController.checkConnectAccountStatus(newVendor)
+            created_vendor.payment_status = account
 
             created_vendor['stripe_account_id'] = serviceAccount.id
             created_vendor['token'] = token
