@@ -197,7 +197,7 @@ export default class CustomerService {
                 }
             }
             
-            let unReadCount = await db.notifications.count({
+            let unReadCount = await db.customer_notifications.count({
                 where: {
                     customer_id:  Number(query.customer_id),
                     isRead: 0
