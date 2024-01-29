@@ -64,6 +64,22 @@ export default class PaymentService {
       throw error;
     }
   }
+
+  async checkConnectAccountStatus(vendor) {
+    try {
+      // Retrieve account information using the Stripe API
+      const account = await stripeInstance.accounts.retrieve(vendor.stripe_account_id);
+  
+      // Check the account status
+      const accountStatus = account.details_submitted ? 'active' : 'inactive';
+      console.log(`Connect Account Status: ${accountStatus}`);
+      return accountStatus
+      // You may also want to check other properties of the account object for more details
+  
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  }
   
 }
 

@@ -5,6 +5,7 @@ import stripe from 'stripe';
 const stripeInstance = stripe('sk_test_51OMUzdHmGYnRQyfQ80HgdP96iYWHbg5Surkh5c2uJgaXnUYeJS3OIEUj1NbS8U1jVH7YIPr8DfvjI28BjnbFCtvB00SxzStg0e');
 import { v4 as uuidv4 } from 'uuid';
 import { parse, format } from 'date-fns';
+import PaymentService from './payment.service.js';
 
 let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
 let bucket = new handler.bucketHandler()
@@ -84,6 +85,10 @@ export default class vendorService {
             if (!vendor) {
                 throw new Error('User not found, Incorrect email or password')
             }
+
+            let paymentController = new PaymentService()
+            let account = await paymentController.checkConnectAccountStatus(vendor)
+            vendor.payment_status = account
             delete vendor.password
             let token = await JWT.getToken(vendor)
 
@@ -166,6 +171,9 @@ export default class vendorService {
             }
             delete vendor.password
             delete vendor.fcm_token
+            let paymentController = new PaymentService()
+            let account = await paymentController.checkConnectAccountStatus(vendor)
+            vendor.payment_status = account
             let token = await JWT.getToken(vendor)
             servResp.data = {
                 ...vendor, token: token
@@ -341,7 +349,7 @@ export default class vendorService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('getVendorData() started')
-            let vendor = await db.vendor.findFirst({
+            var vendor = await db.vendor.findFirst({
                 where: {
                     id: Number(query.id)
                 }, include: { vendor_reviews: true, services: true }
@@ -352,6 +360,9 @@ export default class vendorService {
             for (var review of vendor.vendor_reviews) {
                 rating += review.rating
             }
+            let paymentController = new PaymentService()
+            let account = await paymentController.checkConnectAccountStatus(vendor)
+            vendor.payment_status = account
             vendor.rating = rating
             delete vendor.fcm_token
             servResp.data = vendor
