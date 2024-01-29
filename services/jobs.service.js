@@ -262,7 +262,7 @@ export default class JobsService {
 
             const registrationToken = customer.fcm_token;
 
-            await db.notifications.create({
+            await db.customer_notifications.create({
                 data: {
                     description: `${vendor.first_name} has provided estimates.`,
                     created_at: new Date(new Date().toUTCString()),
@@ -568,7 +568,7 @@ export default class JobsService {
             })
             const registrationToken = customer.fcm_token;
 
-            await db.notifications.create({
+            await db.customer_notifications.create({
                 data: {
                     description: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
                     created_at: new Date(new Date().toUTCString()),
@@ -855,7 +855,7 @@ export default class JobsService {
             })
             const registrationToken = customer.fcm_token;
 
-            await db.notifications.create({
+            await db.customer_notifications.create({
                 data: {
                     description: `Your job has been started by ${vendor.first_name} ${vendor.last_name}`,
                     created_at: new Date(new Date().toUTCString()),
@@ -927,7 +927,7 @@ export default class JobsService {
             })
             const registrationToken = customer.fcm_token;
 
-            await db.notifications.create({
+            await db.customer_notifications.create({
                 data: {
                     description: `${vendor.first_name} ${vendor.last_name} is on his way`,
                     created_at: new Date(new Date().toUTCString()),
@@ -1049,7 +1049,7 @@ export default class JobsService {
 
             const registrationToken = customer.fcm_token;
 
-            await db.notifications.create({
+            await db.customer_notifications.create({
                 data: {
                     description: `Your job has been completed by ${vendor.first_name} ${vendor.last_name}`,
                     created_at: new Date(new Date().toUTCString()),
@@ -1124,7 +1124,7 @@ export default class JobsService {
             const registrationToken = customer.fcm_token;
 
 
-            await db.notifications.create({
+            await db.customer_notifications.create({
                 data: {
                     description: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
                     created_at: new Date(new Date().toUTCString()),

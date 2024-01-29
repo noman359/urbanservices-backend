@@ -74,7 +74,7 @@ export default class CustomerService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('getVendorData() started')
-            let notification = await db.notifications.update({
+            let notification = await db.customer_notifications.update({
                 where: {
                     id: query.id
                 },
@@ -97,7 +97,7 @@ export default class CustomerService {
         let servResp = new config.serviceResponse()
         try {
             console.debug('getVendorData() started')
-            let notification = await db.notifications.deleteMany({
+            let notification = await db.customer_notifications.deleteMany({
                 where: {
                     customer_id: query.id
                 }
@@ -127,7 +127,7 @@ export default class CustomerService {
             var response = {};
 
             if (Number(query.page) > 1) {
-                let olderNotifications = await db.notifications.findMany({
+                let olderNotifications = await db.customer_notifications.findMany({
                     where: {
                         customer_id: Number(query.customer_id),
                         created_at: {
@@ -148,7 +148,7 @@ export default class CustomerService {
                 }
 
             } else {
-                let todayNotifications = await db.notifications.findMany({
+                let todayNotifications = await db.customer_notifications.findMany({
                     where: {
                         customer_id: Number(query.customer_id),
                         created_at: {
@@ -163,7 +163,7 @@ export default class CustomerService {
     
                 });
     
-                let yesterdayNotifications = await db.notifications.findMany({
+                let yesterdayNotifications = await db.customer_notifications.findMany({
                     where: {
                         customer_id: Number(query.customer_id),
                         created_at: {
@@ -176,7 +176,7 @@ export default class CustomerService {
                     },
                 });
     
-                let olderNotifications = await db.notifications.findMany({
+                let olderNotifications = await db.customer_notifications.findMany({
                     where: {
                         customer_id: Number(query.customer_id),
                         created_at: {
@@ -306,7 +306,6 @@ export default class CustomerService {
         return servResp
     }
 
-
     async saveCustomerFCMToken(query) {
         let servResp = new config.serviceResponse()
         try {
@@ -329,7 +328,6 @@ export default class CustomerService {
         }
         return servResp
     }
-
 
     async saveCustomerReview(query) {
         let servResp = new config.serviceResponse()
@@ -392,7 +390,6 @@ export default class CustomerService {
         return servResp
     }
 
-
     async getCustomers(filters = { limit: 10, offset: 0, search: "", sort: "" }) {
         let servResp = new config.serviceResponse()
         try {
@@ -438,7 +435,6 @@ export default class CustomerService {
         }
         return servResp
     }
-
 
     async signIn(query) {
         let servResp = new config.serviceResponse()
