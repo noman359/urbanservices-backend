@@ -14,6 +14,7 @@ export default function (router) {
     lRoute.get('/reviews', customerCtrl.getCustomerReviews, handler.apiResponseHandler)
     lRoute.post('/review', customerCtrl.addCustomerReviews, handler.apiResponseHandler)
     lRoute.post('/readNotification', customerCtrl.readNotification, handler.apiResponseHandler)
+    lRoute.delete('/clearNotifications', customerCtrl.clearNotifications, handler.apiResponseHandler)
     lRoute.get('/:id', customerCtrl.getCustomer, handler.apiResponseHandler)
     lRoute.put('/:id', formData, customerCtrl.updateCustomer, handler.apiResponseHandler)
 }

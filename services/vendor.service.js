@@ -226,6 +226,25 @@ export default class vendorService {
         return servResp
     }
 
+    async clearNotifications(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorData() started')
+            let notification = await db.notifications.deleteMany({
+                where: {
+                    vendor_id: query.id
+                }
+            })
+            servResp.message = 'Notifications successfully cleared'
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async getNotifications(query) {
 
         let servResp = new config.serviceResponse()

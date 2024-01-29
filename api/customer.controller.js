@@ -67,7 +67,17 @@ export default class CustomerController {
         if (token.isError == true) {
             next(token)
         } else {
-        let customers = await customerServ.readNotification({id: Number(req.query.id)})
+        let customers = await customerServ.readNotification({id: Number(req.query.customer_id)})
+        next(customers)
+        }
+    }
+
+    async clearNotifications(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+        let customers = await customerServ.clearNotifications({id: Number(req.query.customer_id)})
         next(customers)
         }
     }
