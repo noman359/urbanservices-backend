@@ -26,7 +26,7 @@ export default class PaymentService {
     try {
       // Create a PaymentIntent
       const paymentIntent = await stripeInstance.paymentIntents.create({
-        amount: Number(payment.price*100),
+        amount: Number(payment.price * 100),
         currency: 'usd',
         automatic_payment_methods: {
           enabled: true,
@@ -51,11 +51,11 @@ export default class PaymentService {
     try {
 
       var transfer = await stripeInstance.transfers.create({
-        amount: payment.amount*100,
+        amount: payment.amount * 100,
         currency: 'usd',
         destination: payment.vendorAccountId,
       });
-  
+
       console.log('Transfer successful:', transfer);
       return transfer;
     } catch (error) {
@@ -65,21 +65,45 @@ export default class PaymentService {
     }
   }
 
+  async refundPayment(chargeId) {
+    try {
+      const charge = await stripe.charges.retrieve(chargeId);
+
+      console.log('Charge information:', charge);
+
+      charge.amount
+
+      const refund = await stripeInstance.refunds.create({
+        charge: chargeId,
+        amount: charge.amount, // specify the amount to refund in cents
+      });
+
+      console.log('Refund processed:', refund);
+
+      // You may want to update your database or handle other logic here
+
+      return refund;
+    } catch (error) {
+      console.error('Error refunding payment:', error.message);
+      throw error;
+    }
+  }
+
   async checkConnectAccountStatus(vendor) {
     try {
       // Retrieve account information using the Stripe API
       const account = await stripeInstance.accounts.retrieve(vendor.stripe_account_id);
-  
+
       // Check the account status
       const accountStatus = account.details_submitted ? 'active' : 'inactive';
       console.log(`Connect Account Status: ${accountStatus}`);
       return accountStatus
       // You may also want to check other properties of the account object for more details
-  
+
     } catch (error) {
       console.error('Error:', error.message);
     }
   }
-  
+
 }
 

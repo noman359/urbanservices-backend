@@ -224,6 +224,26 @@ export default class JobsService {
                 servResp.message = 'Estimates can not be less than service fee: $39'
                 return servResp
             }
+            
+
+            var estiimate = await db.estimates.findFirst({
+                where: {
+                    id: Number(job.request_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id: Number(estiimate.vendor_id)
+                }
+            })
+
+            var notificationText = ''
+            if (estiimate.status == 'PROVIDED') {
+                notificationText = `${vendor.first_name} has updated the estimates.`
+            } else {
+                notificationText = `${vendor.first_name} has provided the estimates.`
+            }
 
             servResp.data = await db.estimates.update({
 
@@ -238,12 +258,6 @@ export default class JobsService {
                 }
             })
 
-            var estiimate = await db.estimates.findFirst({
-                where: {
-                    id: Number(job.request_id)
-                }
-            })
-
             const customerId = estiimate.customer_id;
 
             var customer = await db.customers.findFirst({
@@ -252,22 +266,14 @@ export default class JobsService {
                 }
             })
 
-            var vendor = await db.vendor.findFirst({
-                where: {
-                    id: Number(estiimate.vendor_id)
-                }
-            })
-
-            const notify = ''
-
             const registrationToken = customer.fcm_token;
 
             await db.customer_notifications.create({
                 data: {
-                    description: `${vendor.first_name} has provided estimates.`,
+                    description: notificationText,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
-                    vendor_job_id: Number(job.job_id),
+                    vendor_job_id: Number(estiimate.job_id),
                     vendor_id: Number(estiimate.vendor_id),
                     isRead: 0
 
@@ -279,7 +285,7 @@ export default class JobsService {
             const message = {
                 notification: {
                     title: 'Estimates',
-                    body: `${vendor.first_name} has provided estimates.`,
+                    body: notificationText
                 },
                 data: {
                     estimate_id: `${job.request_id}`,
@@ -455,6 +461,15 @@ export default class JobsService {
             let estimate = await db.estimates.findFirst({
                 where: {
                     vendor_job_id: Number(job.job_id)
+                }
+            })
+
+            var jobpaymentDetails = await db.payment_details.update({
+                where: {
+                    vendor_job_id: Number(job.job_id)
+                },
+                data: {
+                    charge_id: job.charge_id
                 }
             })
 
@@ -1110,6 +1125,17 @@ export default class JobsService {
 
             })
 
+            let paymentDetails = await db.payment_details.findFirst(
+                {
+                    where: {
+                        vendor_job_id: Number(job.job_id)
+                    }
+                }
+            )
+
+            let paymentService = new PaymentService()
+           // paymentService.refundPayment(paymentDetails.charge_id)
+
             var customer = await db.customers.findFirst({
                 where: {
                     id: Number(servResp.data.customer_id)
@@ -1121,12 +1147,13 @@ export default class JobsService {
                     id: Number(servResp.data.vendor_id)
                 }
             })
+
             const registrationToken = customer.fcm_token;
 
 
             await db.customer_notifications.create({
                 data: {
-                    description: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
+                    description: `Your job has been cancelled by ${vendor.first_name} ${vendor.last_name}`,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
                     vendor_job_id: Number(job.job_id),
