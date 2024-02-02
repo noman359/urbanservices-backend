@@ -59,7 +59,7 @@ export default class vendorService {
                     avatar: vendor_avatar.url ?? "",
                     city: vendorModel.city,
                     phone_number: vendorModel.phone_number,
-                    // date_of_birth: new Date(vendorModel.date_of_birth),
+                    date_of_birth: new Date(vendorModel.date_of_birth),
                     experience: Number(vendorModel.experience),
                     first_name: vendorModel.first_name,
                     gender: vendorModel.gender,
