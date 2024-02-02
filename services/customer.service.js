@@ -272,8 +272,8 @@ export default class CustomerService {
 
             var backImage = ''
 
-            if (front_id_avatar.url != null) {
-                backImage = front_id_avatar.url
+            if (back_id_avatar.url != null) {
+                backImage = back_id_avatar.url
             } else {
                 backImage = customer.front_id ? customer.front_id : undefined
             }

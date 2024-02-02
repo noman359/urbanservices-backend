@@ -439,25 +439,15 @@ export default class vendorService {
 
     async updateVendor(query, vendorModel) {
         let servResp = new config.serviceResponse()
+        let vendor_avatar = new Object()
+        let front_id_avatar = new Object()
+        let back_id_avatar = new Object()
         try {
-            console.debug("updateVendor() started")
-            let user_id_front_resp = new Object()
-            let user_id_back_resp = new Object()
-            let vendor_avatar = new Object()
-            if (vendorModel.user_id_front && vendorModel.user_id_back) {
-                let user_id_front_val = {
-                    bucket: config.card_upload_s3_bucket_name,
-                    key: `${vendorModel.username}_${vendorModel.user_id_front['name']}`,
-                    body: await bucket.fileToArrayBuffer(vendorModel.user_id_front)
-                }
-                user_id_front_resp = await bucket.upload(user_id_front_val)
 
-                let user_id_back_val = {
-                    bucket: config.card_upload_s3_bucket_name,
-                    key: `${vendorModel.username}_${vendorModel.user_id_back['name']}`,
-                    body: await bucket.fileToArrayBuffer(vendorModel.user_id_back)
-                }
-                user_id_back_resp = await bucket.upload(user_id_back_val)
+            let vendorDetail = await db.vendor.findFirst({ where: { id: query.id } })
+
+            if (!vendorDetail) {
+                throw new Error('Customer not found!')
             }
 
             if (vendorModel.avatar) {
@@ -465,27 +455,63 @@ export default class vendorService {
                 let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
-                    key: `${vendorModel.username}_${vendorModel.avatar['name']}.${extentionName}`,
+                    key: `${uuidv4()}.${extentionName}`,
                     body: await bucket.fileToArrayBuffer(vendorModel.avatar)
                 }
                 vendor_avatar = await bucket.upload(avatar_val)
             }
 
+            if (vendorModel.front_id) {
+                var arr = vendorModel.front_id.name.split('.')
+                    let extentionName = arr[arr.length - 1]
+                let avatar_val = {
+                    bucket: config.customer_avatar_s3_bucket_name,
+                    key: `${uuidv4()}.${extentionName}`,
+                    body: await bucket.fileToArrayBuffer(vendorModel.front_id)
+                }
+                front_id_avatar = await bucket.upload(avatar_val)
+            }
+
+            if (vendorModel.back_id) {
+                var arr = vendorModel.back_id.name.split('.')
+                    let extentionName = arr[arr.length - 1]
+                let avatar_val = {
+                    bucket: config.customer_avatar_s3_bucket_name,
+                    key: `${uuidv4()}.${extentionName}`,
+                    body: await bucket.fileToArrayBuffer(vendorModel.back_id)
+                }
+                back_id_avatar = await bucket.upload(avatar_val)
+            }
+            var frontImage = ''
+
+            if (front_id_avatar.url != null) {
+                frontImage = front_id_avatar.url
+            } else {
+                frontImage = customer.front_id ? customer.front_id : undefined
+            }
+
+            var backImage = ''
+
+            if (back_id_avatar.url != null) {
+                backImage = back_id_avatar.url
+            } else {
+                backImage = customer.front_id ? customer.front_id : undefined
+            }
+
             let updated_vendor = await db.vendor.update({
                 data: {
                     updated_at: new Date(new Date().toUTCString()),
-                    email: vendorModel.email || undefined,
-                    avatar: vendor_avatar.url || undefined,
-                    city: vendorModel.city || undefined,
-                    // date_of_birth: vendorModel.date_of_birth ? new Date(vendorModel.date_of_birth) : undefined,
-                    experience: vendorModel.experience ? Number(vendorModel.experience) : undefined,
-                    first_name: vendorModel.first_name || undefined,
-                    gender: vendorModel.gender || undefined,
-                    is_online: vendorModel.is_online ? Boolean(vendorModel.is_online) : undefined,
-                    last_name: vendorModel.last_name || undefined,
-                    user_id_back: user_id_back_resp.url || undefined,
-                    user_id_front: user_id_front_resp.url || undefined,
-                    zip_code: vendorModel.zip_code || undefined
+                    email: vendorModel.email ? vendorModel.email : vendorDetail.email,
+                    avatar: vendor_avatar.url ? vendor_avatar.url : vendorDetail.avatar,
+                    city: vendorModel.city ? vendorModel.city : vendorDetail.city,
+                    experience: vendorModel.experience ? Number(vendorModel.experience) : Number(vendorDetail.experience),
+                    first_name: vendorModel.first_name ? vendorModel.first_name : vendorDetail.first_name,
+                    gender: vendorModel.gender ? vendorModel.gender : vendorDetail.gender,
+                    is_online: vendorModel.is_online ? Boolean(vendorModel.is_online) : vendorDetail.is_online,
+                    last_name: vendorModel.last_name ? vendorModel.last_name : vendorDetail.last_name,
+                    user_id_back: backImage,
+                    user_id_front: frontImage,
+                    zip_code: vendorModel.zip_code ? vendorModel.zip_code : vendorDetail.zip_code
                 }, where: {
                     id: Number(query.id)
                 }
