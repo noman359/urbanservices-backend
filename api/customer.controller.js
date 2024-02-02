@@ -67,7 +67,7 @@ export default class CustomerController {
         if (token.isError == true) {
             next(token)
         } else {
-        let customers = await customerServ.readNotification({id: Number(req.query.customer_id)})
+        let customers = await customerServ.readNotification({id: Number(req.query.id)})
         next(customers)
         }
     }
