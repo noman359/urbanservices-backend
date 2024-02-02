@@ -68,7 +68,8 @@ export default class vendorService {
                     user_id_front: user_id_front_resp.url ?? "",
                     zip_code: vendorModel.zip_code,
                     service_id: Number(vendorModel.service_id),
-                    stripe_account_id: ''
+                    stripe_account_id: '',
+                    state: vendorModel.state
                     // vendor_services: { createMany: { service_id: Array.isArray(vendorModel.services) ? vendorModel.services : JSON.parse(vendorModel.services) } }
                 }
             })
