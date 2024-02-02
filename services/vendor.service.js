@@ -22,6 +22,15 @@ export default class vendorService {
             let user_id_back_resp = new Object()
             let vendor_avatar = new Object()
 
+            let isVendorAlreadyRegistered = await db.vendor.findFirst({
+                where: {
+                    phone_number: vendorModel.phone_number
+                }
+            })
+
+            if (isVendorAlreadyRegistered) {
+                throw new Error('User already exist.')
+            }
 
             if (vendorModel.user_id_front && vendorModel.user_id_back) {
                 var arr = vendorModel.user_id_front.name.split('.')
@@ -82,11 +91,6 @@ export default class vendorService {
                     services: true
                 }
             })
-
-            if (!vendor) {
-                throw new Error('User not found, Incorrect email or password')
-            }
-
            
             delete vendor.password
             let token = await JWT.getToken(vendor)
