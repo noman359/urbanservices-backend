@@ -24,6 +24,7 @@ export default function (router) {
     lRoute.put('/start', jobsController.startedJob, handler.apiResponseHandler)
     lRoute.put('/complete', jobsController.completeJob, handler.apiResponseHandler)
     lRoute.put('/cancel', jobsController.cancelledJob, handler.apiResponseHandler)
+    lRoute.put('/cancelJob', jobsController.cancelledJobByCustomer, handler.apiResponseHandler)
     lRoute.get('/estimates/vendor/list', jobsController.getEstimatesListForVendor,handler.apiResponseHandler)
     lRoute.get('/estimates/customer/list', jobsController.getEstimatesListForCustomer,handler.apiResponseHandler)
     cronJob.createCron()

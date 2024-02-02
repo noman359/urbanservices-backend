@@ -1134,7 +1134,7 @@ export default class JobsService {
             )
 
             let paymentService = new PaymentService()
-           // paymentService.refundPayment(paymentDetails.charge_id)
+            paymentService.refundPayment(paymentDetails.charge_id)
 
             var customer = await db.customers.findFirst({
                 where: {
@@ -1169,6 +1169,93 @@ export default class JobsService {
                 notification: {
                     title: 'Job cancelled',
                     body: `Your job has been cancelled by ${vendor.first_name} ${vendor.last_name}`,
+                },
+                data: {
+                    // Add extra data here
+                    id: `${job.job_id}`,
+                    // Add other key-value pairs as needed
+                },
+                token: registrationToken,
+            };
+
+            admin.messaging().send(message)
+                .then((response) => {
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.error('Error sending message:', error);
+                });
+            }
+
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async cancelledJobByCustomer(job) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('createCustomer() started')
+
+            servResp.data = await db.vendor_jobs.update({
+                where: {
+                    id: Number(job.job_id)
+                },
+                data: {
+                    status: vendor_jobs_status.cancelled
+                }
+
+            })
+
+            let paymentDetails = await db.payment_details.findFirst(
+                {
+                    where: {
+                        vendor_job_id: Number(job.job_id)
+                    }
+                }
+            )
+
+            let paymentService = new PaymentService()
+            paymentService.refundPaymentToCustomer(paymentDetails.charge_id)
+
+            var customer = await db.customers.findFirst({
+                where: {
+                    id: Number(servResp.data.customer_id)
+                }
+            })
+
+            var vendor = await db.vendor.findFirst({
+                where: {
+                    id: Number(servResp.data.vendor_id)
+                }
+            })
+
+            const registrationToken = vendor.fcm_token;
+
+
+            await db.customer_notifications.create({
+                data: {
+                    description: `Your job has been cancelled by ${customer.full_name}`,
+                    created_at: new Date(new Date().toUTCString()),
+                    customer_id: Number(customer.id),
+                    vendor_job_id: Number(job.job_id),
+                    vendor_id: Number(servResp.data.vendor_id),
+                    isRead: 0
+
+                }
+            })
+
+            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
+
+            const message = {
+                notification: {
+                    title: 'Job cancelled',
+                    body: `Your job has been cancelled by ${customer.full_name}`,
                 },
                 data: {
                     // Add extra data here

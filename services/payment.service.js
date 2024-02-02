@@ -65,6 +65,30 @@ export default class PaymentService {
     }
   }
 
+  async refundPaymentToCustomer(chargeId) {
+    try {
+      const charge = await stripe.charges.retrieve(chargeId);
+
+      console.log('Charge information:', charge);
+
+      charge.amount
+
+      const refund = await stripeInstance.refunds.create({
+        charge: chargeId,
+        amount: charge.amount - 3900, // specify the amount to refund in cents
+      });
+
+      console.log('Refund processed:', refund);
+
+      // You may want to update your database or handle other logic here
+
+      return refund;
+    } catch (error) {
+      console.error('Error refunding payment:', error.message);
+      throw error;
+    }
+  }
+
   async refundPayment(chargeId) {
     try {
       const charge = await stripe.charges.retrieve(chargeId);
