@@ -273,7 +273,7 @@ export default class JobsService {
                     description: notificationText,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
-                    vendor_job_id: Number(estiimate.job_id),
+                    vendor_job_id: Number(estiimate.vendor_job_id),
                     vendor_id: Number(estiimate.vendor_id),
                     isRead: 0
 
