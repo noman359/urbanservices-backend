@@ -182,7 +182,7 @@ export default class JobsService {
                 }
             })
 
-            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
+            if (registrationToken) {
                 const message = {
                     notification: {
                         title: 'Requested estimates',
@@ -280,7 +280,7 @@ export default class JobsService {
                 }
             })
 
-            if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
+            if (registrationToken) {
 
             const message = {
                 notification: {
