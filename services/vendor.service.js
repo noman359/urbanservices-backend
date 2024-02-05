@@ -455,7 +455,7 @@ export default class vendorService {
             }
 
             if (vendorModel.avatar) {
-                var arr = vendorModel.avatar.split('.')
+                var arr = vendorModel.avatar.name.split('.')
                 let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
@@ -491,22 +491,31 @@ export default class vendorService {
             if (front_id_avatar.url != null) {
                 frontImage = front_id_avatar.url
             } else {
-                frontImage = customer.front_id ? customer.front_id : undefined
+                frontImage = vendorModel.front_id ? vendorModel.front_id : undefined
             }
+            
 
             var backImage = ''
 
             if (back_id_avatar.url != null) {
                 backImage = back_id_avatar.url
             } else {
-                backImage = customer.front_id ? customer.front_id : undefined
+                backImage = vendorModel.front_id ? vendorModel.front_id : undefined
+            }
+
+            var avatar = ''
+
+            if (vendor_avatar.url != null) {
+                avatar = vendor_avatar.url
+            } else {
+                avatar = vendorModel.avatar ? vendorModel.avatar : undefined
             }
 
             let updated_vendor = await db.vendor.update({
                 data: {
                     updated_at: new Date(new Date().toUTCString()),
                     email: vendorModel.email ? vendorModel.email : vendorDetail.email,
-                    avatar: vendor_avatar.url ? vendor_avatar.url : vendorDetail.avatar,
+                    avatar: avatar,
                     city: vendorModel.city ? vendorModel.city : vendorDetail.city,
                     experience: vendorModel.experience ? Number(vendorModel.experience) : Number(vendorDetail.experience),
                     first_name: vendorModel.first_name ? vendorModel.first_name : vendorDetail.first_name,
