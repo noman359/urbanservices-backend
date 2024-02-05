@@ -448,7 +448,7 @@ export default class vendorService {
         let back_id_avatar = new Object()
         try {
 
-            let vendorDetail = await db.vendor.findFirst({ where: { id: query.id } })
+            let vendorDetail = await db.vendor.findFirst({ where: { id: Number(query.id) } })
 
             if (!vendorDetail) {
                 throw new Error('Customer not found!')
