@@ -515,6 +515,7 @@ export default class vendorService {
                     last_name: vendorModel.last_name ? vendorModel.last_name : vendorDetail.last_name,
                     user_id_back: backImage,
                     user_id_front: frontImage,
+                    bio: vendorModel.bio ? vendorModel.bio : vendorDetail.bio,
                     zip_code: vendorModel.zip_code ? vendorModel.zip_code : vendorDetail.zip_code
                 }, where: {
                     id: Number(query.id)
