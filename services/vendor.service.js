@@ -96,7 +96,7 @@ export default class vendorService {
             let token = await JWT.getToken(vendor)
 
             var serviceAccount = await stripeInstance.accounts.create({
-                type: 'custom',
+                type: 'express',
                 country: 'US',
                 email: vendorModel.email,
                 capabilities: {
