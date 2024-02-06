@@ -112,7 +112,6 @@ export default class vendorService {
 
             var accountLink = await stripeInstance.accountLinks.create({
                 account: serviceAccount.id,
-                refresh_url: '',
                 return_url: 'https://urban_cabs_vender',
                 type: 'account_onboarding',
             });
