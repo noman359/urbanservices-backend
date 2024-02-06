@@ -464,14 +464,14 @@ export default class JobsService {
                 }
             })
 
-            var jobpaymentDetails = await db.payment_details.update({
-                where: {
-                    vendor_job_id: Number(job.job_id)
-                },
-                data: {
-                    charge_id: job.charge_id
-                }
-            })
+            // var jobpaymentDetails = await db.payment_details.update({
+            //     where: {
+            //         vendor_job_id: Number(job.job_id)
+            //     },
+            //     data: {
+            //         charge_id: job.charge_id
+            //     }
+            // })
 
             servResp.data = await db.vendor_jobs.update({
                 where: {
