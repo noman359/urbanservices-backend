@@ -224,7 +224,7 @@ export default class JobsService {
                 servResp.message = 'Estimates can not be less than service fee: $39'
                 return servResp
             }
-            
+
 
             var estiimate = await db.estimates.findFirst({
                 where: {
@@ -282,26 +282,26 @@ export default class JobsService {
 
             if (registrationToken) {
 
-            const message = {
-                notification: {
-                    title: 'Estimates',
-                    body: notificationText
-                },
-                data: {
-                    estimate_id: `${job.request_id}`,
-                    job_id: `${estiimate.vendor_job_id}`,
-                    vendor_id: `${vendor.id}`
-                },
-                token: registrationToken,
-            };
+                const message = {
+                    notification: {
+                        title: 'Estimates',
+                        body: notificationText
+                    },
+                    data: {
+                        estimate_id: `${job.request_id}`,
+                        job_id: `${estiimate.vendor_job_id}`,
+                        vendor_id: `${vendor.id}`
+                    },
+                    token: registrationToken,
+                };
 
-            admin.messaging().send(message)
-                .then((response) => {
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                });
+                admin.messaging().send(message)
+                    .then((response) => {
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
             }
             console.debug('createCustomer() returning')
 
@@ -464,15 +464,17 @@ export default class JobsService {
                 }
             })
 
-            // var jobpaymentDetails = await db.payment_details.update({
-            //     where: {
-            //         vendor_job_id: Number(job.job_id)
-            //     },
-            //     data: {
-            //         charge_id: job.charge_id
-            //     }
-            // })
+            if (job.charge_id) {
+                var jobpaymentDetails = await db.payment_details.update({
+                    where: {
+                        vendor_job_id: Number(job.job_id)
+                    },
+                    data: {
+                        charge_id: job.charge_id
+                    }
+                })
 
+            }
             servResp.data = await db.vendor_jobs.update({
                 where: {
                     id: Number(job.job_id)
@@ -512,26 +514,26 @@ export default class JobsService {
 
             if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
 
-            const message = {
-                notification: {
-                    title: 'Assigned Job',
-                    body: `${customer.full_name} has assigned you a job.`,
-                },
-                data: {
-                    // Add extra data here
-                    id: `${job.job_id}`,
-                    // Add other key-value pairs as needed
-                },
-                token: registrationToken,
-            };
+                const message = {
+                    notification: {
+                        title: 'Assigned Job',
+                        body: `${customer.full_name} has assigned you a job.`,
+                    },
+                    data: {
+                        // Add extra data here
+                        id: `${job.job_id}`,
+                        // Add other key-value pairs as needed
+                    },
+                    token: registrationToken,
+                };
 
-            admin.messaging().send(message)
-                .then((response) => {
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                });
+                admin.messaging().send(message)
+                    .then((response) => {
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
             }
             console.debug('createCustomer() returning')
             console.debug('createCustomer() returning')
@@ -596,26 +598,26 @@ export default class JobsService {
             })
 
             if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
-            const message = {
-                notification: {
-                    title: 'Job Accepted',
-                    body: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
-                },
-                data: {
-                    // Add extra data here
-                    id: `${job.job_id}`,
-                    // Add other key-value pairs as needed
-                },
-                token: registrationToken,
-            };
+                const message = {
+                    notification: {
+                        title: 'Job Accepted',
+                        body: `Your job has been accepted by ${vendor.first_name} ${vendor.last_name}`,
+                    },
+                    data: {
+                        // Add extra data here
+                        id: `${job.job_id}`,
+                        // Add other key-value pairs as needed
+                    },
+                    token: registrationToken,
+                };
 
-            admin.messaging().send(message)
-                .then((response) => {
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                });
+                admin.messaging().send(message)
+                    .then((response) => {
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
             }
             console.debug('createCustomer() returning')
 
@@ -883,26 +885,26 @@ export default class JobsService {
             })
 
             if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
-            const message = {
-                notification: {
-                    title: 'Job started',
-                    body: `Your job has been started by ${vendor.first_name} ${vendor.last_name}`,
-                },
-                data: {
-                    // Add extra data here
-                    id: `${job.job_id}`,
-                    // Add other key-value pairs as needed
-                },
-                token: registrationToken,
-            };
+                const message = {
+                    notification: {
+                        title: 'Job started',
+                        body: `Your job has been started by ${vendor.first_name} ${vendor.last_name}`,
+                    },
+                    data: {
+                        // Add extra data here
+                        id: `${job.job_id}`,
+                        // Add other key-value pairs as needed
+                    },
+                    token: registrationToken,
+                };
 
-            admin.messaging().send(message)
-                .then((response) => {
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                });
+                admin.messaging().send(message)
+                    .then((response) => {
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
             }
             console.debug('createCustomer() returning')
 
@@ -956,26 +958,26 @@ export default class JobsService {
 
             if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
 
-            const message = {
-                notification: {
-                    title: 'On Way',
-                    body: `${vendor.first_name} ${vendor.last_name} is on his way`,
-                },
-                data: {
-                    // Add extra data here
-                    id: `${job.job_id}`,
-                    // Add other key-value pairs as needed
-                },
-                token: registrationToken,
-            };
+                const message = {
+                    notification: {
+                        title: 'On Way',
+                        body: `${vendor.first_name} ${vendor.last_name} is on his way`,
+                    },
+                    data: {
+                        // Add extra data here
+                        id: `${job.job_id}`,
+                        // Add other key-value pairs as needed
+                    },
+                    token: registrationToken,
+                };
 
-            admin.messaging().send(message)
-                .then((response) => {
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                });
+                admin.messaging().send(message)
+                    .then((response) => {
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
             }
             console.debug('createCustomer() returning')
 
@@ -1078,26 +1080,26 @@ export default class JobsService {
 
             if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
 
-            const message = {
-                notification: {
-                    title: 'Job completed',
-                    body: `Your job has been completed by ${vendor.first_name} ${vendor.last_name}`,
-                },
-                data: {
-                    // Add extra data here
-                    id: `${job.job_id}`,
-                    // Add other key-value pairs as needed
-                },
-                token: registrationToken,
-            };
+                const message = {
+                    notification: {
+                        title: 'Job completed',
+                        body: `Your job has been completed by ${vendor.first_name} ${vendor.last_name}`,
+                    },
+                    data: {
+                        // Add extra data here
+                        id: `${job.job_id}`,
+                        // Add other key-value pairs as needed
+                    },
+                    token: registrationToken,
+                };
 
-            admin.messaging().send(message)
-                .then((response) => {
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                });
+                admin.messaging().send(message)
+                    .then((response) => {
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
             }
 
             console.debug('createCustomer() returning')
@@ -1165,26 +1167,26 @@ export default class JobsService {
 
             if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
 
-            const message = {
-                notification: {
-                    title: 'Job cancelled',
-                    body: `Your job has been cancelled by ${vendor.first_name} ${vendor.last_name}`,
-                },
-                data: {
-                    // Add extra data here
-                    id: `${job.job_id}`,
-                    // Add other key-value pairs as needed
-                },
-                token: registrationToken,
-            };
+                const message = {
+                    notification: {
+                        title: 'Job cancelled',
+                        body: `Your job has been cancelled by ${vendor.first_name} ${vendor.last_name}`,
+                    },
+                    data: {
+                        // Add extra data here
+                        id: `${job.job_id}`,
+                        // Add other key-value pairs as needed
+                    },
+                    token: registrationToken,
+                };
 
-            admin.messaging().send(message)
-                .then((response) => {
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                });
+                admin.messaging().send(message)
+                    .then((response) => {
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
             }
 
             console.debug('createCustomer() returning')
@@ -1252,26 +1254,26 @@ export default class JobsService {
 
             if (registrationToken != '' || registrationToken != null || registrationToken != undefined) {
 
-            const message = {
-                notification: {
-                    title: 'Job cancelled',
-                    body: `Your job has been cancelled by ${customer.full_name}`,
-                },
-                data: {
-                    // Add extra data here
-                    id: `${job.job_id}`,
-                    // Add other key-value pairs as needed
-                },
-                token: registrationToken,
-            };
+                const message = {
+                    notification: {
+                        title: 'Job cancelled',
+                        body: `Your job has been cancelled by ${customer.full_name}`,
+                    },
+                    data: {
+                        // Add extra data here
+                        id: `${job.job_id}`,
+                        // Add other key-value pairs as needed
+                    },
+                    token: registrationToken,
+                };
 
-            admin.messaging().send(message)
-                .then((response) => {
-                    console.log('Successfully sent message:', response);
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                });
+                admin.messaging().send(message)
+                    .then((response) => {
+                        console.log('Successfully sent message:', response);
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
             }
 
             console.debug('createCustomer() returning')
