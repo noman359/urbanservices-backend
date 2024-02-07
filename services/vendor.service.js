@@ -371,7 +371,6 @@ export default class vendorService {
             let account = await paymentController.checkConnectAccountStatus(vendor)
             vendor.payment_status = account
             vendor.rating = rating
-            delete vendor.fcm_token
             servResp.data = vendor
             console.debug('getVendorData() ended')
         } catch (error) {

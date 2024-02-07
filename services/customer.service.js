@@ -426,7 +426,6 @@ export default class CustomerService {
         try {
             console.debug('getCustomer() started')
             servResp.data = await db.customers.findFirst({ where: { id: Number(query.id) } })
-            delete servResp.data.fcm_token;
             console.debug('getCustomer() returning')
         } catch (error) {
             console.debug('getCustomer() exception thrown')
