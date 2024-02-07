@@ -369,7 +369,8 @@ export default class JobsService {
                             id: true,
                             full_name: true,
                             phone_number: true,
-                            avatar: true
+                            avatar: true,
+                            fcm_token: true
 
 
                         },
@@ -668,7 +669,8 @@ export default class JobsService {
                             select: {
                                 id: true,
                                 first_name: true,
-                                last_name: true
+                                last_name: true,
+                                fcm_token: true
                             }
                         },
 
@@ -773,7 +775,8 @@ export default class JobsService {
                                 id: true,
                                 first_name: true,
                                 last_name: true,
-                                avatar: true
+                                avatar: true,
+                                fcm_token: true
                             }
                         },
 
