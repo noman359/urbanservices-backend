@@ -428,7 +428,8 @@ export default class JobsService {
                             id: true,
                             full_name: true,
                             phone_number: true,
-                            avatar: true
+                            avatar: true,
+                            fcm_token: true
                         }
                     },
                     vendor: {
@@ -436,7 +437,8 @@ export default class JobsService {
                             id: true,
                             first_name: true,
                             last_name: true,
-                            avatar: true
+                            avatar: true,
+                            fcm_token: true
                         }
                     }
 
