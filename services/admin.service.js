@@ -88,7 +88,7 @@ export default class AdminService {
             if (filters.status != null) {
 
                 if (filters.search != null) {
-                 [paginatedData, count] =  await db.$transaction( [db.vendor.findMany({
+                    [paginatedData, count] = await db.$transaction([db.vendor.findMany({
                         where: {
                             status: filters.status,
                             full_name: {
@@ -97,7 +97,7 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.vendor.count({
+                    }), db.vendor.count({
                         where: {
                             status: filters.status,
                             full_name: {
@@ -106,13 +106,13 @@ export default class AdminService {
                         },
                     })]);
                 } else {
-                    [paginatedData, count] =  await db.$transaction( [db.vendor.findMany({
+                    [paginatedData, count] = await db.$transaction([db.vendor.findMany({
                         where: {
                             status: filters.status
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.vendor.count({
+                    }), db.vendor.count({
                         where: {
                             status: filters.status
                         },
@@ -123,7 +123,7 @@ export default class AdminService {
 
                 if (filters.search != null) {
 
-                    [paginatedData, count] =  await db.$transaction( [db.vendor.findMany({
+                    [paginatedData, count] = await db.$transaction([db.vendor.findMany({
                         where: {
                             full_name: {
                                 startsWith: filters.search,
@@ -131,7 +131,7 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.vendor.count({
+                    }), db.vendor.count({
                         where: {
                             full_name: {
                                 startsWith: filters.search,
@@ -140,16 +140,16 @@ export default class AdminService {
                     })]);
 
                 } else {
-                    [paginatedData, count] =  await db.$transaction( [db.vendor.findMany({
+                    [paginatedData, count] = await db.$transaction([db.vendor.findMany({
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.vendor.count()]);
+                    }), db.vendor.count()]);
                 }
             }
 
             servResp.count = count
             servResp.data = paginatedData
-            console.debug('getVendorData() ended',servResp.totalRecords)
+            console.debug('getVendorData() ended', servResp.totalRecords)
         } catch (error) {
             console.debug('createVendor() exception thrown')
             servResp.isError = true
@@ -167,7 +167,7 @@ export default class AdminService {
             if (filters.status != null) {
 
                 if (filters.search != null) {
-                    [paginatedData, count] =  await db.$transaction([db.customers.findMany({
+                    [paginatedData, count] = await db.$transaction([db.customers.findMany({
                         where: {
                             status: filters.status,
                             full_name: {
@@ -176,7 +176,7 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.customers.count({
+                    }), db.customers.count({
                         where: {
                             status: filters.status,
                             full_name: {
@@ -186,13 +186,13 @@ export default class AdminService {
                     })]);
 
                 } else {
-                    [paginatedData, count] =  await db.$transaction( [db.customers.findMany({
+                    [paginatedData, count] = await db.$transaction([db.customers.findMany({
                         where: {
                             status: filters.status
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.customers.count({
+                    }), db.customers.count({
                         where: {
                             status: filters.status
                         },
@@ -203,7 +203,7 @@ export default class AdminService {
 
                 if (filters.search != null) {
 
-                    [paginatedData, count] =  await db.$transaction( [db.customers.findMany({
+                    [paginatedData, count] = await db.$transaction([db.customers.findMany({
                         where: {
                             full_name: {
                                 startsWith: filters.search,
@@ -211,7 +211,7 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.customers.count({
+                    }), db.customers.count({
                         where: {
                             full_name: {
                                 startsWith: filters.search,
@@ -220,10 +220,10 @@ export default class AdminService {
                     })]);
 
                 } else {
-                    [paginatedData, count] =  await db.$transaction( [db.customers.findMany({
+                    [paginatedData, count] = await db.$transaction([db.customers.findMany({
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.customers.count()]);
+                    }), db.customers.count()]);
                 }
             }
             servResp.count = count
@@ -360,7 +360,7 @@ export default class AdminService {
             if (filters.status != null) {
 
                 if (filters.search != null) {
-                    [paginatedData, count] =  await db.$transaction( [db.vendor_jobs.findMany({
+                    [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
                         where: {
                             status: filters.status,
                             description: {
@@ -371,7 +371,7 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.vendor_jobs.count({
+                    }), db.vendor_jobs.count({
                         where: {
                             status: filters.status,
                             description: {
@@ -383,13 +383,13 @@ export default class AdminService {
                     })]);
 
                 } else {
-                    [paginatedData, count] =  await db.$transaction( [db.vendor_jobs.findMany({
+                    [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
                         where: {
                             status: filters.status
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.vendor_jobs.count({
+                    }), db.vendor_jobs.count({
                         where: {
                             status: filters.status
                         },
@@ -400,7 +400,7 @@ export default class AdminService {
 
                 if (filters.search != null) {
 
-                    [paginatedData, count] =  await db.$transaction( [db.vendor_jobs.findMany({
+                    [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
                         where: {
                             description: {
                                 startsWith: filters.search,
@@ -409,7 +409,7 @@ export default class AdminService {
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.vendor_jobs.count({
+                    }), db.vendor_jobs.count({
                         where: {
                             description: {
                                 startsWith: filters.search,
@@ -419,10 +419,10 @@ export default class AdminService {
                     })]);
 
                 } else {
-                    [paginatedData, count] =  await db.$transaction( [db.vendor_jobs.findMany({
+                    [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
-                    }),db.vendor_jobs.count()]);
+                    }), db.vendor_jobs.count()]);
                 }
             }
             servResp.count = count
@@ -439,10 +439,23 @@ export default class AdminService {
 
     async createService(serviceBody) {
         let servResp = new config.serviceResponse()
+        let service_avatar = new Object()
         try {
+            if (serviceBody.image) {
+                var arr = serviceBody.image.name.split('.')
+                let extentionName = arr[arr.length - 1]
+                let avatar_val = {
+                    bucket: config.vendor_avatar_s3_bucket_name,
+                    key: `${uuidv4()}.${extentionName}`,
+                    body: await bucket.fileToArrayBuffer(serviceBody.image)
+                }
+                service_avatar = await bucket.upload(avatar_val)
+            }
+
             servResp.data = await db.services.create({
                 data: {
                     name: serviceBody.name,
+                    avatar: service_avatar.url ?? '',
                     created_at: new Date(new Date().toUTCString()),
                     stats: 0
                 }
@@ -460,13 +473,39 @@ export default class AdminService {
 
     async updateService(serviceBody) {
         let servResp = new config.serviceResponse()
+        let service_avatar = new Object()
         try {
+            if (serviceBody.image) {
+                var arr = serviceBody.image.name.split('.')
+                let extentionName = arr[arr.length - 1]
+                let avatar_val = {
+                    bucket: config.vendor_avatar_s3_bucket_name,
+                    key: `${uuidv4()}.${extentionName}`,
+                    body: await bucket.fileToArrayBuffer(serviceBody.image)
+                }
+                service_avatar = await bucket.upload(avatar_val)
+            }
+
+            let oldService = await db.services.findFirst({
+                where: {
+                    id: Number(serviceBody.id)
+                }
+            })
+
+            var url = ''
+            if (service_avatar.url) {
+                url = service_avatar.url
+            } else {
+                url = oldService.avatar
+            }
+
             servResp.data = await db.services.update({
                 where: {
                     id: Number(serviceBody.id)
                 },
                 data: {
-                    name: serviceBody.name,
+                    avatar: url ?? '',
+                    name: serviceBody.name ? serviceBody.name : oldService.ser,
                     updated_at: new Date(new Date().toUTCString())
                 }
             })
@@ -502,9 +541,22 @@ export default class AdminService {
 
     async createSubService(serviceBody) {
         let servResp = new config.serviceResponse()
+        let service_avatar = new Object()
         try {
+            if (serviceBody.image) {
+                var arr = serviceBody.image.name.split('.')
+                let extentionName = arr[arr.length - 1]
+                let avatar_val = {
+                    bucket: config.vendor_avatar_s3_bucket_name,
+                    key: `${uuidv4()}.${extentionName}`,
+                    body: await bucket.fileToArrayBuffer(serviceBody.image)
+                }
+                service_avatar = await bucket.upload(avatar_val)
+            }
+
             servResp.data = await db.sub_services.create({
                 data: {
+                    avatar: service_avatar.url ?? '',
                     name: serviceBody.name,
                     created_at: new Date(new Date().toUTCString()),
                     services_id: Number(serviceBody.service_id),
@@ -524,14 +576,38 @@ export default class AdminService {
 
     async updateSubService(serviceBody) {
         let servResp = new config.serviceResponse()
+        let service_avatar = new Object()
         try {
+            if (serviceBody.image) {
+                var arr = serviceBody.image.name.split('.')
+                let extentionName = arr[arr.length - 1]
+                let avatar_val = {
+                    bucket: config.vendor_avatar_s3_bucket_name,
+                    key: `${uuidv4()}.${extentionName}`,
+                    body: await bucket.fileToArrayBuffer(serviceBody.image)
+                }
+                service_avatar = await bucket.upload(avatar_val)
+            }
+
+            let oldService = await db.services.findFirst({
+                where: {
+                    id: Number(serviceBody.id)
+                }
+            })
+
+            var image = ''
+            image = oldService.avatar ? oldService.avatar : ''
+            if (service_avatar) {
+                image = service_avatar.url
+            }
+
             servResp.data = await db.sub_services.update({
                 where: {
                     id: serviceBody.id
                 },
                 data: {
-                   // services_id: Number(serviceBody.service_id),
-                    name: serviceBody.name,
+                    avatar: image,
+                    name: serviceBody.name ? serviceBody.name : oldService.name,
                     updated_at: new Date(new Date().toUTCString())
                 }
             })
@@ -573,7 +649,7 @@ export default class AdminService {
                     id: customer.id
                 },
                 data: {
-                   // services_id: Number(serviceBody.service_id),
+                    // services_id: Number(serviceBody.service_id),
                     status: customer.status,
                     updated_at: new Date(new Date().toUTCString())
                 }
@@ -631,4 +707,174 @@ export default class AdminService {
 
     }
 
+    async changePercentage(percent) {
+        let servResp = new config.serviceResponse()
+        try {
+            servResp.data = await db.percentage.update({
+                where: {
+                    id: 1
+                },
+                data: {
+                    percentage: Number(percent.percentage),
+                    updated_at: new Date(new Date().toUTCString())
+                }
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
+    async getPercentage(percent) {
+        let servResp = new config.serviceResponse()
+        try {
+            servResp.data = await db.percentage.findFirst({
+                where: {
+                    id: 1
+                }
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
+
+    async createQuestion(query) {
+        let servResp = new config.serviceResponse()
+        try {
+
+            servResp.data = await db.questions.create({
+                data: {
+                    question: query.question,
+                    created_at: new Date(new Date().toUTCString())
+                }
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
+    async getAllQuestions() {
+        let servResp = new config.serviceResponse()
+        try {
+
+            servResp.data = await db.questions.findMany()
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
+    async deleteQuestion(question) {
+        let servResp = new config.serviceResponse()
+        try {
+            servResp.data = await db.questions.delete({
+                where: {
+                    id: Number(question.id)
+                }
+            })
+            console.debug('createCustomer() returning')
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
+    async saveAnswer(query) {
+        let servResp = new config.serviceResponse()
+        try {
+
+            for (var item of query.answers) {
+                await db.answers.create({
+                    data: {
+                        question_id: Number(item.question_id),
+                        vendor_job_id: Number(item.job_id),
+                        answer: item.answer,
+                        created_at: new Date(new Date().toUTCString())
+                    }
+                })
+            }
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
+    async updateAnswer(query) {
+        let servResp = new config.serviceResponse()
+        try {
+
+            for (var item of query.answers) {
+                await db.answers.update({
+                    where: {
+                        id: Number(item.id)
+                    },
+                    data: {
+                        answer: item.answer,
+                        updated_at: new Date(new Date().toUTCString())
+                    }
+                })
+            }
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
+    async getAnswers(query) {
+        let servResp = new config.serviceResponse()
+        try {
+
+            servResp.data = await db.answers.findMany({
+                where: {
+                    vendor_job_id: Number(query.job_id)
+                },
+                include: {
+                    questions: true
+                }
+            })
+
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
 }

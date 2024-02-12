@@ -169,6 +169,86 @@ export default class AdminController {
             next(updated_customer)
         }
     }
+
+    async changePercentage(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let updated_customer = await adminService.changePercentage(req.body)
+            next(updated_customer)
+        }
+    }
+
+    async getPercentage(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let updated_customer = await adminService.getPercentage(req.body)
+            next(updated_customer)
+        }
+    }
+
+    async createQuestion(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let updated_customer = await adminService.createQuestion(req.body)
+            next(updated_customer)
+        }
+    }
+
+    async getQuestions(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let updated_customer = await adminService.getAllQuestions(req.body)
+            next(updated_customer)
+        }
+    }
+
+    async deleteQuestion(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let updated_customer = await adminService.deleteQuestion(req.body)
+            next(updated_customer)
+        }
+    }
+
+    async saveAnswers(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let updated_customer = await adminService.saveAnswer(req.body)
+            next(updated_customer)
+        }
+    }
+
+    async updateAnswers(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let updated_customer = await adminService.updateAnswer(req.body)
+            next(updated_customer)
+        }
+    }
+
+    async getAnswers(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let updated_customer = await adminService.getAnswers(req.query)
+            next(updated_customer)
+        }
+    }
     
     async checkToken(req) {
         var authorizationHeader = req.headers.authorization;

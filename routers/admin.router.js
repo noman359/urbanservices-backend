@@ -14,8 +14,8 @@ export default function (router) {
     lRoute.get('/customer/details', adminController.getCustomerDetails, handler.apiResponseHandler)
     lRoute.get('/vendor/details', adminController.getVendorDetails, handler.apiResponseHandler)
     lRoute.get('/jobs', adminController.getAllJobs, handler.apiResponseHandler)
-    lRoute.post('/service/create', adminController.createService, handler.apiResponseHandler)
-    lRoute.post('/service/update', adminController.updateService, handler.apiResponseHandler)
+    lRoute.post('/service/create', formData, adminController.createService, handler.apiResponseHandler)
+    lRoute.post('/service/update',formData ,adminController.updateService, handler.apiResponseHandler)
     lRoute.post('/service/delete', adminController.deleteService, handler.apiResponseHandler)
 
     lRoute.post('/subService/create', adminController.createSubService, handler.apiResponseHandler)
@@ -24,7 +24,15 @@ export default function (router) {
     
     lRoute.post('/customer/update', adminController.updateCustomer, handler.apiResponseHandler)
     lRoute.post('/customer/delete', adminController.deleteCustomer, handler.apiResponseHandler)
-
+    lRoute.put('/percentage', adminController.changePercentage, handler.apiResponseHandler)
+    lRoute.get('/percentage', adminController.getPercentage, handler.apiResponseHandler)
     lRoute.post('/vendor/update', adminController.updateVendor, handler.apiResponseHandler)
 
+    lRoute.post('/question', adminController.createQuestion, handler.apiResponseHandler)
+    lRoute.get('/question', adminController.getQuestions, handler.apiResponseHandler)
+    lRoute.delete('/question', adminController.deleteQuestion, handler.apiResponseHandler)
+
+    lRoute.post('/answer', adminController.saveAnswers, handler.apiResponseHandler)
+    lRoute.put('/answer', adminController.updateAnswers, handler.apiResponseHandler)
+    lRoute.get('/answer', adminController.getAnswers, handler.apiResponseHandler)
 }
