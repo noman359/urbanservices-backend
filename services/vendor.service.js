@@ -302,9 +302,10 @@ export default class vendorService {
                             gte: previousDate,
                             lt: dateObject,
                         },
-                        orderBy: {
-                            created_at: 'asc',
-                        },
+                        
+                    },
+                    orderBy: {
+                        created_at: 'asc',
                     },
 
                 });
@@ -316,11 +317,11 @@ export default class vendorService {
                             gte: yesterdayDate,
                             lt: previousDate,
                         },
-                        orderBy: {
-                            created_at: 'asc',
-                        },
+                        
                     },
-
+                    orderBy: {
+                        created_at: 'asc',
+                    },
                 });
 
                 let olderNotifications = await db.notifications.findMany({
@@ -329,9 +330,10 @@ export default class vendorService {
                         created_at: {
                             lt: yesterdayDate,
                         },
-                        orderBy: {
-                            created_at: 'asc',
-                        },
+                       
+                    },
+                    orderBy: {
+                        created_at: 'asc',
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
