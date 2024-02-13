@@ -812,7 +812,7 @@ export default class AdminService {
 
             await db.answers.deleteMany({
                 where: {
-                    vendor_job_id: Number(item.job_id),
+                    vendor_job_id: Number(query.answers[0].job_id),
                 }
             })
 
