@@ -810,11 +810,13 @@ export default class AdminService {
         let servResp = new config.serviceResponse()
         try {
 
-            await db.answers.deleteMany({
-                where: {
-                    vendor_job_id: Number(query.answers[0].job_id),
-                }
-            })
+            if (query.answers.length > 0) {
+                await db.answers.deleteMany({
+                    where: {
+                        vendor_job_id: Number(query.answers[0].job_id),
+                    }
+                })
+            }
 
             for (var item of query.answers) {
                 await db.answers.create({
