@@ -810,6 +810,7 @@ export default class AdminService {
         let servResp = new config.serviceResponse()
         try {
 
+            console.log(query.answers)
             if (query.answers.length > 0) {
                 await db.answers.deleteMany({
                     where: {
