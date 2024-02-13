@@ -439,7 +439,8 @@ export default class vendorService {
                 console.log(element);
                 let estimate = await db.estimates.findFirst({
                     where: {
-                        vendor_id: Number(element.id)
+                        vendor_id: Number(element.id),
+                        vendor_job_id:  Number(filters.job_id)
                     }
                 })
                 for (var review of element.vendor_reviews) {
