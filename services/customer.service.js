@@ -138,6 +138,9 @@ export default class CustomerService {
                     include: {
                         vendor: true
                     },
+                    orderBy: {
+                        created_at: 'asc',
+                    },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
     
@@ -160,7 +163,9 @@ export default class CustomerService {
                     include: {
                         vendor: true
                     },
-    
+                    orderBy: {
+                        created_at: 'asc',
+                    },
                 });
     
                 let yesterdayNotifications = await db.customer_notifications.findMany({
@@ -174,6 +179,9 @@ export default class CustomerService {
                     include: {
                         vendor: true
                     },
+                    orderBy: {
+                        created_at: 'asc',
+                    },
                 });
     
                 let olderNotifications = await db.customer_notifications.findMany({
@@ -185,6 +193,9 @@ export default class CustomerService {
                     },
                     include: {
                         vendor: true
+                    },
+                    orderBy: {
+                        created_at: 'asc',
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page

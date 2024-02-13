@@ -1034,7 +1034,13 @@ export default class JobsService {
             })
 
             var vendorServiceFee = Number(paymentIntent.amount)
-            vendorServiceFee = vendorServiceFee - 39.0
+            var percentage = await db.percentage.findFirst({
+                where: {
+                    id: 1
+                }
+            })
+
+            vendorServiceFee = vendorServiceFee - (vendorServiceFee*Number(percentage.percentage))
             if (vendorServiceFee < 0) {
                 servResp.data.isError = true
                 servResp.data.message = 'Amount can not be negative'

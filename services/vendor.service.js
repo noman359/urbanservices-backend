@@ -282,6 +282,9 @@ export default class vendorService {
                             lt: yesterdayDate,
                         },
                     },
+                    orderBy: {
+                        created_at: 'asc',
+                    },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
 
@@ -299,6 +302,9 @@ export default class vendorService {
                             gte: previousDate,
                             lt: dateObject,
                         },
+                        orderBy: {
+                            created_at: 'asc',
+                        },
                     },
 
                 });
@@ -310,6 +316,9 @@ export default class vendorService {
                             gte: yesterdayDate,
                             lt: previousDate,
                         },
+                        orderBy: {
+                            created_at: 'asc',
+                        },
                     },
 
                 });
@@ -319,6 +328,9 @@ export default class vendorService {
                         vendor_id: Number(query.vendor_id),
                         created_at: {
                             lt: yesterdayDate,
+                        },
+                        orderBy: {
+                            created_at: 'asc',
                         },
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
