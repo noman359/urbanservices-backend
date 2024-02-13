@@ -97,7 +97,7 @@ export default class VendorController {
         if (token.isError == true) {
             next(token)
         } else {
-            let vendorResp = await vendorServ.getVendorsList({ service_id: Number(req.query.service_id), limit: Number(req.query.limit), offset: Number(req.query.offset) })
+            let vendorResp = await vendorServ.getVendorsList({ service_id: Number(req.query.service_id), job_id: Number(req.query.job_id) ,limit: Number(req.query.limit), offset: Number(req.query.offset) })
             next(vendorResp)
         }
     }

@@ -446,7 +446,7 @@ export default class vendorService {
                 for (var review of element.vendor_reviews) {
                     rating += review.rating
                 }
-                element.estimates = estimate
+                element['estimates'] = estimate
                 element.rating = rating
 
             }
