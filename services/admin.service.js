@@ -831,6 +831,7 @@ export default class AdminService {
             console.debug('createVendor() exception thrown')
             servResp.isError = true
             servResp.message = error.message
+            console.log(error)
         }
         return servResp
 
