@@ -136,7 +136,8 @@ export default class CustomerService {
                     
                     },
                     include: {
-                        vendor: true
+                        vendor: true,
+                        vendor_jobs: true
                     },
                     orderBy: {
                         created_at: 'asc',
@@ -161,7 +162,8 @@ export default class CustomerService {
                         
                     },
                     include: {
-                        vendor: true
+                        vendor: true,
+                        vendor_jobs: true
                     },
                     orderBy: {
                         created_at: 'asc',
@@ -177,7 +179,8 @@ export default class CustomerService {
                         },
                     },
                     include: {
-                        vendor: true
+                        vendor: true,
+                        vendor_jobs: true
                     },
                     orderBy: {
                         created_at: 'asc',
@@ -192,7 +195,8 @@ export default class CustomerService {
                         },
                     },
                     include: {
-                        vendor: true
+                        vendor: true,
+                        vendor_jobs: true
                     },
                     orderBy: {
                         created_at: 'asc',
