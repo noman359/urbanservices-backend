@@ -78,7 +78,7 @@ export default class PaymentService {
     })
       const refund = await stripeInstance.refunds.create({
         charge: chargeId,
-        amount: charge.amount - charge.amount*Number(percentage.percentage), // specify the amount to refund in cents
+        amount: charge.amount - charge.amount*(Number(percentage.percentage)/100), // specify the amount to refund in cents
       });
 
       console.log('Refund processed:', refund);

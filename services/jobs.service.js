@@ -1040,7 +1040,7 @@ export default class JobsService {
                 }
             })
 
-            vendorServiceFee = vendorServiceFee - (vendorServiceFee*Number(percentage.percentage))
+            vendorServiceFee = vendorServiceFee - (vendorServiceFee*(Number(percentage.percentage)/100))
             if (vendorServiceFee < 0) {
                 servResp.data.isError = true
                 servResp.data.message = 'Amount can not be negative'
