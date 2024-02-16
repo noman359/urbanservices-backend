@@ -67,9 +67,16 @@ export default class PaymentService {
 
   async refundPaymentToCustomer(chargeId) {
     try {
-      const charge = await stripe.charges.retrieve(chargeId);
-
-      console.log('Charge information:', charge);
+      var intentString = `pi_${chargeId.split('_')[1]}`
+      var chargeID = ''
+      var chargeAmount = 0
+      const paymentIntent = await stripeInstance.paymentIntents.retrieve(intentString, {
+        expand: ['charges'],
+      });
+  
+      // Access charge information from the charges array
+      chargeID = paymentIntent.latest_charge
+      chargeAmount = paymentIntent.amount
 
       var percentage = await db.percentage.findFirst({
         where: {
@@ -77,8 +84,8 @@ export default class PaymentService {
         }
     })
       const refund = await stripeInstance.refunds.create({
-        charge: chargeId,
-        amount: charge.amount - charge.amount*(Number(percentage.percentage)/100), // specify the amount to refund in cents
+        charge: chargeID,
+        amount: chargeAmount - chargeAmount*(Number(percentage.percentage)/100), // specify the amount to refund in cents
       });
 
       console.log('Refund processed:', refund);
@@ -94,15 +101,19 @@ export default class PaymentService {
 
   async refundPayment(chargeId) {
     try {
-      const charge = await stripe.charges.retrieve(chargeId);
-
-      console.log('Charge information:', charge);
-
-      charge.amount
-
+      var intentString = `pi_${chargeId.split('_')[1]}`
+      var chargeID = ''
+      var chargeAmount = 0
+      const paymentIntent = await stripeInstance.paymentIntents.retrieve(intentString, {
+        expand: ['charges'],
+      });
+  
+      // Access charge information from the charges array
+      chargeID = paymentIntent.latest_charge
+      chargeAmount = paymentIntent.amount
       const refund = await stripeInstance.refunds.create({
-        charge: chargeId,
-        amount: charge.amount, // specify the amount to refund in cents
+        charge: chargeID,
+        amount: chargeAmount, // specify the amount to refund in cents
       });
 
       console.log('Refund processed:', refund);

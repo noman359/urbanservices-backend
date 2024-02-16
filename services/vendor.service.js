@@ -285,6 +285,9 @@ export default class vendorService {
                     orderBy: {
                         created_at: 'asc',
                     },
+                    include: {
+                        customers: true
+                    },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
 
@@ -304,6 +307,9 @@ export default class vendorService {
                         },
                         
                     },
+                    include: {
+                        customers: true
+                    },
                     orderBy: {
                         created_at: 'asc',
                     },
@@ -319,6 +325,9 @@ export default class vendorService {
                         },
                         
                     },
+                    include: {
+                        customers: true
+                    },
                     orderBy: {
                         created_at: 'asc',
                     },
@@ -331,6 +340,9 @@ export default class vendorService {
                             lt: yesterdayDate,
                         },
                        
+                    },
+                    include: {
+                        customers: true
                     },
                     orderBy: {
                         created_at: 'asc',
@@ -465,12 +477,29 @@ export default class vendorService {
         let vendor_avatar = new Object()
         let front_id_avatar = new Object()
         let back_id_avatar = new Object()
+        var images = []
         try {
 
             let vendorDetail = await db.vendor.findFirst({ where: { id: Number(query.id) } })
 
             if (!vendorDetail) {
                 throw new Error('Customer not found!')
+            }
+
+            if (job.job_images) {
+                for (var image of job.job_images) {
+                    let job_image = new Object()
+                    var arr = image.name.split('.')
+                    let extentionName = arr[arr.length - 1]
+
+                    let avatar_val = {
+                        bucket: config.jobs_s3_bucket_name,
+                        key: `${uuidv4()}.${extentionName}`,
+                        body: await bucket.fileToArrayBuffer(image)
+                    }
+                    job_image = await bucket.upload(avatar_val)
+                    images.push(job_image.url)
+                }
             }
 
             if (vendorModel.avatar) {
@@ -530,6 +559,11 @@ export default class vendorService {
                 avatar = vendorModel.avatar ? vendorModel.avatar : undefined
             }
 
+            var imagesString = vendorDetail.job_images
+            if (images.length != 0) {
+                imagesString = images.join(',')
+            }
+
             let updated_vendor = await db.vendor.update({
                 data: {
                     updated_at: new Date(new Date().toUTCString()),
@@ -544,7 +578,8 @@ export default class vendorService {
                     user_id_back: backImage,
                     user_id_front: frontImage,
                     bio: vendorModel.bio ? vendorModel.bio : vendorDetail.bio,
-                    zip_code: vendorModel.zip_code ? vendorModel.zip_code : vendorDetail.zip_code
+                    zip_code: vendorModel.zip_code ? vendorModel.zip_code : vendorDetail.zip_code,
+                    job_images: imagesString ?? ''
                 }, where: {
                     id: Number(query.id)
                 }

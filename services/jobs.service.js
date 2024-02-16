@@ -685,6 +685,9 @@ export default class JobsService {
                             }
                         }
                     },
+                    orderBy: {
+                        created_at: 'asc'
+                    },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
 
@@ -730,6 +733,9 @@ export default class JobsService {
                                 }
                             }
                         }
+                    },
+                    orderBy: {
+                        created_at: 'asc',
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
@@ -792,6 +798,9 @@ export default class JobsService {
                         }
 
                     },
+                    orderBy: {
+                        created_at: 'asc',
+                    },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
 
@@ -831,6 +840,9 @@ export default class JobsService {
                             }
                         }
 
+                    },
+                    orderBy: {
+                        created_at: 'asc',
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
@@ -1147,7 +1159,7 @@ export default class JobsService {
             )
 
             let paymentService = new PaymentService()
-            paymentService.refundPayment(paymentDetails.charge_id)
+            let paymentCheck = await paymentService.refundPayment(paymentDetails.payment_intent)
 
             var customer = await db.customers.findFirst({
                 where: {
@@ -1158,6 +1170,12 @@ export default class JobsService {
             var vendor = await db.vendor.findFirst({
                 where: {
                     id: Number(servResp.data.vendor_id)
+                }
+            })
+
+            await db.estimates.deleteMany({
+                where: {
+                    vendor_job_id: Number(job.job_id)
                 }
             })
 
@@ -1234,7 +1252,7 @@ export default class JobsService {
             )
 
             let paymentService = new PaymentService()
-            paymentService.refundPaymentToCustomer(paymentDetails.charge_id)
+            paymentService.refundPaymentToCustomer(paymentDetails.payment_intent)
 
             var customer = await db.customers.findFirst({
                 where: {
@@ -1245,6 +1263,12 @@ export default class JobsService {
             var vendor = await db.vendor.findFirst({
                 where: {
                     id: Number(servResp.data.vendor_id)
+                }
+            })
+
+            await db.estimates.deleteMany({
+                where: {
+                    vendor_job_id: Number(job.job_id)
                 }
             })
 
