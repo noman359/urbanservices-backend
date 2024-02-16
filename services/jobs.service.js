@@ -636,111 +636,211 @@ export default class JobsService {
         let servResp = new config.serviceResponse()
         var jobs = [];
         const dateString = query.date
-        const dateObject = parse(dateString, 'MM-dd-yyyy', new Date());
-        const nextDay = new Date(dateObject);
-        nextDay.setDate(nextDay.getDate() + 1);
+       
 
 
         try {
             if (query.customer_id != null) {
-                jobs = await db.vendor_jobs.findMany({
-                    where: {
-                        customer_id: Number(query.customer_id),
-                        status: query.status,
-                        job_type: 'scheduled',
-                        scheduled_time: {
-                            gte: dateObject,
-                            lt: nextDay,
-                        },
-                    },
-                    select: {
-                        id: true,
-                        location: true,
-                        job_images: true,
-                        status: true,
-                        created_at: true,
-                        lat: true,
-                        long: true,
-                        vendor_lat: true,
-                        vendor_long: true,
-                        scheduled_time: true,
-                        amount: true,
-                        vendor: {
-                            select: {
-                                id: true,
-                                first_name: true,
-                                last_name: true,
-                                fcm_token: true
-                            }
-                        },
 
-                        sub_services: {
-                            select: {
-                                services: {
-                                    select: {
-                                        id: true,
-                                        name: true
+                if (dateString) {
+                    const dateObject = parse(dateString, 'MM-dd-yyyy', new Date());
+                    const nextDay = new Date(dateObject);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    jobs = await db.vendor_jobs.findMany({
+                        where: {
+                            customer_id: Number(query.customer_id),
+                            status: query.status,
+                            job_type: 'scheduled',
+                            scheduled_time: {
+                                gte: dateObject,
+                                lt: nextDay,
+                            },
+                        },
+                        select: {
+                            id: true,
+                            location: true,
+                            job_images: true,
+                            status: true,
+                            created_at: true,
+                            lat: true,
+                            long: true,
+                            vendor_lat: true,
+                            vendor_long: true,
+                            scheduled_time: true,
+                            amount: true,
+                            vendor: {
+                                select: {
+                                    id: true,
+                                    first_name: true,
+                                    last_name: true,
+                                    fcm_token: true
+                                }
+                            },
+
+                            sub_services: {
+                                select: {
+                                    services: {
+                                        select: {
+                                            id: true,
+                                            name: true
+                                        }
                                     }
                                 }
                             }
-                        }
-                    },
-                    orderBy: {
-                        created_at: 'asc'
-                    },
-                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
-                    take: query.limit, // Set the number of records to be returned per page
+                        },
+                        orderBy: {
+                            created_at: 'asc'
+                        },
+                        skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                        take: query.limit, // Set the number of records to be returned per page
 
-                });
+                    });
+                } else {
+                    jobs = await db.vendor_jobs.findMany({
+                        where: {
+                            customer_id: Number(query.customer_id),
+                            status: query.status,
+                            job_type: 'scheduled'
+                        },
+                        select: {
+                            id: true,
+                            location: true,
+                            job_images: true,
+                            status: true,
+                            created_at: true,
+                            lat: true,
+                            long: true,
+                            vendor_lat: true,
+                            vendor_long: true,
+                            scheduled_time: true,
+                            amount: true,
+                            vendor: {
+                                select: {
+                                    id: true,
+                                    first_name: true,
+                                    last_name: true,
+                                    fcm_token: true
+                                }
+                            },
+
+                            sub_services: {
+                                select: {
+                                    services: {
+                                        select: {
+                                            id: true,
+                                            name: true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        orderBy: {
+                            created_at: 'asc'
+                        },
+                        skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                        take: query.limit, // Set the number of records to be returned per page
+                    })
+                }
             } else {
-                jobs = await db.vendor_jobs.findMany({
-                    where: {
-                        vendor_id: Number(query.vendor_id),
-                        status: query.status,
-                        job_type: 'scheduled',
-                        scheduled_time: {
-                            gte: dateObject,
-                            lt: nextDay,
-                        },
-                    },
-                    select: {
-                        id: true,
-                        location: true,
-                        job_images: true,
-                        status: true,
-                        created_at: true,
-                        lat: true,
-                        long: true,
-                        vendor_lat: true,
-                        vendor_long: true,
-                        scheduled_time: true,
-                        amount: true,
-                        vendor: {
-                            select: {
-                                id: true,
-                                first_name: true,
-                                last_name: true
-                            }
-                        },
 
-                        sub_services: {
-                            select: {
-                                services: {
-                                    select: {
-                                        id: true,
-                                        name: true
+                if (dateString) {
+                    const dateObject = parse(dateString, 'MM-dd-yyyy', new Date());
+                    const nextDay = new Date(dateObject);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    jobs = await db.vendor_jobs.findMany({
+                        where: {
+                            vendor_id: Number(query.vendor_id),
+                            status: query.status,
+                            job_type: 'scheduled',
+                            scheduled_time: {
+                                gte: dateObject,
+                                lt: nextDay,
+                            },
+                        },
+                        select: {
+                            id: true,
+                            location: true,
+                            job_images: true,
+                            status: true,
+                            created_at: true,
+                            lat: true,
+                            long: true,
+                            vendor_lat: true,
+                            vendor_long: true,
+                            scheduled_time: true,
+                            amount: true,
+                            vendor: {
+                                select: {
+                                    id: true,
+                                    first_name: true,
+                                    last_name: true
+                                }
+                            },
+
+                            sub_services: {
+                                select: {
+                                    services: {
+                                        select: {
+                                            id: true,
+                                            name: true
+                                        }
                                     }
                                 }
                             }
-                        }
-                    },
-                    orderBy: {
-                        created_at: 'asc',
-                    },
-                    skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
-                    take: query.limit, // Set the number of records to be returned per page
+                        },
+                        orderBy: {
+                            created_at: 'asc',
+                        },
+                        skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                        take: query.limit, // Set the number of records to be returned per page
 
-                });
+                    });
+                } else {
+                    jobs = await db.vendor_jobs.findMany({
+                        where: {
+                            vendor_id: Number(query.vendor_id),
+                            status: query.status,
+                            job_type: 'scheduled',
+
+                        },
+                        select: {
+                            id: true,
+                            location: true,
+                            job_images: true,
+                            status: true,
+                            created_at: true,
+                            lat: true,
+                            long: true,
+                            vendor_lat: true,
+                            vendor_long: true,
+                            scheduled_time: true,
+                            amount: true,
+                            vendor: {
+                                select: {
+                                    id: true,
+                                    first_name: true,
+                                    last_name: true
+                                }
+                            },
+
+                            sub_services: {
+                                select: {
+                                    services: {
+                                        select: {
+                                            id: true,
+                                            name: true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        orderBy: {
+                            created_at: 'asc',
+                        },
+                        skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
+                        take: query.limit, // Set the number of records to be returned per page
+                    })
+                }
             }
 
 
@@ -1052,7 +1152,7 @@ export default class JobsService {
                 }
             })
 
-            vendorServiceFee = vendorServiceFee - (vendorServiceFee*(Number(percentage.percentage)/100))
+            vendorServiceFee = vendorServiceFee - (vendorServiceFee * (Number(percentage.percentage) / 100))
             if (vendorServiceFee < 0) {
                 servResp.data.isError = true
                 servResp.data.message = 'Amount can not be negative'
