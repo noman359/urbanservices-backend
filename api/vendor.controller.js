@@ -169,4 +169,15 @@ export default class VendorController {
             next(status)
         }
     }
+
+    async getEarning(req, res, next) {
+        console.log(req)
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let vendorResp = await vendorServ.getEarning()
+            next(vendorResp)
+        }
+    }
 }

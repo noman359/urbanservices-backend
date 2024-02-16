@@ -9,6 +9,7 @@ const tokenController = new TokenHandler()
 const lRoute = Router();
 export default function (router) {
     router.use('/vendor', lRoute)
+    lRoute.get('/earnings', vendorCtrl.getEarning, handler.apiResponseHandler)
     lRoute.post('/token', vendorCtrl.getFCMToken, handler.apiResponseHandler)
     lRoute.post('/', formData, vendorCtrl.createVendor, handler.apiResponseHandler)
     lRoute.get('/list', vendorCtrl.getVendorsList, handler.apiResponseHandler)
@@ -26,5 +27,6 @@ export default function (router) {
     lRoute.get('/:id/services/:service_id', vendorCtrl.getVendorServicesAndReviews, handler.apiResponseHandler)
     lRoute.get('/:id/jobs', vendorCtrl.getVendorJobs)
     lRoute.get('/:id/jobs/:job_id', vendorCtrl.getVendorjobDetails)
+   
     // lRoute.delete('/:id', todoCtrl.deleteTodo, response)
 }
