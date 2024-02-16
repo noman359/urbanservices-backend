@@ -91,7 +91,7 @@ export default class vendorService {
                     services: true
                 }
             })
-           
+
             delete vendor.password
             let token = await JWT.getToken(vendor)
 
@@ -229,7 +229,7 @@ export default class vendorService {
                 data: {
                     isRead: 1
                 }
-                
+
             })
             servResp.data = notification
             console.debug('getVendorData() ended')
@@ -305,7 +305,7 @@ export default class vendorService {
                             gte: previousDate,
                             lt: dateObject,
                         },
-                        
+
                     },
                     include: {
                         customers: true
@@ -323,7 +323,7 @@ export default class vendorService {
                             gte: yesterdayDate,
                             lt: previousDate,
                         },
-                        
+
                     },
                     include: {
                         customers: true
@@ -339,7 +339,7 @@ export default class vendorService {
                         created_at: {
                             lt: yesterdayDate,
                         },
-                       
+
                     },
                     include: {
                         customers: true
@@ -361,7 +361,7 @@ export default class vendorService {
 
             let unReadCount = await db.notifications.count({
                 where: {
-                    vendor_id:  Number(query.vendor_id),
+                    vendor_id: Number(query.vendor_id),
                     isRead: 0
                 }
             })
@@ -452,7 +452,7 @@ export default class vendorService {
                 let estimate = await db.estimates.findFirst({
                     where: {
                         vendor_id: Number(element.id),
-                        vendor_job_id:  Number(filters.job_id)
+                        vendor_job_id: Number(filters.job_id)
                     }
                 })
                 for (var review of element.vendor_reviews) {
@@ -482,23 +482,37 @@ export default class vendorService {
 
             let vendorDetail = await db.vendor.findFirst({ where: { id: Number(query.id) } })
 
-            if (!vendorDetail) {
-                throw new Error('Customer not found!')
+            if (vendorDetail === null) {
+                throw new Error('vendorr not found!')
             }
 
-            if (job.job_images) {
-                for (var image of job.job_images) {
-                    let job_image = new Object()
-                    var arr = image.name.split('.')
-                    let extentionName = arr[arr.length - 1]
+            if (vendorModel.job_images) {
+                if (Array.isArray(vendorModel.job_images)) {
+                    for (var image of vendorModel.job_images) {
+                        let job_image = new Object()
+                        var arr = image.name.split('.')
+                        let extentionName = arr[arr.length - 1]
 
-                    let avatar_val = {
-                        bucket: config.jobs_s3_bucket_name,
-                        key: `${uuidv4()}.${extentionName}`,
-                        body: await bucket.fileToArrayBuffer(image)
+                        let avatar_val = {
+                            bucket: config.jobs_s3_bucket_name,
+                            key: `${uuidv4()}.${extentionName}`,
+                            body: await bucket.fileToArrayBuffer(image)
+                        }
+                        job_image = await bucket.upload(avatar_val)
+                        images.push(job_image.url)
                     }
-                    job_image = await bucket.upload(avatar_val)
-                    images.push(job_image.url)
+                } else {
+                    let job_image = new Object()
+                        var arr = vendorModel.job_images.name.split('.')
+                        let extentionName = arr[arr.length - 1]
+
+                        let avatar_val = {
+                            bucket: config.jobs_s3_bucket_name,
+                            key: `${uuidv4()}.${extentionName}`,
+                            body: await bucket.fileToArrayBuffer(vendorModel.job_images)
+                        }
+                        job_image = await bucket.upload(avatar_val)
+                        images.push(job_image.url)
                 }
             }
 
@@ -515,7 +529,7 @@ export default class vendorService {
 
             if (vendorModel.front_id) {
                 var arr = vendorModel.front_id.name.split('.')
-                    let extentionName = arr[arr.length - 1]
+                let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
                     key: `${uuidv4()}.${extentionName}`,
@@ -526,7 +540,7 @@ export default class vendorService {
 
             if (vendorModel.back_id) {
                 var arr = vendorModel.back_id.name.split('.')
-                    let extentionName = arr[arr.length - 1]
+                let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
                     key: `${uuidv4()}.${extentionName}`,
@@ -541,7 +555,7 @@ export default class vendorService {
             } else {
                 frontImage = vendorModel.front_id ? vendorModel.front_id : undefined
             }
-            
+
 
             var backImage = ''
 
@@ -579,7 +593,7 @@ export default class vendorService {
                     user_id_front: frontImage,
                     bio: vendorModel.bio ? vendorModel.bio : vendorDetail.bio,
                     zip_code: vendorModel.zip_code ? vendorModel.zip_code : vendorDetail.zip_code,
-                    job_images: imagesString ?? ''
+                    job_images: imagesString
                 }, where: {
                     id: Number(query.id)
                 }
