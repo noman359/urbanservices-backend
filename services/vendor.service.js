@@ -562,7 +562,7 @@ export default class vendorService {
             if (back_id_avatar.url != null) {
                 backImage = back_id_avatar.url
             } else {
-                backImage = vendorModel.front_id ? vendorModel.front_id : undefined
+                backImage = vendorModel.back_id ? vendorModel.back_id : undefined
             }
 
             var avatar = ''
