@@ -140,7 +140,7 @@ export default class CustomerService {
                         vendor_jobs: true
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
@@ -166,7 +166,7 @@ export default class CustomerService {
                         vendor_jobs: true
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
                 });
     
@@ -183,7 +183,7 @@ export default class CustomerService {
                         vendor_jobs: true
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
                 });
     
@@ -199,7 +199,7 @@ export default class CustomerService {
                         vendor_jobs: true
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page

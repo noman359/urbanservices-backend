@@ -636,7 +636,7 @@ export default class JobsService {
         let servResp = new config.serviceResponse()
         var jobs = [];
         const dateString = query.date
-       
+
 
 
         try {
@@ -689,7 +689,7 @@ export default class JobsService {
                             }
                         },
                         orderBy: {
-                            created_at: 'asc'
+                            created_at: 'desc'
                         },
                         skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                         take: query.limit, // Set the number of records to be returned per page
@@ -735,7 +735,7 @@ export default class JobsService {
                             }
                         },
                         orderBy: {
-                            created_at: 'asc'
+                            created_at: 'desc'
                         },
                         skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                         take: query.limit, // Set the number of records to be returned per page
@@ -789,7 +789,7 @@ export default class JobsService {
                             }
                         },
                         orderBy: {
-                            created_at: 'asc',
+                            created_at: 'desc',
                         },
                         skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                         take: query.limit, // Set the number of records to be returned per page
@@ -835,7 +835,7 @@ export default class JobsService {
                             }
                         },
                         orderBy: {
-                            created_at: 'asc',
+                            created_at: 'desc',
                         },
                         skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                         take: query.limit, // Set the number of records to be returned per page
@@ -899,7 +899,7 @@ export default class JobsService {
 
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
@@ -942,7 +942,7 @@ export default class JobsService {
 
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
@@ -1496,6 +1496,8 @@ export default class JobsService {
         }
         return servResp
     }
+
+   
 
     // async updateCustomer(query, customerBody) {
     //     let servResp = new config.serviceResponse()

@@ -61,7 +61,7 @@ export default class vendorService {
                 vendor_avatar = await bucket.upload(avatar_val)
             }
 
-            let created_vendor = await db.vendor.create({
+            var created_vendor = await db.vendor.create({
                 data: {
                     created_at: new Date(new Date().toUTCString()),
                     email: vendorModel.email,
@@ -80,6 +80,9 @@ export default class vendorService {
                     stripe_account_id: '',
                     state: vendorModel.state
                     // vendor_services: { createMany: { service_id: Array.isArray(vendorModel.services) ? vendorModel.services : JSON.parse(vendorModel.services) } }
+                },
+                include: {
+                    services: true
                 }
             })
 
@@ -128,19 +131,6 @@ export default class vendorService {
                 }
             })
 
-            if (vendorModel.services) {
-
-                if (typeof vendorModel.services === 'string') {
-                    vendorModel.services = JSON.parse(vendorModel.services)
-                }
-                let service_ids = Array.isArray(vendorModel.services) ? vendorModel.services : [vendorModel.services]
-                let a = []
-                let promises = service_ids.map(service_id => {
-                    return db.vendor_services.create({ data: { service_id: service_id, vendor_id: created_vendor.id, created_at: new Date(new Date().toUTCString()) } })
-                })
-                created_vendor['vendor_services'] = await Promise.all(promises)
-            }
-
             let paymentController = new PaymentService()
             let account = await paymentController.checkConnectAccountStatus(newVendor)
             created_vendor.payment_status = account
@@ -174,7 +164,7 @@ export default class vendorService {
             })
 
             if (!vendor) {
-                throw new Error('User not found, Incorrect email or password')
+                throw new Error('User not found')
             }
             delete vendor.password
             delete vendor.fcm_token
@@ -283,7 +273,7 @@ export default class vendorService {
                         },
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
                     include: {
                         customers: true
@@ -311,7 +301,7 @@ export default class vendorService {
                         customers: true
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
 
                 });
@@ -329,7 +319,7 @@ export default class vendorService {
                         customers: true
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
                 });
 
@@ -345,7 +335,7 @@ export default class vendorService {
                         customers: true
                     },
                     orderBy: {
-                        created_at: 'asc',
+                        created_at: 'desc',
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
