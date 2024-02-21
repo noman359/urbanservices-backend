@@ -1392,7 +1392,7 @@ export default class JobsService {
                 const message = {
                     notification: {
                         title: 'Job cancelled',
-                        body: `Your job has been cancelled by ${vendor.first_name} ${vendor.last_name}`,
+                        body: `Your job has been cancelled by ${customer.first_name} ${customer.last_name}`,
                     },
                     data: {
                         // Add extra data here
