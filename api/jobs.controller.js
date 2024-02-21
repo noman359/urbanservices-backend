@@ -91,6 +91,16 @@ export default class JobsController {
         }
     }
 
+    async beforeStartingCustomerCancelJob (req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let created_customer = await customerServ.beforeStartedCustomerCancelJob(req.body)
+            next(created_customer)
+        }
+    }
+
 
     async requestEstimates(req, res, next) {
 
