@@ -462,6 +462,86 @@ export default class vendorService {
         return servResp
     }
 
+    async getVendorsListWithJobLocation(filters = { limit: 10, offset: 0 }) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorList() started')
+
+            let jobDetail = await db.vendor_jobs.findFirst({
+                where: {
+                    id: Number(filters.job_id)
+                }
+            })
+
+            const paginatedData = await db.vendor.findMany({
+                where: {
+                    service_id: Number(filters.service_id),
+                    status: 'online',
+                    lat: {
+                        gte: Number(jobDetail.lat) - (50 / 111),  // 1 degree latitude is approximately 111 km
+                        lte: Number(jobDetail.lat) + (50 / 111)
+                    },
+                    long: {
+                        gte: Number(jobDetail.long) - (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180))),  // 1 degree longitude varies with latitude
+                        lte: Number(jobDetail.long) + (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180)))
+                    }
+                },
+                skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                take: filters.limit, // Set the number of records to be returned per page
+                select: {
+                    id: true,
+                    first_name: true,
+                    last_name: true,
+                    charges: true,
+                    avatar: true,
+                    lat: true,
+                    long: true,
+                    status: true,
+                    vendor_reviews: {
+                        select: {
+                            id: true,
+                            description: true,
+                            rating: true,
+                            created_at: true,
+                            updated_at: true,
+                        },
+                    },
+                    services: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
+                },
+            });
+
+            var reviews = paginatedData["vendor_reviews"]
+            for (var element of paginatedData) {
+                var rating = 0
+                console.log(element);
+                let estimate = await db.estimates.findFirst({
+                    where: {
+                        vendor_id: Number(element.id),
+                        vendor_job_id: Number(filters.job_id)
+                    }
+                })
+                for (var review of element.vendor_reviews) {
+                    rating += review.rating
+                }
+                element['estimates'] = estimate
+                element.rating = rating
+
+            }
+            servResp.data = paginatedData
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async updateVendor(query, vendorModel) {
         let servResp = new config.serviceResponse()
         let vendor_avatar = new Object()
@@ -907,7 +987,7 @@ export default class vendorService {
                     id: true,
                     description: true,
                     rating: true,
-                    vendor: {
+                    customers: {
                         select: {
                             id: true,
                             first_name: true,

@@ -13,6 +13,7 @@ export default function (router) {
     lRoute.post('/token', vendorCtrl.getFCMToken, handler.apiResponseHandler)
     lRoute.post('/', formData, vendorCtrl.createVendor, handler.apiResponseHandler)
     lRoute.get('/list', vendorCtrl.getVendorsList, handler.apiResponseHandler)
+    lRoute.get('/getList', vendorCtrl.getVendorsListWithLocation, handler.apiResponseHandler)
     lRoute.get('/notifications', vendorCtrl.getVendorNotications, handler.apiResponseHandler)
     lRoute.post('/readNotification', vendorCtrl.readNotification, handler.apiResponseHandler)
     lRoute.delete('/clearNotifications', vendorCtrl.clearNotifications, handler.apiResponseHandler)

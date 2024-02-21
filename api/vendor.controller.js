@@ -102,6 +102,17 @@ export default class VendorController {
         }
     }
 
+    async getVendorsListWithLocation(req, res, next) {
+        console.log(req)
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let vendorResp = await vendorServ.getVendorsListWithJobLocation({ service_id: Number(req.query.service_id), job_id: Number(req.query.job_id) ,limit: Number(req.query.limit), offset: Number(req.query.offset) })
+            next(vendorResp)
+        }
+    }
+
     async getVendorServices(req, res, next) {
         console.log(req)
         let vendorServReviews = await vendorServ.getVendorServices({ id: Number(req.params.id) }, { limit: Number(req.query.limit), offset: Number(req.query.offset) })
