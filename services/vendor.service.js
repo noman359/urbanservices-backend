@@ -990,8 +990,7 @@ export default class vendorService {
                     customers: {
                         select: {
                             id: true,
-                            first_name: true,
-                            last_name: true,
+                            full_name: true,
                             avatar: true
                         }
                     }
