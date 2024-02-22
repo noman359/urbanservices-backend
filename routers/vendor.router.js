@@ -11,6 +11,7 @@ export default function (router) {
     router.use('/vendor', lRoute)
     lRoute.get('/earnings', vendorCtrl.getEarning, handler.apiResponseHandler)
     lRoute.post('/token', vendorCtrl.getFCMToken, handler.apiResponseHandler)
+    lRoute.post('/onboardUrl', vendorCtrl.getOnboardURL, handler.apiResponseHandler)
     lRoute.post('/', formData, vendorCtrl.createVendor, handler.apiResponseHandler)
     lRoute.get('/list', vendorCtrl.getVendorsList, handler.apiResponseHandler)
     lRoute.get('/getList', vendorCtrl.getVendorsListWithLocation, handler.apiResponseHandler)

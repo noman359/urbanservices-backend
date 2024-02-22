@@ -23,6 +23,13 @@ export default class VendorController {
 
     }
 
+    async getOnboardURL(req, res, next) {
+    
+        let created_vendor = await vendorServ.getOnBoardURL(req.body)
+        next(created_vendor)
+
+    }
+
     async updateVendor(req, res, next) {
         let token = await tokenHandler.checkToken(req)
         if (token.isError == true) {

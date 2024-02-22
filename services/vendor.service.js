@@ -115,7 +115,7 @@ export default class vendorService {
 
             var accountLink = await stripeInstance.accountLinks.create({
                 account: serviceAccount.id,
-                refresh_url: 'https://codersglobe.com',
+                refresh_url: `http://ec2-44-205-32-103.compute-1.amazonaws.com:8080/api/vendor/webhook/${serviceAccount.id}`,
                 return_url: 'https://urban_cabs_vender',
                 type: 'account_onboarding',
             });
@@ -199,6 +199,33 @@ export default class vendorService {
             })
 
             servResp.data = vendor
+            console.debug('getVendorData() ended')
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
+    async getOnBoardURL(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('getVendorData() started')
+            let vendorDetails = await db.vendor.findFirst({
+                where: {
+                    id: query.vendor_id
+                }
+            })
+    
+            var accountLink = await stripeInstance.accountLinks.create({
+                account: vendorDetails.stripe_account_id,
+                refresh_url: `http://ec2-44-205-32-103.compute-1.amazonaws.com:8080/api/vendor/webhook/${vendorDetails.stripe_account_id}`,
+                return_url: 'https://urban_cabs_vender',
+                type: 'account_onboarding',
+            });
+
+            servResp.data = {url: accountLink.url}
             console.debug('getVendorData() ended')
         } catch (error) {
             console.debug('createVendor() exception thrown')
