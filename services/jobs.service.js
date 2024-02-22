@@ -1377,7 +1377,7 @@ export default class JobsService {
 
             await db.customer_notifications.create({
                 data: {
-                    description: `Your job has been cancelled by ${customer.first_name} ${customer.last_name}`,
+                    description: `Your job has been cancelled by ${customer.full_name}`,
                     created_at: new Date(new Date().toUTCString()),
                     customer_id: Number(customer.id),
                     vendor_job_id: Number(job.job_id),
@@ -1392,7 +1392,7 @@ export default class JobsService {
                 const message = {
                     notification: {
                         title: 'Job cancelled',
-                        body: `Your job has been cancelled by ${customer.first_name} ${customer.last_name}`,
+                        body: `Your job has been cancelled by ${customer.full_name}`,
                     },
                     data: {
                         // Add extra data here
