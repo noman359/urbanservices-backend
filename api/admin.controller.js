@@ -205,7 +205,7 @@ export default class AdminController {
         if (token.isError == true) {
             next(token)
         } else {
-            let updated_customer = await adminService.getAllQuestions(req.body)
+            let updated_customer = await adminService.getAllQuestions({sub_service_id: req.query.sub_service_id})
             next(updated_customer)
         }
     }
@@ -247,6 +247,17 @@ export default class AdminController {
         } else {
             let updated_customer = await adminService.getAnswers(req.query)
             next(updated_customer)
+        }
+    }
+
+    async getEarning(req, res, next) {
+        console.log(req)
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let vendorResp = await adminService.getEarning({vendor_id: req.query.vendor_id})
+            next(vendorResp)
         }
     }
     

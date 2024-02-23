@@ -368,7 +368,7 @@ export default class AdminService {
                             description: {
                                 startsWith: filters.search,
                             },
-
+                            include: {customers: true, vendor: true}
 
                         },
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
@@ -389,6 +389,7 @@ export default class AdminService {
                         where: {
                             status: filters.status
                         },
+                        include: {customers: true, vendor: true},
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
                     }), db.vendor_jobs.count({
@@ -409,6 +410,7 @@ export default class AdminService {
                             },
 
                         },
+                        include: {customers: true, vendor: true},
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
                     }), db.vendor_jobs.count({
@@ -759,6 +761,8 @@ export default class AdminService {
             servResp.data = await db.questions.create({
                 data: {
                     question: query.question,
+                    service_id: Number(query.service_id),
+                    sub_service_id: Number(query.sub_service_id),
                     created_at: new Date(new Date().toUTCString())
                 }
             })
@@ -889,4 +893,125 @@ export default class AdminService {
         return servResp
 
     }
+
+    async getEarning(query) {
+
+        let servResp = new config.serviceResponse()
+        try {
+            const currentYear = new Date().getFullYear();
+            const recordsByYear = [];
+
+            // Iterate over the last five years
+            for (let year = currentYear; year >= currentYear - 4; year--) {
+                // Query records for the current year
+                const yearly = await db.vendor_jobs.findMany({
+                    where: {
+                        
+                        AND: [
+                            {vendor_id: Number(query.vendor_id)},
+                            
+                            { created_at: { gte: new Date(`${year}-01-01`) } },
+                            { created_at: { lt: new Date(`${year + 1}-01-01`) } },
+                        ],
+                    },
+                    select: {
+                        id: true,
+                        description: true,
+                        amount: true
+                    },
+                    orderBy: {
+                        created_at: 'asc'
+                    },
+                });
+
+                yearly.reverse()
+                var totalYearlyRecord = 0
+                for (const yRecord of yearly) {
+                    // Add the amount of each record to the totalAmount
+                    if (yRecord.amount !== null && !isNaN(yRecord.amount)) {
+                        totalYearlyRecord += yRecord.amount;
+                    }
+                }
+                recordsByYear.push({ year, totalYearlyRecord });
+            }
+
+            const monthlyRecords = [];
+
+            // Iterate over each month of the current year
+            for (let month = 1; month <= 12; month++) {
+                // Query records for the current month and year
+                let nextMonth = month === 12 ? 1 : month + 1;
+                let nextYear = month === 12 ? currentYear + 1 : currentYear;
+
+                // Query records for the current month and year
+                const monthly = await db.vendor_jobs.findMany({
+                   
+                    where: {
+                        AND: [
+                            {vendor_id: Number(query.vendor_id)},
+                            { created_at: { gte: new Date(`${currentYear}-${month}-01`) } },
+                            { created_at: { lt: new Date(`${nextYear}-${nextMonth}-01`) } },
+                        ],
+                    },
+                    select: {
+                        id: true,
+                        description: true,
+                        amount: true
+                    },
+                    orderBy: {
+                        created_at: 'asc'
+                    },
+                });
+
+                var totalMonthlyRecord = 0
+                for (const mItem of monthly) {
+                    // Add the amount of each record to the totalAmount
+                    if (mItem.amount !== null && !isNaN(mItem.amount)) {
+                        totalMonthlyRecord += mItem.amount;
+                    }
+                }
+                monthlyRecords.push({ month, totalMonthlyRecord });
+            }
+
+            const currentMonth = new Date().getMonth() + 1; // Note: JavaScript months are 0-indexed
+            const recordsByDays = []
+
+            // Query records for the current month
+            const records = await db.vendor_jobs.findMany({
+                where: {
+                    AND: [
+                        {vendor_id: Number(query.vendor_id)},
+                        { created_at: { gte: new Date(`${currentYear}-${currentMonth}-01`) } },
+                        { created_at: { lt: new Date(`${currentYear}-${currentMonth + 1}-01`) } },
+                    ],
+                },
+                select: {
+                    id: true,
+                    description: true,
+                    amount: true
+                },
+                orderBy: {
+                    created_at: 'asc'
+                },
+            });
+            var totalCurrentRecord = 0
+            for (const mItem of records) {
+                // Add the amount of each record to the totalAmount
+                if (mItem.amount !== null && !isNaN(mItem.amount)) {
+                    totalCurrentRecord += mItem.amount;
+                }
+            }
+            recordsByDays.push({ current: totalCurrentRecord })
+            var newData = [{ current: totalCurrentRecord }, { monthly: monthlyRecords }, { yearly: recordsByYear }];
+            servResp.data = newData
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
 }
