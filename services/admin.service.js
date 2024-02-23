@@ -2,7 +2,9 @@ import handler from '../handlers/index.js'
 import config from '../config/index.js'
 import Prisma, { vendor_jobs_status } from '@prisma/client';
 const { PrismaClient } = Prisma;
+import { v4 as uuidv4 } from 'uuid';
 
+let bucket = new handler.bucketHandler()
 let JWT = new handler.JWT()
 let db = new PrismaClient({ log: ['query', 'info', 'warn', 'error'] })
 
