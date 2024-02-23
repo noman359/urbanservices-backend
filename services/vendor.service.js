@@ -164,7 +164,6 @@ export default class vendorService {
                 }
             })
 
-            
 
             if (!vendor) {
                 throw new Error('User not found')
@@ -796,7 +795,7 @@ export default class vendorService {
                         
                         AND: [
                             {vendor_id: Number(query.vendor_id)},
-                            
+                            {status: vendor_jobs_status.done},
                             { created_at: { gte: new Date(`${year}-01-01`) } },
                             { created_at: { lt: new Date(`${year + 1}-01-01`) } },
                         ],
@@ -835,6 +834,7 @@ export default class vendorService {
                    
                     where: {
                         AND: [
+                            {status: vendor_jobs_status.done},
                             {vendor_id: Number(query.vendor_id)},
                             { created_at: { gte: new Date(`${currentYear}-${month}-01`) } },
                             { created_at: { lt: new Date(`${nextYear}-${nextMonth}-01`) } },
@@ -867,6 +867,7 @@ export default class vendorService {
             const records = await db.vendor_jobs.findMany({
                 where: {
                     AND: [
+                        {status: vendor_jobs_status.done},
                         {vendor_id: Number(query.vendor_id)},
                         { created_at: { gte: new Date(`${currentYear}-${currentMonth}-01`) } },
                         { created_at: { lt: new Date(`${currentYear}-${currentMonth + 1}-01`) } },

@@ -74,7 +74,7 @@ export default class AdminController {
         if (token.isError == true) {
             next(token)
         } else {
-            let vendorResp = await adminService.getAllJobs({ status: req.query.status, search: req.query.search, limit: Number(req.query.limit), offset: Number(req.query.offset) })
+            let vendorResp = await adminService.getAllJobs({vendor_id: req.query.vendor_id, status: req.query.status, search: req.query.search, limit: Number(req.query.limit), offset: Number(req.query.offset) })
             next(vendorResp)
         }
     }
