@@ -457,11 +457,12 @@ export default class CustomerService {
             console.debug('customer signIn() started')
             let customer = await db.customers.findFirst({
                 where: {
-                    phone_number: query.phone_number,
-                    status: 'active'
-                }
+                    phone_number: query.phone_number                }
             })
 
+            if (customer.status == 'inactive') {
+                throw new Error('Customer account is disabled by the admin, Please contact support.')
+            }
             if (!customer) {
                 throw new Error('User not found, Incorrect email or password')
             }

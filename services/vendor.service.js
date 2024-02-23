@@ -158,12 +158,15 @@ export default class vendorService {
             let vendor = await db.vendor.findFirst({
                 where: {
                     phone_number: query.phone_number,
-                    account_status: 'active'
                 },
                 include: {
                     services: true
                 }
             })
+
+            if (customer.account_status == 'inactive') {
+                throw new Error('Your account is inactive, Please contact support.')
+            }
 
             if (!vendor) {
                 throw new Error('User not found')
