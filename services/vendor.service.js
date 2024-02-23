@@ -164,12 +164,14 @@ export default class vendorService {
                 }
             })
 
-            if (customer.account_status == 'inactive') {
-                throw new Error('Your account is inactive, Please contact support.')
-            }
+            
 
             if (!vendor) {
                 throw new Error('User not found')
+            }
+
+            if (vendor.account_status == 'inactive') {
+                throw new Error('Your account is inactive, Please contact support.')
             }
             delete vendor.password
             delete vendor.fcm_token

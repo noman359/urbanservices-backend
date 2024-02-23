@@ -460,11 +460,13 @@ export default class CustomerService {
                     phone_number: query.phone_number                }
             })
 
-            if (customer.status == 'inactive') {
-                throw new Error('Customer account is disabled by the admin, Please contact support.')
-            }
+            
             if (!customer) {
                 throw new Error('User not found, Incorrect email or password')
+            }
+
+            if (customer.status == 'inactive') {
+                throw new Error('Your account is inactive, Please contact support.')
             }
             delete customer.fcm_token;
             let token = await JWT.getToken(customer)
