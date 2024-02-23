@@ -694,7 +694,7 @@ export default class AdminService {
                     id: vendor.id
                 },
                 data: {
-                    status: vendor.status,
+                    account_status: vendor.status,
                     updated_at: new Date(new Date().toUTCString())
                 }
             })

@@ -78,7 +78,8 @@ export default class vendorService {
                     zip_code: vendorModel.zip_code,
                     service_id: Number(vendorModel.service_id),
                     stripe_account_id: '',
-                    state: vendorModel.state
+                    state: vendorModel.state,
+                    account_status: 'inactive'
                     // vendor_services: { createMany: { service_id: Array.isArray(vendorModel.services) ? vendorModel.services : JSON.parse(vendorModel.services) } }
                 },
                 include: {
@@ -156,7 +157,8 @@ export default class vendorService {
             console.debug('vendor signIn() started')
             let vendor = await db.vendor.findFirst({
                 where: {
-                    phone_number: query.phone_number
+                    phone_number: query.phone_number,
+                    account_status: 'active'
                 },
                 include: {
                     services: true

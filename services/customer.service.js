@@ -41,7 +41,8 @@ export default class CustomerService {
                     created_at: new Date(new Date().toUTCString()),
                     phone_number: customerBody.phone_number,
                     zipcode: customerBody.password,
-                    email: customerBody.email
+                    email: customerBody.email,
+                    status: 'active'
 
                 }
             })
@@ -456,7 +457,8 @@ export default class CustomerService {
             console.debug('customer signIn() started')
             let customer = await db.customers.findFirst({
                 where: {
-                    phone_number: query.phone_number
+                    phone_number: query.phone_number,
+                    status: 'active'
                 }
             })
 
