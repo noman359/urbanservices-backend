@@ -504,14 +504,14 @@ export default class vendorService {
                 where: {
                     service_id: Number(filters.service_id),
                     status: 'online',
-                    lat: {
-                        gte: Number(jobDetail.lat) - (50 / 111),  // 1 degree latitude is approximately 111 km
-                        lte: Number(jobDetail.lat) + (50 / 111)
-                    },
-                    long: {
-                        gte: Number(jobDetail.long) - (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180))),  // 1 degree longitude varies with latitude
-                        lte: Number(jobDetail.long) + (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180)))
-                    }
+                    // lat: {
+                    //     gte: Number(jobDetail.lat) - (50 / 111),  // 1 degree latitude is approximately 111 km
+                    //     lte: Number(jobDetail.lat) + (50 / 111)
+                    // },
+                    // long: {
+                    //     gte: Number(jobDetail.long) - (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180))),  // 1 degree longitude varies with latitude
+                    //     lte: Number(jobDetail.long) + (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180)))
+                    // }
                 },
                 skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                 take: filters.limit, // Set the number of records to be returned per page
@@ -774,7 +774,7 @@ export default class vendorService {
         return servResp;
     }
 
-    async getEarning() {
+    async getEarning(query) {
 
         let servResp = new config.serviceResponse()
         try {
@@ -786,7 +786,10 @@ export default class vendorService {
                 // Query records for the current year
                 const yearly = await db.vendor_jobs.findMany({
                     where: {
+                        
                         AND: [
+                            {vendor_id: Number(query.vendor_id)},
+                            
                             { created_at: { gte: new Date(`${year}-01-01`) } },
                             { created_at: { lt: new Date(`${year + 1}-01-01`) } },
                         ],
@@ -822,8 +825,10 @@ export default class vendorService {
 
                 // Query records for the current month and year
                 const monthly = await db.vendor_jobs.findMany({
+                   
                     where: {
                         AND: [
+                            {vendor_id: Number(query.vendor_id)},
                             { created_at: { gte: new Date(`${currentYear}-${month}-01`) } },
                             { created_at: { lt: new Date(`${nextYear}-${nextMonth}-01`) } },
                         ],
@@ -855,6 +860,7 @@ export default class vendorService {
             const records = await db.vendor_jobs.findMany({
                 where: {
                     AND: [
+                        {vendor_id: Number(query.vendor_id)},
                         { created_at: { gte: new Date(`${currentYear}-${currentMonth}-01`) } },
                         { created_at: { lt: new Date(`${currentYear}-${currentMonth + 1}-01`) } },
                     ],

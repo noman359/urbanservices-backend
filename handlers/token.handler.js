@@ -11,6 +11,7 @@ export default class TokenHandler {
             try {
                 var jwt = new JWTHandler()
                 var data = await jwt.verifyToken(token)
+                servResp.data = data
                 servResp.isError = false
                 return servResp
             } catch (error) {

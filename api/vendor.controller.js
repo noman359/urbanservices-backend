@@ -194,7 +194,7 @@ export default class VendorController {
         if (token.isError == true) {
             next(token)
         } else {
-            let vendorResp = await vendorServ.getEarning()
+            let vendorResp = await vendorServ.getEarning({vendor_id: token.data.id})
             next(vendorResp)
         }
     }
