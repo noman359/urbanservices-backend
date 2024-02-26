@@ -37,4 +37,5 @@ export default function (router) {
     lRoute.get('/answer', adminController.getAnswers, handler.apiResponseHandler)
 
     lRoute.get('/earnings', adminController.getEarning, handler.apiResponseHandler)
+    lRoute.post('/delete-vendor', adminController.deleteVendor, handler.apiResponseHandler)
 }

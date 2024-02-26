@@ -260,6 +260,17 @@ export default class AdminController {
             next(vendorResp)
         }
     }
+
+    async deleteVendor(req, res, next) {
+        console.log(req)
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+            let vendorResp = await adminService.deleteVendor({vendor_id: req.query.vendor_id})
+            next(vendorResp)
+        }
+    }
     
     async checkToken(req) {
         var authorizationHeader = req.headers.authorization;
