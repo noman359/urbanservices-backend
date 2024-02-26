@@ -382,9 +382,7 @@ export default class AdminService {
                                 status: filters.status,
                                 description: {
                                     startsWith: filters.search,
-                                },
-    
-    
+                                }
                             },
                             include: {customers: true, vendor: true}
                         })]);
@@ -426,8 +424,8 @@ export default class AdminService {
                                 description: {
                                     startsWith: filters.search,
                                 },
-                                include: {customers: true, vendor: true}
                             },
+                            include: {customers: true, vendor: true}
                         })]);
     
                     } else {
@@ -452,8 +450,7 @@ export default class AdminService {
                             status: filters.status,
                             description: {
                                 startsWith: filters.search,
-                            },
-
+                            }
                         },
                         include: {customers: true, vendor: true},
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
