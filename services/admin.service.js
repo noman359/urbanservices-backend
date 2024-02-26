@@ -371,9 +371,9 @@ export default class AdminService {
                                 description: {
                                     startsWith: filters.search,
                                 },
-                                include: {customers: true, vendor: true}
     
                             },
+                            include: {customers: true, vendor: true},
                             skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                             take: filters.limit, // Set the number of records to be returned per page
                         }), db.vendor_jobs.count({
@@ -383,10 +383,10 @@ export default class AdminService {
                                 description: {
                                     startsWith: filters.search,
                                 },
-                                include: {customers: true, vendor: true}
     
     
                             },
+                            include: {customers: true, vendor: true}
                         })]);
     
                     } else {
@@ -415,9 +415,7 @@ export default class AdminService {
                                 vendor_id: Number(filters.vendor_id),
                                 description: {
                                     startsWith: filters.search,
-                                },
-                                include: {customers: true, vendor: true}
-    
+                                }    
                             },
                             include: {customers: true, vendor: true},
                             skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
@@ -455,9 +453,9 @@ export default class AdminService {
                             description: {
                                 startsWith: filters.search,
                             },
-                            include: {customers: true, vendor: true}
 
                         },
+                        include: {customers: true, vendor: true},
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                         take: filters.limit, // Set the number of records to be returned per page
                     }), db.vendor_jobs.count({
@@ -495,7 +493,6 @@ export default class AdminService {
                             description: {
                                 startsWith: filters.search,
                             },
-                            include: {customers: true, vendor: true}
                         },
                         include: {customers: true, vendor: true},
                         skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
