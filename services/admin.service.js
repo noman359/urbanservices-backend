@@ -684,13 +684,13 @@ export default class AdminService {
 
             var image = ''
             image = oldService.avatar ? oldService.avatar : ''
-            if (service_avatar) {
+            if (service_avatar.url) {
                 image = service_avatar.url
             }
 
             servResp.data = await db.sub_services.update({
                 where: {
-                    id: serviceBody.id
+                    id: Number(serviceBody.id)
                 },
                 data: {
                     avatar: image,
