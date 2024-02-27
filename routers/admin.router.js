@@ -19,7 +19,7 @@ export default function (router) {
     lRoute.post('/service/delete', adminController.deleteService, handler.apiResponseHandler)
 
     lRoute.post('/subService/create', formData, adminController.createSubService, handler.apiResponseHandler)
-    lRoute.post('/subService/update', adminController.updateSubService, handler.apiResponseHandler)
+    lRoute.post('/subService/update',formData, adminController.updateSubService, handler.apiResponseHandler)
     lRoute.post('/subService/delete', adminController.deleteSubService, handler.apiResponseHandler)
     
     lRoute.post('/customer/update', adminController.updateCustomer, handler.apiResponseHandler)
