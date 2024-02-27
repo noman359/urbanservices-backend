@@ -714,7 +714,7 @@ export default class AdminService {
         try {
             servResp.data = await db.sub_services.delete({
                 where: {
-                    id: serviceBody.id
+                    id: Number(serviceBody.id)
                 }
             })
             console.debug('createCustomer() returning')

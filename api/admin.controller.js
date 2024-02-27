@@ -104,7 +104,7 @@ export default class AdminController {
         if (token.isError == true) {
             next(token)
         } else {
-            let created_service = await adminService.deleteService(req.body)
+            let created_service = await adminService.deleteService({id: req.query.id})
             next(created_service)
         }
     }
@@ -131,10 +131,10 @@ export default class AdminController {
 
     async deleteSubService(req, res, next) {
         let token = await tokenHandler.checkToken(req)
-        if (token.isError == true) {
+        if (token.isError == true) { 
             next(token)
         } else {
-            let created_service = await adminService.deleteSubService(req.body)
+            let created_service = await adminService.deleteSubService({id: req.query.id})
             next(created_service)
         }
     }

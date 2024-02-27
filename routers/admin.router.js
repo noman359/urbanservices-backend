@@ -16,11 +16,11 @@ export default function (router) {
     lRoute.get('/jobs', adminController.getAllJobs, handler.apiResponseHandler)
     lRoute.post('/service/create', formData, adminController.createService, handler.apiResponseHandler)
     lRoute.post('/service/update',formData ,adminController.updateService, handler.apiResponseHandler)
-    lRoute.post('/service/delete', adminController.deleteService, handler.apiResponseHandler)
+    lRoute.delete('/service', adminController.deleteService, handler.apiResponseHandler)
 
     lRoute.post('/subService/create', formData, adminController.createSubService, handler.apiResponseHandler)
     lRoute.post('/subService/update',formData, adminController.updateSubService, handler.apiResponseHandler)
-    lRoute.post('/subService/delete', adminController.deleteSubService, handler.apiResponseHandler)
+    lRoute.delete('/subService', adminController.deleteSubService, handler.apiResponseHandler)
     
     lRoute.post('/customer/update', adminController.updateCustomer, handler.apiResponseHandler)
     lRoute.post('/customer/delete', adminController.deleteCustomer, handler.apiResponseHandler)
