@@ -676,7 +676,7 @@ export default class AdminService {
                 service_avatar = await bucket.upload(avatar_val)
             }
 
-            let oldService = await db.services.findFirst({
+            let oldService = await db.sub_services.findFirst({
                 where: {
                     id: Number(serviceBody.id)
                 }
