@@ -1123,4 +1123,81 @@ export default class AdminService {
         return servResp
     }
 
+    async getJobsCounts(query) {
+
+        let servResp = new config.serviceResponse()
+        try {
+            const currentYear = new Date().getFullYear();
+            const recordsByYear = [];
+
+            // Iterate over the last five years
+            for (let year = currentYear; year >= currentYear - 4; year--) {
+                // Query records for the current year
+                const yearly = await db.vendor_jobs.count({
+                    where: {
+                        
+                        AND: [
+                            { created_at: { gte: new Date(`${year}-01-01`) } },
+                            { created_at: { lt: new Date(`${year + 1}-01-01`) } },
+                        ],
+                    },
+                    orderBy: {
+                        created_at: 'asc'
+                    },
+                });
+
+                recordsByYear.push({ year, yearly });
+            }
+
+            const monthlyRecords = [];
+
+            // Iterate over each month of the current year
+            for (let month = 1; month <= 12; month++) {
+                // Query records for the current month and year
+                let nextMonth = month === 12 ? 1 : month + 1;
+                let nextYear = month === 12 ? currentYear + 1 : currentYear;
+
+                // Query records for the current month and year
+                const monthly = await db.vendor_jobs.count({
+                   
+                    where: {
+                        AND: [
+                            { created_at: { gte: new Date(`${currentYear}-${month}-01`) } },
+                            { created_at: { lt: new Date(`${nextYear}-${nextMonth}-01`) } },
+                        ],
+                    },
+                    orderBy: {
+                        created_at: 'asc'
+                    },
+                });
+                monthlyRecords.push({ month, monthly });
+            }
+
+            const currentMonth = new Date().getMonth() + 1; // Note: JavaScript months are 0-indexed
+            const recordsByDays = []
+
+            // Query records for the current month
+            const records = await db.vendor_jobs.count({
+                where: {
+                    AND: [
+                        { created_at: { gte: new Date(`${currentYear}-${currentMonth}-01`) } },
+                        { created_at: { lt: new Date(`${currentYear}-${currentMonth + 1}-01`) } },
+                    ],
+                },
+                orderBy: {
+                    created_at: 'asc'
+                },
+            });
+            var newData = [{ current: records }, { monthly: monthlyRecords }, { yearly: recordsByYear }];
+            servResp.data = newData
+
+        } catch (error) {
+            console.debug('createVendor() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+
+    }
+
 }

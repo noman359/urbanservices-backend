@@ -36,6 +36,8 @@ export default function (router) {
     lRoute.put('/answer', adminController.updateAnswers, handler.apiResponseHandler)
     lRoute.get('/answer', adminController.getAnswers, handler.apiResponseHandler)
 
+    lRoute.get('/jobCounts', adminController.getJobsCounts, handler.apiResponseHandler)
+
     lRoute.get('/earnings', adminController.getEarning, handler.apiResponseHandler)
     lRoute.post('/delete-vendor', adminController.deleteVendor, handler.apiResponseHandler)
 }
