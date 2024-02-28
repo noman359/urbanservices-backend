@@ -366,11 +366,10 @@ export default class CustomerService {
                     id: Number(query.vendor_job_id)
                 },
                 data: {
-                    status: vendor_jobs_status.reviewed
+                    review: 1
                 }
 
             })
-
 
             servResp.data = customer
             console.debug('getVendorData() ended')
