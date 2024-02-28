@@ -439,7 +439,8 @@ export default class JobsService {
                             first_name: true,
                             last_name: true,
                             avatar: true,
-                            fcm_token: true
+                            fcm_token: true,
+                            service_id: true
                         }
                     }
 
