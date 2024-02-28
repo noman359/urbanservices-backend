@@ -21,7 +21,7 @@ export default class CustomerService {
             console.debug('createCustomer() started')
             if (customerBody.avatar) {
                 var arr = customerBody.avatar.name.split('.')
-                    let extentionName = arr[arr.length - 1]
+                let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
                     key: `${uuidv4()}.${extentionName}`,
@@ -82,7 +82,7 @@ export default class CustomerService {
                 data: {
                     isRead: 1
                 }
-                
+
             })
             servResp.data = notification
             console.debug('getVendorData() ended')
@@ -123,7 +123,7 @@ export default class CustomerService {
         const yesterdayDate = new Date(dateObject);
         yesterdayDate.setDate(yesterdayDate.getDate() - 2);
         try {
-            
+
 
             var response = {};
 
@@ -134,7 +134,7 @@ export default class CustomerService {
                         created_at: {
                             lt: yesterdayDate,
                         },
-                    
+
                     },
                     include: {
                         vendor: true,
@@ -145,9 +145,9 @@ export default class CustomerService {
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
-    
+
                 });
-                
+
                 response = {
                     older: olderNotifications
                 }
@@ -160,7 +160,7 @@ export default class CustomerService {
                             gte: previousDate,
                             lt: dateObject,
                         },
-                        
+
                     },
                     include: {
                         vendor: true,
@@ -170,7 +170,7 @@ export default class CustomerService {
                         created_at: 'desc',
                     },
                 });
-    
+
                 let yesterdayNotifications = await db.customer_notifications.findMany({
                     where: {
                         customer_id: Number(query.customer_id),
@@ -187,7 +187,7 @@ export default class CustomerService {
                         created_at: 'desc',
                     },
                 });
-    
+
                 let olderNotifications = await db.customer_notifications.findMany({
                     where: {
                         customer_id: Number(query.customer_id),
@@ -204,7 +204,7 @@ export default class CustomerService {
                     },
                     skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                     take: query.limit, // Set the number of records to be returned per page
-    
+
                 });
                 response = {
                     today: todayNotifications,
@@ -212,17 +212,17 @@ export default class CustomerService {
                     older: olderNotifications
                 }
             }
-            
+
             let unReadCount = await db.customer_notifications.count({
                 where: {
-                    customer_id:  Number(query.customer_id),
+                    customer_id: Number(query.customer_id),
                     isRead: 0
                 }
             })
             response.unReadCount = unReadCount
             servResp.data = response
 
-            
+
         }
         catch (error) {
             console.debug('createVendor() exception thrown')
@@ -259,7 +259,7 @@ export default class CustomerService {
 
             if (customerBody.front_id) {
                 var arr = customerBody.front_id.name.split('.')
-                    let extentionName = arr[arr.length - 1]
+                let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
                     key: `${uuidv4()}.${extentionName}`,
@@ -270,7 +270,7 @@ export default class CustomerService {
 
             if (customerBody.back_id) {
                 var arr = customerBody.back_id.name.split('.')
-                    let extentionName = arr[arr.length - 1]
+                let extentionName = arr[arr.length - 1]
                 let avatar_val = {
                     bucket: config.customer_avatar_s3_bucket_name,
                     key: `${uuidv4()}.${extentionName}`,
@@ -305,7 +305,7 @@ export default class CustomerService {
                     front_id: frontImage,
                     back_id: backImage,
                     cnic: customerBody.cnic ? customerBody.cnic : customer.cnic,
-                    address : customerBody.address ? customerBody.address : customer.address
+                    address: customerBody.address ? customerBody.address : customer.address
                 },
 
                 where: {
@@ -360,6 +360,18 @@ export default class CustomerService {
                 }
             })
 
+
+            await db.vendor_jobs.update({
+                where: {
+                    id: Number(query.vendor_job_id)
+                },
+                data: {
+                    status: vendor_jobs_status.reviewed
+                }
+
+            })
+
+
             servResp.data = customer
             console.debug('getVendorData() ended')
         } catch (error) {
@@ -384,17 +396,17 @@ export default class CustomerService {
                     rating: true,
                     customers: {
                         select: {
-                        id: true,
-                        full_name: true,
-                        avatar: true
+                            id: true,
+                            full_name: true,
+                            avatar: true
                         }
                     }
                 },
                 skip: (query.page - 1) * query.limit, // Calculate the number of records to skip based on page number
                 take: query.limit, // Set the number of records to be returned per page
-                
-              });
-            
+
+            });
+
 
             servResp.data = customer
             console.debug('getVendorData() ended')
@@ -457,10 +469,11 @@ export default class CustomerService {
             console.debug('customer signIn() started')
             let customer = await db.customers.findFirst({
                 where: {
-                    phone_number: query.phone_number                }
+                    phone_number: query.phone_number
+                }
             })
 
-            
+
             if (!customer) {
                 throw new Error('User not found, Incorrect email or password')
             }
