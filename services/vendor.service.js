@@ -956,6 +956,15 @@ export default class vendorService {
                 }
             })
 
+            await db.vendor_jobs.update({
+                where: {
+                    id: Number(query.vendor_job_id)
+                },
+                data: {
+                    review: 1
+                }
+
+            })
             servResp.data = customer
             console.debug('getVendorData() ended')
         } catch (error) {
@@ -1050,6 +1059,7 @@ export default class vendorService {
         return servResp
     }
 
+   
 
     async getVendorJobDetails(query, filters = { limit: 10, offset: 0, filter: '' }) {
         let servResp = new config.serviceResponse()
