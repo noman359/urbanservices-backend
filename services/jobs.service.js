@@ -669,6 +669,7 @@ export default class JobsService {
                             vendor_long: true,
                             scheduled_time: true,
                             amount: true,
+                            review: true,
                             vendor: {
                                 select: {
                                     id: true,
@@ -715,6 +716,7 @@ export default class JobsService {
                             vendor_long: true,
                             scheduled_time: true,
                             amount: true,
+                            review: true,
                             vendor: {
                                 select: {
                                     id: true,
@@ -770,6 +772,7 @@ export default class JobsService {
                             vendor_long: true,
                             scheduled_time: true,
                             amount: true,
+                            review: true,
                             vendor: {
                                 select: {
                                     id: true,
@@ -816,6 +819,7 @@ export default class JobsService {
                             vendor_long: true,
                             scheduled_time: true,
                             amount: true,
+                            review: true,
                             vendor: {
                                 select: {
                                     id: true,
@@ -877,6 +881,7 @@ export default class JobsService {
                         vendor_lat: true,
                         vendor_long: true,
                         scheduled_time: true,
+                        review: true,
                         vendor: {
                             select: {
                                 id: true,
@@ -923,6 +928,7 @@ export default class JobsService {
                         vendor_lat: true,
                         vendor_long: true,
                         scheduled_time: true,
+                        review: true,
                         customers: {
                             select: {
                                 id: true,
