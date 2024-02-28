@@ -951,14 +951,14 @@ export default class vendorService {
                     rating: Number(query.rating),
                     vendor_id: Number(query.vendor_id),
                     customer_id: Number(query.customer_id),
-                    vendor_job_id: Number(query.vendor_job_id),
+                    vendor_job_id: Number(query.job_id),
                     created_at: new Date(new Date().toUTCString())
                 }
             })
 
             await db.vendor_jobs.update({
                 where: {
-                    id: Number(query.vendor_job_id)
+                    id: Number(query.job_id)
                 },
                 data: {
                     review: 1
