@@ -1004,7 +1004,8 @@ export default class AdminService {
                     select: {
                         id: true,
                         description: true,
-                        amount: true
+                        amount: true,
+                        earning: true
                     },
                     orderBy: {
                         created_at: 'asc'
@@ -1044,7 +1045,8 @@ export default class AdminService {
                     select: {
                         id: true,
                         description: true,
-                        amount: true
+                        amount: true,
+                        earning: true
                     },
                     orderBy: {
                         created_at: 'asc'
@@ -1077,7 +1079,8 @@ export default class AdminService {
                 select: {
                     id: true,
                     description: true,
-                    amount: true
+                    amount: true,
+                    earning: true
                 },
                 orderBy: {
                     created_at: 'asc'
