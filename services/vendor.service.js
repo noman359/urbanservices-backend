@@ -1027,7 +1027,6 @@ export default class vendorService {
         return servResp
     }
 
-
     async getVendorReview(query) {
         let servResp = new config.serviceResponse()
         try {
@@ -1040,6 +1039,7 @@ export default class vendorService {
                     id: true,
                     description: true,
                     rating: true,
+                    created_at: true,
                     customers: {
                         select: {
                             id: true,

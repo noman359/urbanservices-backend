@@ -382,6 +382,7 @@ export default class CustomerService {
                     id: true,
                     comment: true,
                     rating: true,
+                    created_at: true,
                     customers: {
                         select: {
                             id: true,
