@@ -510,14 +510,14 @@ export default class vendorService {
                 where: {
                     service_id: Number(filters.service_id),
                     status: 'online',
-                    // lat: {
-                    //     gte: Number(jobDetail.lat) - (50 / 111),  // 1 degree latitude is approximately 111 km
-                    //     lte: Number(jobDetail.lat) + (50 / 111)
-                    // },
-                    // long: {
-                    //     gte: Number(jobDetail.long) - (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180))),  // 1 degree longitude varies with latitude
-                    //     lte: Number(jobDetail.long) + (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180)))
-                    // }
+                    lat: {
+                        gte: Number(jobDetail.lat) - (50 / 111),  // 1 degree latitude is approximately 111 km
+                        lte: Number(jobDetail.lat) + (50 / 111)
+                    },
+                    long: {
+                        gte: Number(jobDetail.long) - (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180))),  // 1 degree longitude varies with latitude
+                        lte: Number(jobDetail.long) + (50 / (111 * Math.cos(Number(jobDetail.lat) * Math.PI / 180)))
+                    }
                 },
                 skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                 take: filters.limit, // Set the number of records to be returned per page
