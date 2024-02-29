@@ -1015,8 +1015,8 @@ export default class AdminService {
                 var totalYearlyRecord = 0
                 for (const yRecord of yearly) {
                     // Add the amount of each record to the totalAmount
-                    if (yRecord.amount !== null && !isNaN(yRecord.amount)) {
-                        totalYearlyRecord += yRecord.amount;
+                    if (yRecord.earning !== null && !isNaN(yRecord.earning)) {
+                        totalYearlyRecord += yRecord.earning;
                     }
                 }
                 recordsByYear.push({ year, totalYearlyRecord });
@@ -1054,8 +1054,8 @@ export default class AdminService {
                 var totalMonthlyRecord = 0
                 for (const mItem of monthly) {
                     // Add the amount of each record to the totalAmount
-                    if (mItem.amount !== null && !isNaN(mItem.amount)) {
-                        totalMonthlyRecord += mItem.amount;
+                    if (mItem.earning !== null && !isNaN(mItem.earning)) {
+                        totalMonthlyRecord += mItem.earning;
                     }
                 }
                 monthlyRecords.push({ month, totalMonthlyRecord });
@@ -1086,8 +1086,8 @@ export default class AdminService {
             var totalCurrentRecord = 0
             for (const mItem of records) {
                 // Add the amount of each record to the totalAmount
-                if (mItem.amount !== null && !isNaN(mItem.amount)) {
-                    totalCurrentRecord += mItem.amount;
+                if (mItem.earning !== null && !isNaN(mItem.earning)) {
+                    totalCurrentRecord += mItem.earning;
                 }
             }
             recordsByDays.push({ current: totalCurrentRecord })

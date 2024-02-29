@@ -479,6 +479,13 @@ export default class JobsService {
                 })
 
             }
+
+            let percentData = await db.percentage.findMany()
+
+            let percentValue = Number(percentData[0].percentage)/100
+
+            let valueAfterFee = Number(percent[0].percentage) * (percentValue)
+
             servResp.data = await db.vendor_jobs.update({
                 where: {
                     id: Number(job.job_id)
@@ -486,7 +493,8 @@ export default class JobsService {
                 data: {
                     status: vendor_jobs_status.pending,
                     vendor_id: Number(job.vendor_id),
-                    amount: Number(estimate.estimated_price ?? 0)
+                    amount: Number(estimate.estimated_price ?? 0),
+                    earning: valueAfterFee
                 }
 
             })
