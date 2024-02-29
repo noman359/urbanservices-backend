@@ -484,7 +484,7 @@ export default class JobsService {
 
             let percentValue = Number(percentData[0].percentage)/100
 
-            let valueAfterFee = Number(percentData[0].percentage) * (percentValue)
+            let valueAfterFee = Number(estimate.estimated_price ?? 0) * (percentValue)
 
             servResp.data = await db.vendor_jobs.update({
                 where: {
