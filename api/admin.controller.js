@@ -215,7 +215,7 @@ export default class AdminController {
         if (token.isError == true) {
             next(token)
         } else {
-            let updated_customer = await adminService.deleteQuestion(req.body)
+            let updated_customer = await adminService.deleteQuestion(req.params)
             next(updated_customer)
         }
     }

@@ -30,7 +30,7 @@ export default function (router) {
 
     lRoute.post('/question', adminController.createQuestion, handler.apiResponseHandler)
     lRoute.get('/question', adminController.getQuestions, handler.apiResponseHandler)
-    lRoute.delete('/question', adminController.deleteQuestion, handler.apiResponseHandler)
+    lRoute.delete('/question/:id', adminController.deleteQuestion, handler.apiResponseHandler)
 
     lRoute.post('/answer', adminController.saveAnswers, handler.apiResponseHandler)
     lRoute.put('/answer', adminController.updateAnswers, handler.apiResponseHandler)
