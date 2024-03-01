@@ -14,7 +14,7 @@ export default class ServicesService {
         let servResp = new config.serviceResponse()
         try {
             let [services, count] = await db.$transaction([db.services.findMany({
-                where: { name: { contains: filters.search } },
+                where: { name: { contains: filters.search  } },
                 skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                 take: filters.limit, // Set the number of records to be returned per page
             }), db.services.count({

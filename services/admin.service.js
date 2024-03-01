@@ -40,7 +40,6 @@ export default class AdminService {
         return servResp
     }
 
-
     async getJobsCount() {
         let servResp = new config.serviceResponse()
         try {
@@ -371,9 +370,9 @@ export default class AdminService {
                                 description: {
                                     startsWith: filters.search,
                                 },
-    
+
                             },
-                            include: {customers: true, vendor: true},
+                            include: { customers: true, vendor: true },
                             skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                             take: filters.limit, // Set the number of records to be returned per page
                         }), db.vendor_jobs.count({
@@ -384,16 +383,16 @@ export default class AdminService {
                                     startsWith: filters.search,
                                 }
                             },
-                            include: {customers: true, vendor: true}
+                            include: { customers: true, vendor: true }
                         })]);
-    
+
                     } else {
                         [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
                             where: {
                                 vendor_id: Number(filters.vendor_id),
                                 status: filters.status
                             },
-                            include: {customers: true, vendor: true},
+                            include: { customers: true, vendor: true },
                             skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                             take: filters.limit, // Set the number of records to be returned per page
                         }), db.vendor_jobs.count({
@@ -403,19 +402,19 @@ export default class AdminService {
                             },
                         })]);
                     }
-    
+
                 } else {
-    
+
                     if (filters.search != null) {
-    
+
                         [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
                             where: {
                                 vendor_id: Number(filters.vendor_id),
                                 description: {
                                     startsWith: filters.search,
-                                }    
+                                }
                             },
-                            include: {customers: true, vendor: true},
+                            include: { customers: true, vendor: true },
                             skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                             take: filters.limit, // Set the number of records to be returned per page
                         }), db.vendor_jobs.count({
@@ -425,93 +424,95 @@ export default class AdminService {
                                     startsWith: filters.search,
                                 },
                             },
-                            include: {customers: true, vendor: true}
+                            include: { customers: true, vendor: true }
                         })]);
-    
+
                     } else {
                         [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
                             where: {
                                 vendor_id: Number(filters.vendor_id),
                             },
-                            include: {customers: true, vendor: true},
+                            include: { customers: true, vendor: true },
                             skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                             take: filters.limit, // Set the number of records to be returned per page
-                        }), db.vendor_jobs.count({ where: {
-                            vendor_id: Number(filters.vendor_id),
-                        },})]);
+                        }), db.vendor_jobs.count({
+                            where: {
+                                vendor_id: Number(filters.vendor_id),
+                            },
+                        })]);
                     }
                 }
             } else {
-            if (filters.status != null) {
+                if (filters.status != null) {
 
-                if (filters.search != null) {
-                    [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
-                        where: {
-                            status: filters.status,
-                            description: {
-                                startsWith: filters.search,
-                            }
-                        },
-                        include: {customers: true, vendor: true},
-                        skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
-                        take: filters.limit, // Set the number of records to be returned per page
-                    }), db.vendor_jobs.count({
-                        where: {
-                            status: filters.status,
-                            description: {
-                                startsWith: filters.search,
+                    if (filters.search != null) {
+                        [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
+                            where: {
+                                status: filters.status,
+                                description: {
+                                    startsWith: filters.search,
+                                }
                             },
+                            include: { customers: true, vendor: true },
+                            skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                            take: filters.limit, // Set the number of records to be returned per page
+                        }), db.vendor_jobs.count({
+                            where: {
+                                status: filters.status,
+                                description: {
+                                    startsWith: filters.search,
+                                },
 
 
-                        },
-                    })]);
+                            },
+                        })]);
+
+                    } else {
+                        [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
+                            where: {
+                                status: filters.status
+                            },
+                            include: { customers: true, vendor: true },
+                            skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                            take: filters.limit, // Set the number of records to be returned per page
+                        }), db.vendor_jobs.count({
+                            where: {
+                                status: filters.status
+                            },
+                        })]);
+                    }
 
                 } else {
-                    [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
-                        where: {
-                            status: filters.status
-                        },
-                        include: {customers: true, vendor: true},
-                        skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
-                        take: filters.limit, // Set the number of records to be returned per page
-                    }), db.vendor_jobs.count({
-                        where: {
-                            status: filters.status
-                        },
-                    })]);
-                }
 
-            } else {
+                    if (filters.search != null) {
 
-                if (filters.search != null) {
-
-                    [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
-                        where: {
-                            description: {
-                                startsWith: filters.search,
+                        [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
+                            where: {
+                                description: {
+                                    startsWith: filters.search,
+                                },
                             },
-                        },
-                        include: {customers: true, vendor: true},
-                        skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
-                        take: filters.limit, // Set the number of records to be returned per page
-                    }), db.vendor_jobs.count({
-                        where: {
-                            description: {
-                                startsWith: filters.search,
+                            include: { customers: true, vendor: true },
+                            skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                            take: filters.limit, // Set the number of records to be returned per page
+                        }), db.vendor_jobs.count({
+                            where: {
+                                description: {
+                                    startsWith: filters.search,
+                                },
+
                             },
+                        })]);
 
-                        },
-                    })]);
-
-                } else {
-                    [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
-                        include: {customers: true, vendor: true},
-                        skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
-                        take: filters.limit, // Set the number of records to be returned per page
-                    }), db.vendor_jobs.count()]);
+                    } else {
+                        [paginatedData, count] = await db.$transaction([db.vendor_jobs.findMany({
+                            include: { customers: true, vendor: true },
+                            skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
+                            take: filters.limit, // Set the number of records to be returned per page
+                        }), db.vendor_jobs.count()]);
+                    }
                 }
             }
-        }
             servResp.count = count
             paginatedData.count = count
             servResp.data = paginatedData
@@ -993,10 +994,10 @@ export default class AdminService {
                 // Query records for the current year
                 const yearly = await db.vendor_jobs.findMany({
                     where: {
-                        
+
                         AND: [
-                            {vendor_id: Number(query.vendor_id)},
-                            {status: vendor_jobs_status.done},
+                            { vendor_id: Number(query.vendor_id) },
+                            { status: vendor_jobs_status.done },
                             { created_at: { gte: new Date(`${year}-01-01`) } },
                             { created_at: { lt: new Date(`${year + 1}-01-01`) } },
                         ],
@@ -1033,11 +1034,11 @@ export default class AdminService {
 
                 // Query records for the current month and year
                 const monthly = await db.vendor_jobs.findMany({
-                   
+
                     where: {
                         AND: [
-                            {status: vendor_jobs_status.done},
-                            {vendor_id: Number(query.vendor_id)},
+                            { status: vendor_jobs_status.done },
+                            { vendor_id: Number(query.vendor_id) },
                             { created_at: { gte: new Date(`${currentYear}-${month}-01`) } },
                             { created_at: { lt: new Date(`${nextYear}-${nextMonth}-01`) } },
                         ],
@@ -1070,8 +1071,8 @@ export default class AdminService {
             const records = await db.vendor_jobs.findMany({
                 where: {
                     AND: [
-                        {status: vendor_jobs_status.done},
-                        {vendor_id: Number(query.vendor_id)},
+                        { status: vendor_jobs_status.done },
+                        { vendor_id: Number(query.vendor_id) },
                         { created_at: { gte: new Date(`${currentYear}-${currentMonth}-01`) } },
                         { created_at: { lt: new Date(`${currentYear}-${currentMonth + 1}-01`) } },
                     ],
@@ -1114,7 +1115,7 @@ export default class AdminService {
                 where: {
                     id: Number(query.vendor_id)
                 },
-                
+
             })
 
             servResp.data = vendors
@@ -1138,7 +1139,7 @@ export default class AdminService {
                 // Query records for the current year
                 const yearly = await db.vendor_jobs.count({
                     where: {
-                        
+
                         AND: [
                             { created_at: { gte: new Date(`${year}-01-01`) } },
                             { created_at: { lt: new Date(`${year + 1}-01-01`) } },
@@ -1162,7 +1163,7 @@ export default class AdminService {
 
                 // Query records for the current month and year
                 const monthly = await db.vendor_jobs.count({
-                   
+
                     where: {
                         AND: [
                             { created_at: { gte: new Date(`${currentYear}-${month}-01`) } },
@@ -1179,19 +1180,49 @@ export default class AdminService {
             const currentMonth = new Date().getMonth() + 1; // Note: JavaScript months are 0-indexed
             const recordsByDays = []
 
-            // Query records for the current month
-            const records = await db.vendor_jobs.count({
+
+            const year = new Date().getFullYear();
+            if (!year || isNaN(year)) {
+                throw new Error("Invalid year provided.");
+            }
+
+            // Fetch data from Prisma for the specified year
+            const data = await db.vendor_jobs.findMany({
                 where: {
-                    AND: [
-                        { created_at: { gte: new Date(`${currentYear}-${currentMonth}-01`) } },
-                        { created_at: { lt: new Date(`${currentYear}-${currentMonth + 1}-01`) } },
-                    ],
-                },
-                orderBy: {
-                    created_at: 'asc'
-                },
+                    created_at: {
+                        gte: new Date(year, 0, 1), // Start of the year
+                        lt: new Date(year + 1, 0, 1) // Start of the next year
+                    }
+                }
             });
-            var newData = [{ current: records }, { monthly: monthlyRecords }, { yearly: recordsByYear }];
+
+            // Initialize an object to store the data for each week
+            const dataByWeek = {};
+            var weekDataArray = [];
+
+            // Group the data by week number
+            data.forEach(entry => {
+                var date = new Date(entry.created_at)
+                const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+                const daysSinceFirstDayOfYear = (date - firstDayOfYear) / (24 * 60 * 60 * 1000);
+    
+                const weekNumber = Math.ceil((daysSinceFirstDayOfYear + firstDayOfYear.getDay() + 1) / 7);
+                dataByWeek[weekNumber] = dataByWeek[weekNumber] || [];
+                dataByWeek[weekNumber].push(entry);
+            });
+
+            // Display the data for each week
+            Object.entries(dataByWeek).forEach(([week, entries]) => {
+                let weekData = {
+                    week: week,
+                    jobs: entries.length
+
+                };
+                weekDataArray.push(weekData)
+              
+            });
+
+            var newData = [{ weekly: weekDataArray }, { monthly: monthlyRecords }, { yearly: recordsByYear }];
             servResp.data = newData
 
         } catch (error) {
@@ -1201,6 +1232,6 @@ export default class AdminService {
         }
         return servResp
 
-    }
+    };
 
 }
