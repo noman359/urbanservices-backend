@@ -19,6 +19,34 @@ export default class CustomerService {
         let customer_avatar = new Object()
         try {
             console.debug('createCustomer() started')
+
+            if (customerBody.email) {
+                let emailExist = await db.customers.findUnique({
+                    where: {
+                        email: customerBody.email
+                    }
+                })
+                if (emailExist) {
+                    servResp.isError = true
+                    servResp.message = 'Email already exists.'
+                    return servResp
+                }
+               
+            }
+
+            if (customerBody.phone_number) {
+                let phoneExists = await db.customers.findUnique({
+                    where: {
+                        phone_number: customerBody.phone_number,
+                    }
+                })
+                if (phoneExists) {
+                    servResp.isError = true
+                    servResp.message = 'Phone number already exists.'
+                    return servResp
+                }
+            }
+
             if (customerBody.avatar) {
                 var arr = customerBody.avatar.name.split('.')
                 let extentionName = arr[arr.length - 1]
@@ -29,18 +57,14 @@ export default class CustomerService {
                 }
                 customer_avatar = await bucket.upload(avatar_val)
             }
-            if (customerBody.password.length < 5) {
-                throw new Error("password should be atleast 5 characters long")
-            }
-            customerBody.password = encryption.encrypt(customerBody.password)
+           
             servResp.data = await db.customers.create({
                 data: {
                     full_name: customerBody.full_name,
-                    password: customerBody.password,
                     avatar: customer_avatar.url ?? "",
                     created_at: new Date(new Date().toUTCString()),
                     phone_number: customerBody.phone_number,
-                    zipcode: customerBody.password,
+                    zipcode: customerBody.zipcode,
                     email: customerBody.email,
                     status: 'active'
 
