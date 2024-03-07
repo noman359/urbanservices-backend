@@ -1177,8 +1177,8 @@ export default class JobsService {
                 'amount': vendorServiceFee,
                 'vendorAccountId': vendor.stripe_account_id
             };
-            // var paymentService = new PaymentService()
-            // await paymentService.sendMoneyToVendor(vendorPaymentObject)
+            var paymentService = new PaymentService()
+            await paymentService.sendMoneyToVendor(vendorPaymentObject)
 
             servResp.data = await db.vendor_jobs.update({
                 where: {

@@ -177,6 +177,14 @@ export default class vendorService {
             let paymentController = new PaymentService()
             let account = await paymentController.checkConnectAccountStatus(vendor)
             vendor.payment_status = account
+            await db.vendor.update({
+                where: {
+                    id: vendor.id
+                },
+                data: {
+                    payment_status: account
+                }
+            })
             let token = await JWT.getToken(vendor)
             servResp.data = {
                 ...vendor, token: token
@@ -418,6 +426,14 @@ export default class vendorService {
             }
             let paymentController = new PaymentService()
             let account = await paymentController.checkConnectAccountStatus(vendor)
+            await db.vendor.update({
+                where: {
+                    id: Number(vendor.id)
+                },
+                data: {
+                    payment_status: account
+                }
+            })
             vendor.payment_status = account
             vendor.rating = rating
             servResp.data = vendor
@@ -437,7 +453,9 @@ export default class vendorService {
             const paginatedData = await db.vendor.findMany({
                 where: {
                     service_id: Number(filters.service_id),
-                    status: 'online'
+                    status: 'online',
+                    account_status: 'active',
+                    payment_status: 'active'
                 },
                 skip: (filters.offset - 1) * filters.limit, // Calculate the number of records to skip based on page number
                 take: filters.limit, // Set the number of records to be returned per page
@@ -510,6 +528,8 @@ export default class vendorService {
                 where: {
                     service_id: Number(filters.service_id),
                     status: 'online',
+                    account_status: 'active',
+                    payment_status: 'active',
                     lat: {
                         gte: Number(jobDetail.lat) - (50 / 111),  // 1 degree latitude is approximately 111 km
                         lte: Number(jobDetail.lat) + (50 / 111)
@@ -1061,8 +1081,6 @@ export default class vendorService {
         }
         return servResp
     }
-
-   
 
     async getVendorJobDetails(query, filters = { limit: 10, offset: 0, filter: '' }) {
         let servResp = new config.serviceResponse()
