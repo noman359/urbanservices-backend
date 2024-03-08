@@ -476,6 +476,20 @@ export default class CustomerService {
         return servResp
     }
 
+    async deleteCustomer(query) {
+        let servResp = new config.serviceResponse()
+        try {
+            console.debug('deleteCustomer() started')
+            servResp.data = await db.customers.delete({ where: { id: Number(query.id) } })
+            console.debug('deleteCustomer() returning')
+        } catch (error) {
+            console.debug('deleteCustomer() exception thrown')
+            servResp.isError = true
+            servResp.message = error.message
+        }
+        return servResp
+    }
+
     async signIn(query) {
         let servResp = new config.serviceResponse()
         try {

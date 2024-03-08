@@ -103,6 +103,16 @@ export default class CustomerController {
         }
     }
 
+    async deleteCustomer(req, res, next) {
+        let token = await tokenHandler.checkToken(req)
+        if (token.isError == true) {
+            next(token)
+        } else {
+        let customer = await customerServ.deleteCustomer({ id: req.params.id })
+        next(customer)
+        }
+    }
+
 
     async customerLogin(req, res, next) {
         let token = await customerServ.signIn(req.body)
