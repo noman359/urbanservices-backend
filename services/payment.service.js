@@ -1,7 +1,7 @@
 import handler from '../handlers/index.js'
 import config from '../config/index.js'
 import stripe from 'stripe';
-const stripeInstance = stripe('sk_test_51OMUzdHmGYnRQyfQ80HgdP96iYWHbg5Surkh5c2uJgaXnUYeJS3OIEUj1NbS8U1jVH7YIPr8DfvjI28BjnbFCtvB00SxzStg0e');
+const stripeInstance = stripe('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');
 import Prisma from '@prisma/client';
 const { PrismaClient } = Prisma;
 
