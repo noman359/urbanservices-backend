@@ -315,9 +315,6 @@ export default class AdminService {
                 where: {
                     vendor_id: Number(filters.vendor_id),
                     status: vendor_jobs_status.pending
-                },
-                include: {
-                    services: true
                 }
             })
 
@@ -330,9 +327,6 @@ export default class AdminService {
                             vendor_jobs_status.started,
                         ],
                     }
-                },
-                include: {
-                    services: true
                 }
             })
 
@@ -340,9 +334,6 @@ export default class AdminService {
                 where: {
                     vendor_id: Number(filters.vendor_id),
                     status: vendor_jobs_status.done
-                },
-                include: {
-                    services: true
                 }
             })
 
