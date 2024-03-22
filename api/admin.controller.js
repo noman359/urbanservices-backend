@@ -74,7 +74,7 @@ export default class AdminController {
         if (token.isError == true) {
             next(token)
         } else {
-            let vendorResp = await adminService.getAllJobs({vendor_id: req.query.vendor_id, status: req.query.status, search: req.query.search, limit: Number(req.query.limit), offset: Number(req.query.offset) })
+            let vendorResp = await adminService.getAllJobs({ vendor_id: req.query.vendor_id, status: req.query.status, search: req.query.search, limit: Number(req.query.limit), offset: Number(req.query.offset) })
             next(vendorResp)
         }
     }
@@ -104,7 +104,7 @@ export default class AdminController {
         if (token.isError == true) {
             next(token)
         } else {
-            let created_service = await adminService.deleteService({id: req.query.id})
+            let created_service = await adminService.deleteService({ id: req.query.id })
             next(created_service)
         }
     }
@@ -131,10 +131,10 @@ export default class AdminController {
 
     async deleteSubService(req, res, next) {
         let token = await tokenHandler.checkToken(req)
-        if (token.isError == true) { 
+        if (token.isError == true) {
             next(token)
         } else {
-            let created_service = await adminService.deleteSubService({id: req.query.id})
+            let created_service = await adminService.deleteSubService({ id: req.query.id })
             next(created_service)
         }
     }
@@ -150,7 +150,7 @@ export default class AdminController {
         }
     }
 
-     async deleteCustomer(req, res, next) {
+    async deleteCustomer(req, res, next) {
         let token = await tokenHandler.checkToken(req)
         if (token.isError == true) {
             next(token)
@@ -201,13 +201,8 @@ export default class AdminController {
     }
 
     async getQuestions(req, res, next) {
-        let token = await tokenHandler.checkToken(req)
-        if (token.isError == true) {
-            next(token)
-        } else {
-            let updated_customer = await adminService.getAllQuestions({sub_service_id: req.query.sub_service_id})
-            next(updated_customer)
-        }
+        let updated_customer = await adminService.getAllQuestions({ sub_service_id: req.query.sub_service_id })
+        next(updated_customer)
     }
 
     async deleteQuestion(req, res, next) {
@@ -256,7 +251,7 @@ export default class AdminController {
         if (token.isError == true) {
             next(token)
         } else {
-            let vendorResp = await adminService.getEarning({vendor_id: req.query.vendor_id})
+            let vendorResp = await adminService.getEarning({ vendor_id: req.query.vendor_id })
             next(vendorResp)
         }
     }
@@ -267,7 +262,7 @@ export default class AdminController {
         if (token.isError == true) {
             next(token)
         } else {
-            let vendorResp = await adminService.deleteVendor({vendor_id: req.query.vendor_id})
+            let vendorResp = await adminService.deleteVendor({ vendor_id: req.query.vendor_id })
             next(vendorResp)
         }
     }
@@ -282,7 +277,7 @@ export default class AdminController {
             next(vendorResp)
         }
     }
-    
+
     async checkToken(req) {
         var authorizationHeader = req.headers.authorization;
         let servResp = new config.serviceResponse()
